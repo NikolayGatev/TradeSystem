@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static TradeSystem.Common.EntityValidationConstants.OrderConstants;
+using static TradeSystem.Common.EntityValidationConstants.OrderAndTradesConstants;
 
 namespace TradeSystem.Data.Models
 {
@@ -12,7 +12,7 @@ namespace TradeSystem.Data.Models
     {
         public Order()
         {
-            this.Trades = new Dictionary<Guid, uint>();
+            this.TradeOrders = new HashSet<TradeOrder>();
         }
         [Key]
 
@@ -30,8 +30,6 @@ namespace TradeSystem.Data.Models
 
         public decimal Price { get; set; }
 
-        public Guid ClientId { get; set; }
-
         public int FinancialInstrumentId { get; set; }
 
         [Required]
@@ -39,11 +37,13 @@ namespace TradeSystem.Data.Models
 
         public virtual FinancialInstrument FinancialInstrument { get; set; } = null!;
 
+        public Guid ClientId { get; set; }
+
         [Required]
         [ForeignKey(nameof(ClientId))]
 
         public virtual Client Client { get; set; } = null!;
 
-        public virtual IDictionary<Guid, uint> Trades { get; set; } = null!;
+        public virtual ICollection<TradeOrder> TradeOrders { get; set; } = null!;
     }
 }

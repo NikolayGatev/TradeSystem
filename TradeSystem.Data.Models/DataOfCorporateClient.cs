@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using static TradeSystem.Common.EntityValidationConstants.CorporativeClientConstants;
+using static TradeSystem.Common.GeneralApplicationConstants;
 
 namespace TradeSystem.Data.Models
 {
@@ -10,7 +11,7 @@ namespace TradeSystem.Data.Models
     public class DataOfCorporateClient : DataOfClients
     {        
         [Required]
-        [MaxLength(MaxLengthName)]
+        [MaxLength(MaxLengthCorporationName)]
 
         public string Name { get; set; } = string.Empty;
 

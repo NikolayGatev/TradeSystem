@@ -12,7 +12,9 @@ namespace TradeSystem.Data.Models
     {
         [Key]
 
-        public Guid Id { get; set; }     
+        public Guid Id { get; set; }
+
+        public bool IsCreatedAcount { get; set; }
 
         public int NationalityId { get; set; }
 
