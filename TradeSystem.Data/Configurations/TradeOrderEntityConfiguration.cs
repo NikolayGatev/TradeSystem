@@ -15,7 +15,7 @@ namespace TradeSystem.Data.Configurations
         {
             builder
                 .Property(to => to.CreatedOn)
-                .HasDefaultValue("GETUTCDATE");
+                .HasDefaultValueSql("GETUTCDATE()");
             builder
                 .HasOne(to => to.Order)
                 .WithMany(o => o.TradeOrders)

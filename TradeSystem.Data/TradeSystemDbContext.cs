@@ -54,6 +54,7 @@ namespace TradeSystem.Web.Data
             builder.ApplyConfiguration(new OrderEntityConfiguration());
             builder.ApplyConfiguration(new TradeEntityConfiguration());
             builder.ApplyConfiguration(new TradeOrderEntityConfiguration());
+            builder.ApplyConfiguration(new TownEntityConfiguration());
 
             if (this.seedDb)
             {

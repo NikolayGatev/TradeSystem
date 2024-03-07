@@ -9,13 +9,15 @@ using TradeSystem.Data.Models;
 
 namespace TradeSystem.Data.Configurations
 {
-    public class TradeEntityConfiguration : IEntityTypeConfiguration<Trade>
+    public class TownEntityConfiguration : IEntityTypeConfiguration<Town>
     {
-        public void Configure(EntityTypeBuilder<Trade> builder)
+        public void Configure(EntityTypeBuilder<Town> builder)
         {
             builder
-                .Property(b => b.CreatedOn)
-                .HasDefaultValueSql("GETUTCDATE()");
+                .HasOne(t => t.Country)
+                .WithMany(c => c.Towns)
+                .HasForeignKey(t => t.CountryId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

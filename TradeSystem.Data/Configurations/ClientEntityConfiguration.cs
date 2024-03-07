@@ -9,8 +9,8 @@ namespace TradeSystem.Data.Configurations
         public void Configure(EntityTypeBuilder<Client> builder)
         {
             builder
-                .Property(h => h.CreateOn)
-                .HasDefaultValue("GETUTCDATE()");
+                .Property(h => h.CreatedOn)
+                .HasDefaultValueSql("GETUTCDATE()");
         }
     }
 }

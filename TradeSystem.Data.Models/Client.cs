@@ -21,7 +21,7 @@ namespace TradeSystem.Data.Models
 
         public Guid Id { get; set; }
 
-        public DateTime CreateOn { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         [Required]
         [ForeignKey(nameof(ApplicationUserId))]

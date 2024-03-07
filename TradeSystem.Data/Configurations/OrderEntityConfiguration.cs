@@ -15,9 +15,7 @@ namespace TradeSystem.Data.Configurations
         {
             builder
                 .Property(h => h.CreatedOn)
-                .HasDefaultValue("GETUTCDATE");
-            builder 
-                .Has
+                .HasDefaultValueSql("GETUTCDATE()");
         }
     }
 }

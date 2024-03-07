@@ -15,7 +15,12 @@ namespace TradeSystem.Data.Configurations
         {
             builder
                 .Property(h => h.CreatedOn)
-                .HasDefaultValue("GETUTCDATE");
+                .HasDefaultValueSql("GETUTCDATE()");
+            builder
+                .HasOne(c => c.Nationality)
+                .WithMany(ic => ic.InvidualClients)
+                .HasForeignKey(ic => ic.NationalityId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

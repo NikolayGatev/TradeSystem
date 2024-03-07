@@ -11,6 +11,8 @@ namespace TradeSystem.Data.Models
         public Country()
         {
             this.Towns = new HashSet<Town>();
+            this.CorporativeClients = new HashSet<DataOfCorporateveClient>();
+            this.InvidualClients = new HashSet<DataOfIndividualClient>();
         }
 
         public int Id { get; set; }
@@ -21,5 +23,10 @@ namespace TradeSystem.Data.Models
         public string Name { get; set; } = string.Empty;
 
         public ICollection<Town> Towns { get; set; } = null!;
+
+        public ICollection<DataOfCorporateveClient> CorporativeClients { get; set; } = null!;
+
+        public ICollection<DataOfIndividualClient> InvidualClients { get; set; } = null!;
+
     }
 }
