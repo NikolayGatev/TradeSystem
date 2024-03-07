@@ -8,6 +8,8 @@ namespace TradeSystem.Data.Models
     /// </summary>
     public class FinancialInstrument
     {
+        [Key]
+
         public int Id { get; set; }
 
         [Required]

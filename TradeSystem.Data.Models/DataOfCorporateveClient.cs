@@ -8,7 +8,7 @@ namespace TradeSystem.Data.Models
     /// <summary>
     /// This class contains the submitted information about each corporate client.
     /// </summary>
-    public class DataOfCorporateClient : DataOfClients
+    public class DataOfCorporateveClient : DataOfClients
     {        
         [Required]
         [MaxLength(MaxLengthCorporationName)]
@@ -29,5 +29,11 @@ namespace TradeSystem.Data.Models
         [MaxLength(MaxLengthNameOfRepresentative)]
 
         public String NameOfRepresentative { get; set; } = String.Empty;
+
+        public Guid? ClientId { get; set; }
+
+        [ForeignKey(nameof(ClientId))]
+
+        public Client? Client { get; set; }
     }
 }

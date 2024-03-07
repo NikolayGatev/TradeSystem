@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TradeSystem.Data.Models;
 
-namespace TradeSystem.Data.Configurations
+namespace TradeSystem.Data.Configurations.Seed
 {
     public class FinancialInstrumentEntityConfiguration : IEntityTypeConfiguration<FinancialInstrument>
     {
@@ -58,7 +58,7 @@ namespace TradeSystem.Data.Configurations
             };
             financialInstruments.Add(financialInstrument);
 
-            return financialInstruments.ToArray();            
+            return financialInstruments.ToArray();
         }
     }
 }

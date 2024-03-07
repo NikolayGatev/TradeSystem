@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TradeSystem.Data.Configurations;
+using TradeSystem.Data.Configurations.Seed;
 using TradeSystem.Data.Models;
 
 namespace TradeSystem.Web.Data
@@ -24,7 +25,7 @@ namespace TradeSystem.Web.Data
 
         public DbSet<Country> Countries { get; set; } = null!;
 
-        public DbSet<DataOfCorporateClient> DataOfCorporateClients { get; set; } = null!;
+        public DbSet<DataOfCorporateveClient> DataOfCorporateClients { get; set; } = null!;
 
         public DbSet<DataOfIndividualClient> DataOfIndividualClients { get; set; } = null!;
 
@@ -46,10 +47,15 @@ namespace TradeSystem.Web.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfiguration(new DivisionEntityConfiguration());
-            builder.ApplyConfiguration(new FinancialInstrumentEntityConfiguration());
+            builder.ApplyConfiguration(new ClientEntityConfiguration());
+            builder.ApplyConfiguration(new DataOfCorporativeClientEntityConfiguration());
+            builder.ApplyConfiguration(new DataOfIndividualClientEntityConfiguration());
+            builder.ApplyConfiguration(new DepositedMoneyEntityConfiguration());
+            builder.ApplyConfiguration(new OrderEntityConfiguration());
+            builder.ApplyConfiguration(new TradeEntityConfiguration());
+            builder.ApplyConfiguration(new TradeOrderEntityConfiguration());
 
-            if(this.seedDb)
+            if (this.seedDb)
             {
                 builder.ApplyConfiguration(new DivisionEntityConfiguration());
                 builder.ApplyConfiguration(new FinancialInstrumentEntityConfiguration());

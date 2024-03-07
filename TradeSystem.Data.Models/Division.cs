@@ -7,6 +7,8 @@ namespace TradeSystem.Data.Models
     /// </summary>
     public class Division
     {
+        [Key]
+
         public int Id { get; set; }
 
         [Required]

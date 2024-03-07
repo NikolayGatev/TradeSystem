@@ -8,6 +8,5 @@ namespace TradeSystem.Data.Models
     /// </summary>
     public class ApplicationUser : IdentityUser<Guid>
     {
-
     }
 }

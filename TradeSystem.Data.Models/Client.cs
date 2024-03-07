@@ -21,6 +21,8 @@ namespace TradeSystem.Data.Models
 
         public Guid Id { get; set; }
 
+        public DateTime CreateOn { get; set; }
+
         [Required]
         [ForeignKey(nameof(ApplicationUserId))]
 
@@ -38,7 +40,7 @@ namespace TradeSystem.Data.Models
 
         [ForeignKey(nameof(DataOfCorporateClientId))]
 
-        public virtual DataOfCorporateClient? DataOfCorporateClient { get; set; }
+        public virtual DataOfCorporateveClient? DataOfCorporateClient { get; set; }
 
         public Guid? DataOfCorporateClientId { get; set; }
 

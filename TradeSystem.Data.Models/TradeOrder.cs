@@ -9,7 +9,11 @@ namespace TradeSystem.Data.Models
     /// </summary>
     public class TradeOrder
     {
+        [Key]
+
         public int Id { get; set; }
+
+        public DateTime CreatedOn { get; set; }
 
         public Guid OrderId { get; set; }
 

@@ -31,5 +31,11 @@ namespace TradeSystem.Data.Models
         public string NationalIdentityNumber { get; set; } = string.Empty;
         
         public DateTime DateOfBirth { get; set; }
+
+        public Guid? ClientId { get; set; }
+
+        [ForeignKey(nameof(ClientId))]
+
+        public Client? Client { get; set; }
     }
 }

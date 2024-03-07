@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TradeSystem.Data.Models;
 
-namespace TradeSystem.Data.Configurations
+namespace TradeSystem.Data.Configurations.Seed
 {
     public class DivisionEntityConfiguration : IEntityTypeConfiguration<Division>
     {
