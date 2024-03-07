@@ -45,8 +45,13 @@ namespace TradeSystem.Web.Data
 
         public DbSet<TradeOrder> TradeOrders { get; set; } = null!;
 
+        public DbSet<ClientFinancialInstrument> ClientFinancialInstruments { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<ClientFinancialInstrument>()
+                .HasKey(cfi => new {cfi.FinancialInstrumentId, cfi.ClientId});
+
             builder.ApplyConfiguration(new ClientEntityConfiguration());
             builder.ApplyConfiguration(new DataOfCorporativeClientEntityConfiguration());
             builder.ApplyConfiguration(new DataOfIndividualClientEntityConfiguration());

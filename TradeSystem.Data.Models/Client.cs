@@ -15,6 +15,7 @@ namespace TradeSystem.Data.Models
             this.AllDepositedsMoney = new HashSet<DepositedMoney>();
             this.Orders = new HashSet<Order>();
             this.Trades = new HashSet<Trade>();
+            this.FinancialInstruments = new HashSet<ClientFinancialInstrument>();
         }
 
         [Key]
@@ -53,5 +54,7 @@ namespace TradeSystem.Data.Models
         public virtual ICollection<Order> Orders { get; set; } = null!;
 
         public virtual ICollection<Trade> Trades { get; set; } = null!;
+
+        public virtual ICollection<ClientFinancialInstrument> FinancialInstruments { get; set; } = null!;
     }
 }

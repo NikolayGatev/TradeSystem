@@ -8,6 +8,10 @@ namespace TradeSystem.Data.Models
     /// </summary>
     public class FinancialInstrument
     {
+        public FinancialInstrument()
+        {
+            this.OwnersOfThisInstruments = new HashSet<ClientFinancialInstrument>();
+        }
         [Key]
 
         public int Id { get; set; }
@@ -26,5 +30,7 @@ namespace TradeSystem.Data.Models
         [MaxLength(ISINLength)]
 
         public string ISIN { get; set; } = string.Empty;
+
+        public virtual ICollection<ClientFinancialInstrument> OwnersOfThisInstruments { get; set; } = null!;
     }
 }
