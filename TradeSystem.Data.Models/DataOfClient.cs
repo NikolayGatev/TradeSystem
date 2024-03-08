@@ -8,7 +8,7 @@ namespace TradeSystem.Data.Models
     /// This is abstract class, which contains the submitted information about each client,
     /// and is no different for corporate or individual client.
     /// </summary>
-    public abstract class DataOfClients
+    public abstract class DataOfClient
     {
         [Key]
 
@@ -37,12 +37,18 @@ namespace TradeSystem.Data.Models
 
         [ForeignKey(nameof(IdentityDocumentId))]
 
-        public virtual IdentityDocument IdentityDocument { get; set; } = null!;
+        public virtual IdentityDocument? IdentityDocument { get; set; } = null!;
 
-        public Guid IdentityDocumentId { get; set; }
+        public Guid? IdentityDocumentId { get; set; }
 
         public DateTime CreatedOn { get; set; }
 
-        public DateTime AuthorisedOn { get; set; }
+        public DateTime? AuthorisedOn { get; set; }
+
+        [ForeignKey(nameof(AdministratorId))]
+
+        public virtual Administrator? Adminstrator { get; set; }
+
+        public Guid? AdministratorId { get; set; }
     }
 }

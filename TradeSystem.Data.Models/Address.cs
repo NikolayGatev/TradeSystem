@@ -41,8 +41,8 @@ namespace TradeSystem.Data.Models
 
         public string Number { get; set; } = string.Empty;
 
-        public byte Floor { get; set; }
+        public byte? Floor { get; set; }
 
-        public byte Flat { get; set; }
+        public byte? Flat { get; set; }
     }
 }

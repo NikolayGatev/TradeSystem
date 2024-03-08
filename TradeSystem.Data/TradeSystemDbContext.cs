@@ -19,7 +19,7 @@ namespace TradeSystem.Web.Data
 
         public DbSet<Address> Addresses { get; set; } = null!;
 
-        public DbSet<Adminstrator> Adminstrators { get; set; } = null!;
+        public DbSet<Administrator> Adminstrators { get; set; } = null!;
 
         public DbSet<Client> Clients { get; set; } = null!;
 
@@ -54,17 +54,23 @@ namespace TradeSystem.Web.Data
 
             builder.ApplyConfiguration(new ClientEntityConfiguration());
             builder.ApplyConfiguration(new DataOfCorporativeClientEntityConfiguration());
-            builder.ApplyConfiguration(new DataOfIndividualClientEntityConfiguration());
+            builder.ApplyConfiguration(new TradeSystem.Data.Configurations.DataOfIndividualClientEntityConfiguration());
             builder.ApplyConfiguration(new DepositedMoneyEntityConfiguration());
             builder.ApplyConfiguration(new OrderEntityConfiguration());
             builder.ApplyConfiguration(new TradeEntityConfiguration());
             builder.ApplyConfiguration(new TradeOrderEntityConfiguration());
-            builder.ApplyConfiguration(new TownEntityConfiguration());
+            builder.ApplyConfiguration(new TradeSystem.Data.Configurations.TownEntityConfiguration());
 
             if (this.seedDb)
             {
                 builder.ApplyConfiguration(new DivisionEntityConfiguration());
                 builder.ApplyConfiguration(new FinancialInstrumentEntityConfiguration());
+                builder.ApplyConfiguration(new AddressEntityConfiguration());
+                builder.ApplyConfiguration(new AdministratorEntityConfiguration());
+                builder.ApplyConfiguration(new ApplicationUserEntityConfiguration());
+                builder.ApplyConfiguration(new CountryEntityConfiguration());
+                builder.ApplyConfiguration(new TradeSystem.Data.Configurations.Seed.DataOfIndividualClientEntityConfiguration());
+                builder.ApplyConfiguration(new TradeSystem.Data.Configurations.Seed.TownEntityConfiguration());
             }
 
             base.OnModelCreating(builder);

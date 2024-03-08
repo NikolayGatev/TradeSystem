@@ -8,7 +8,7 @@ namespace TradeSystem.Data.Models
     /// <summary>
     /// This class contains the submitted information about each corporate client.
     /// </summary>
-    public class DataOfCorporateveClient : DataOfClients
+    public class DataOfCorporateveClient : DataOfClient
     {        
         [Required]
         [MaxLength(MaxLengthCorporationName)]

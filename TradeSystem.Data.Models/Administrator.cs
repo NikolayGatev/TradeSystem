@@ -8,8 +8,13 @@ namespace TradeSystem.Data.Models
     /// <summary>
     /// This class contains information about each employee.
     /// </summary>
-    public class Adminstrator
+    public class Administrator
     {
+        public Administrator()
+        {
+            this.DataOfClients = new HashSet<DataOfClient>();
+        }
+
         [Key]
 
         public Guid Id { get; set; }
@@ -42,5 +47,7 @@ namespace TradeSystem.Data.Models
         public Division Division { get; set; } = null!;
 
         public int DivisionId { get; set; }
+
+        public virtual ICollection<DataOfClient> DataOfClients { get; set; } = null!;
     }
 }

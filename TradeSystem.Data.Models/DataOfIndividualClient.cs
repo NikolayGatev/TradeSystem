@@ -8,7 +8,7 @@ namespace TradeSystem.Data.Models
     /// <summary>
     /// This class contains the submitted infomation about each individual client.
     /// </summary>
-    public class DataOfIndividualClient : DataOfClients
+    public class DataOfIndividualClient : DataOfClient
     {      
         
         [Required]
