@@ -44,11 +44,5 @@ namespace TradeSystem.Data.Models
         public DateTime CreatedOn { get; set; }
 
         public DateTime? AuthorisedOn { get; set; }
-
-        [ForeignKey(nameof(AdministratorId))]
-
-        public virtual Administrator? Adminstrator { get; set; }
-
-        public Guid? AdministratorId { get; set; }
     }
 }

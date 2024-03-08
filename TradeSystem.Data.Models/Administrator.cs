@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using static TradeSystem.Common.GeneralApplicationConstants;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 
 namespace TradeSystem.Data.Models
@@ -12,7 +13,8 @@ namespace TradeSystem.Data.Models
     {
         public Administrator()
         {
-            this.DataOfClients = new HashSet<DataOfClient>();
+            this.CorporativeClients = new HashSet<DataOfCorporateveClient>();
+            this.IndividualClients = new HashSet<DataOfIndividualClient>();
         }
 
         [Key]
@@ -48,6 +50,8 @@ namespace TradeSystem.Data.Models
 
         public int DivisionId { get; set; }
 
-        public virtual ICollection<DataOfClient> DataOfClients { get; set; } = null!;
+        public virtual ICollection<DataOfCorporateveClient> CorporativeClients { get; set; } = null!;
+
+        public virtual ICollection<DataOfIndividualClient> IndividualClients { get; set; } = null!;
     }
 }

@@ -328,13 +328,13 @@ namespace TradeSystem.Data.Migrations
                         {
                             Id = new Guid("dea12856-c198-4129-b3f3-b893d8395082"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "58cdbcfc-9fdb-4946-91a6-160b1cdc9925",
+                            ConcurrencyStamp = "5fe878b0-4e0e-4f3b-9761-fc9025a03311",
                             Email = "admin@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "admin@mail.com",
                             NormalizedUserName = "admin@mail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKdQ+vcxDQ+F3Nd5iRkknkBW23V4+SVyN+UupQefg67Fb/Tpw3tlxZAbAkPYRQ3boQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOvTCjYwpbDlg3BiDVQTc9LQdJiZRmd0MWjg9cwq+L9LxavGGwA0xAWQDGkoWZM5cg==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "admin@mail.com"
@@ -343,13 +343,13 @@ namespace TradeSystem.Data.Migrations
                         {
                             Id = new Guid("6d5800ce-d726-4fc8-83d9-d6b3ac1f591e"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "836e252c-c90e-46fe-a32b-a1ff07b13c25",
+                            ConcurrencyStamp = "2196fbe2-986b-4e63-a5db-842336c90102",
                             Email = "client.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "client.com",
                             NormalizedUserName = "client.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEF/qe7aJuR50wOzVMR3BfZX1sUNLyG6rpqWBGdYRUX+bafHfQQJH5ISKx9W8Oadhbw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEN0UcNvCORyqcUshjB45rmTqh5qQI++xru4rA9ry6rqrCskW62fh19D7uaQe9MNXoQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "client.com"
@@ -362,9 +362,6 @@ namespace TradeSystem.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ApplicationUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal>("Balance")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -374,22 +371,10 @@ namespace TradeSystem.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<Guid?>("DataOfCorporateClientId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("DataOfIndividualClientId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("IsIndividual")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("DataOfCorporateClientId");
-
-                    b.HasIndex("DataOfIndividualClientId");
 
                     b.ToTable("Clients");
                 });
@@ -437,7 +422,7 @@ namespace TradeSystem.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TradeSystem.Data.Models.DataOfClient", b =>
+            modelBuilder.Entity("TradeSystem.Data.Models.DataOfCorporateveClient", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -449,23 +434,45 @@ namespace TradeSystem.Data.Migrations
                     b.Property<Guid?>("AdministratorId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime?>("AuthorisedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("ClientId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid?>("IdentityDocumentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsCreatedAcount")
                         .HasColumnType("bit");
+
+                    b.Property<string>("LegalForm")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("NameOfRepresentative")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("NationalIdentityNumber")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<int>("NationalityId")
                         .HasColumnType("int");
@@ -481,11 +488,110 @@ namespace TradeSystem.Data.Migrations
 
                     b.HasIndex("AdministratorId");
 
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("ClientId");
+
                     b.HasIndex("IdentityDocumentId");
 
-                    b.ToTable("DataOfClient");
+                    b.HasIndex("NationalityId");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("DataOfClient");
+                    b.ToTable("DataOfCorporateClients");
+                });
+
+            modelBuilder.Entity("TradeSystem.Data.Models.DataOfIndividualClient", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AddressId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AdministratorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("AuthorisedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("ClientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<Guid?>("IdentityDocumentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsCreatedAcount")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("NationalIdentityNumber")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("NationalityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(18)
+                        .HasColumnType("nvarchar(18)");
+
+                    b.Property<string>("SecondName")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("AdministratorId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("IdentityDocumentId");
+
+                    b.HasIndex("NationalityId");
+
+                    b.ToTable("DataOfIndividualClients");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("21bbf6eb-0d93-460c-ab6f-c1530b16e97d"),
+                            AddressId = new Guid("130a7006-f51d-4a2c-8796-92b0438a1293"),
+                            ApplicationUserId = new Guid("6d5800ce-d726-4fc8-83d9-d6b3ac1f591e"),
+                            CreatedOn = new DateTime(2024, 3, 8, 13, 46, 52, 386, DateTimeKind.Local).AddTicks(3207),
+                            DateOfBirth = new DateTime(2000, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Petko",
+                            IsCreatedAcount = false,
+                            NationalIdentityNumber = "",
+                            NationalityId = 1,
+                            PhoneNumber = "1234456",
+                            Surname = "Client"
+                        });
                 });
 
             modelBuilder.Entity("TradeSystem.Data.Models.DepositedMoney", b =>
@@ -763,82 +869,6 @@ namespace TradeSystem.Data.Migrations
                     b.ToTable("TradeOrders");
                 });
 
-            modelBuilder.Entity("TradeSystem.Data.Models.DataOfCorporateveClient", b =>
-                {
-                    b.HasBaseType("TradeSystem.Data.Models.DataOfClient");
-
-                    b.Property<string>("LegalForm")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("NameOfRepresentative")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("NationalIdentityNumber")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.HasIndex("NationalityId");
-
-                    b.HasDiscriminator().HasValue("DataOfCorporateveClient");
-                });
-
-            modelBuilder.Entity("TradeSystem.Data.Models.DataOfIndividualClient", b =>
-                {
-                    b.HasBaseType("TradeSystem.Data.Models.DataOfClient");
-
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("NationalIdentityNumber")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
-                        .HasColumnName("DataOfIndividualClient_NationalIdentityNumber");
-
-                    b.Property<string>("SecondName")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.HasIndex("NationalityId");
-
-                    b.HasDiscriminator().HasValue("DataOfIndividualClient");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("21bbf6eb-0d93-460c-ab6f-c1530b16e97d"),
-                            AddressId = new Guid("130a7006-f51d-4a2c-8796-92b0438a1293"),
-                            CreatedOn = new DateTime(2024, 3, 8, 12, 16, 50, 658, DateTimeKind.Local).AddTicks(539),
-                            IsCreatedAcount = false,
-                            NationalityId = 1,
-                            PhoneNumber = "1234456",
-                            DateOfBirth = new DateTime(2000, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstName = "Petko",
-                            NationalIdentityNumber = "",
-                            Surname = "Client"
-                        });
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
@@ -928,29 +958,6 @@ namespace TradeSystem.Data.Migrations
                     b.Navigation("Division");
                 });
 
-            modelBuilder.Entity("TradeSystem.Data.Models.Client", b =>
-                {
-                    b.HasOne("TradeSystem.Data.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TradeSystem.Data.Models.DataOfCorporateveClient", "DataOfCorporateClient")
-                        .WithMany()
-                        .HasForeignKey("DataOfCorporateClientId");
-
-                    b.HasOne("TradeSystem.Data.Models.DataOfIndividualClient", "DataOfIndividualClient")
-                        .WithMany()
-                        .HasForeignKey("DataOfIndividualClientId");
-
-                    b.Navigation("ApplicationUser");
-
-                    b.Navigation("DataOfCorporateClient");
-
-                    b.Navigation("DataOfIndividualClient");
-                });
-
             modelBuilder.Entity("TradeSystem.Data.Models.ClientFinancialInstrument", b =>
                 {
                     b.HasOne("TradeSystem.Data.Models.Client", "Client")
@@ -970,7 +977,7 @@ namespace TradeSystem.Data.Migrations
                     b.Navigation("FinancialInstrument");
                 });
 
-            modelBuilder.Entity("TradeSystem.Data.Models.DataOfClient", b =>
+            modelBuilder.Entity("TradeSystem.Data.Models.DataOfCorporateveClient", b =>
                 {
                     b.HasOne("TradeSystem.Data.Models.Address", "Address")
                         .WithMany()
@@ -979,18 +986,85 @@ namespace TradeSystem.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("TradeSystem.Data.Models.Administrator", "Adminstrator")
-                        .WithMany("DataOfClients")
+                        .WithMany("CorporativeClients")
                         .HasForeignKey("AdministratorId");
+
+                    b.HasOne("TradeSystem.Data.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("CorporativeClients")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TradeSystem.Data.Models.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId");
 
                     b.HasOne("TradeSystem.Data.Models.IdentityDocument", "IdentityDocument")
                         .WithMany()
                         .HasForeignKey("IdentityDocumentId");
 
+                    b.HasOne("TradeSystem.Data.Models.Country", "Nationality")
+                        .WithMany("CorporativeClients")
+                        .HasForeignKey("NationalityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Address");
 
                     b.Navigation("Adminstrator");
 
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Client");
+
                     b.Navigation("IdentityDocument");
+
+                    b.Navigation("Nationality");
+                });
+
+            modelBuilder.Entity("TradeSystem.Data.Models.DataOfIndividualClient", b =>
+                {
+                    b.HasOne("TradeSystem.Data.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TradeSystem.Data.Models.Administrator", "Adminstrator")
+                        .WithMany("IndividualClients")
+                        .HasForeignKey("AdministratorId");
+
+                    b.HasOne("TradeSystem.Data.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("IndividualClients")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TradeSystem.Data.Models.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId");
+
+                    b.HasOne("TradeSystem.Data.Models.IdentityDocument", "IdentityDocument")
+                        .WithMany()
+                        .HasForeignKey("IdentityDocumentId");
+
+                    b.HasOne("TradeSystem.Data.Models.Country", "Nationality")
+                        .WithMany("InvidualClients")
+                        .HasForeignKey("NationalityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Address");
+
+                    b.Navigation("Adminstrator");
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Client");
+
+                    b.Navigation("IdentityDocument");
+
+                    b.Navigation("Nationality");
                 });
 
             modelBuilder.Entity("TradeSystem.Data.Models.DepositedMoney", b =>
@@ -1079,31 +1153,18 @@ namespace TradeSystem.Data.Migrations
                     b.Navigation("Trade");
                 });
 
-            modelBuilder.Entity("TradeSystem.Data.Models.DataOfCorporateveClient", b =>
-                {
-                    b.HasOne("TradeSystem.Data.Models.Country", "Nationality")
-                        .WithMany("CorporativeClients")
-                        .HasForeignKey("NationalityId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Nationality");
-                });
-
-            modelBuilder.Entity("TradeSystem.Data.Models.DataOfIndividualClient", b =>
-                {
-                    b.HasOne("TradeSystem.Data.Models.Country", "Nationality")
-                        .WithMany("InvidualClients")
-                        .HasForeignKey("NationalityId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Nationality");
-                });
-
             modelBuilder.Entity("TradeSystem.Data.Models.Administrator", b =>
                 {
-                    b.Navigation("DataOfClients");
+                    b.Navigation("CorporativeClients");
+
+                    b.Navigation("IndividualClients");
+                });
+
+            modelBuilder.Entity("TradeSystem.Data.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("CorporativeClients");
+
+                    b.Navigation("IndividualClients");
                 });
 
             modelBuilder.Entity("TradeSystem.Data.Models.Client", b =>

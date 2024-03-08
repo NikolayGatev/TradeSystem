@@ -24,26 +24,7 @@ namespace TradeSystem.Data.Models
 
         public DateTime CreatedOn { get; set; }
 
-        [Required]
-        [ForeignKey(nameof(ApplicationUserId))]
-
-        public virtual ApplicationUser ApplicationUser { get; set; } = null!;
-
-        public Guid ApplicationUserId { get; set; }
-
         public bool IsIndividual { get; set; }
-
-        [ForeignKey(nameof(DataOfIndividualClientId))]
-
-        public virtual DataOfIndividualClient? DataOfIndividualClient { get; set; }
-
-        public Guid? DataOfIndividualClientId { get; set; }
-
-        [ForeignKey(nameof(DataOfCorporateClientId))]
-
-        public virtual DataOfCorporateveClient? DataOfCorporateClient { get; set; }
-
-        public Guid? DataOfCorporateClientId { get; set; }
 
         [Precision(MaxNumberOfDigits,FloatingPointPrecision)]
 

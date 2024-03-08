@@ -53,7 +53,7 @@ namespace TradeSystem.Web.Data
                 .HasKey(cfi => new {cfi.FinancialInstrumentId, cfi.ClientId});
 
             builder.ApplyConfiguration(new ClientEntityConfiguration());
-            builder.ApplyConfiguration(new DataOfCorporativeClientEntityConfiguration());
+            builder.ApplyConfiguration(new TradeSystem.Data.Configurations.DataOfCorporativeClientEntityConfiguration());
             builder.ApplyConfiguration(new TradeSystem.Data.Configurations.DataOfIndividualClientEntityConfiguration());
             builder.ApplyConfiguration(new DepositedMoneyEntityConfiguration());
             builder.ApplyConfiguration(new OrderEntityConfiguration());
