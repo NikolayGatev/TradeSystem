@@ -10,28 +10,12 @@ namespace TradeSystem.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var connectionString = 
-                builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            
-            builder.Services.AddDbContext<TradeSystemDbContext>(options =>
-                options.UseSqlServer(connectionString));
-
-            builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
-                {
-                    options.SignIn.RequireConfirmedAccount = 
-                        builder.Configuration.GetValue<bool>("Identity:SignIn:RequireConfirmedAccount");
-                    options.Password.RequireLowercase =
-                        builder.Configuration.GetValue<bool>("Identity:Password:RequireLowercase");
-                    options.Password.RequireUppercase =
-                        builder.Configuration.GetValue<bool>("Identity:Password:RequireUppercase");
-                    options.Password.RequireNonAlphanumeric =
-                        builder.Configuration.GetValue<bool>("Identity:Password:RequireNonAlphanumeric");
-                    options.Password.RequiredLength =
-                        builder.Configuration.GetValue<int>("Identity:Password:RequiredLength");
-                })
-                .AddEntityFrameworkStores<TradeSystemDbContext>();
+            builder.Services.AddApplicationDbContext(builder.Configuration);
+            builder.Services.AddApplicationIdentity(builder.Configuration);
 
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddApplicationServices();
 
             var app = builder.Build();
 

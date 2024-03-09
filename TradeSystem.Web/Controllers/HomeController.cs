@@ -7,8 +7,11 @@ namespace TradeSystem.Web.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController()
+        private readonly ILogger<HomeController> logger;
+
+        public HomeController(ILogger<HomeController> logger)
         {
+            this.logger = logger;
         }
 
         public IActionResult Index()
