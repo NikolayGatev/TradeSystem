@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using TradeSystem.Data.Common.Base;
 using static TradeSystem.Common.GeneralApplicationConstants;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 
 namespace TradeSystem.Data.Models
@@ -9,7 +9,7 @@ namespace TradeSystem.Data.Models
     /// <summary>
     /// This class contains information about each employee.
     /// </summary>
-    public class Administrator
+    public class Administrator : BaseDeletableModel
     {
         public Administrator()
         {

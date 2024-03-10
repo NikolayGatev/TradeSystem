@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TradeSystem.Data.Common.Base;
 
 namespace TradeSystem.Data.Models
 {
@@ -7,13 +8,11 @@ namespace TradeSystem.Data.Models
     /// This class is a many-to-many relationship between Order and 
     /// Trade and shows the volume for each execution.
     /// </summary>
-    public class TradeOrder
+    public class TradeOrder : BaseDeletableModel
     {
         [Key]
 
         public int Id { get; set; }
-
-        public DateTime CreatedOn { get; set; }
 
         public Guid OrderId { get; set; }
 

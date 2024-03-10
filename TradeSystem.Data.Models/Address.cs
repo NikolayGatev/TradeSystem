@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TradeSystem.Data;
+using TradeSystem.Data.Common.Base;
 using static TradeSystem.Common.EntityValidationConstants.AddressConstants;
 
 namespace TradeSystem.Data.Models
@@ -7,7 +9,7 @@ namespace TradeSystem.Data.Models
     /// <summary>
     /// This class contains information about exact address.
     /// </summary>
-    public class Address
+    public class Address : BaseDeletableModel
     {
         [Key]
         public Guid Id { get; set; }

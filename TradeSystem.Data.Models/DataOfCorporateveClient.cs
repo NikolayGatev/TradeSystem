@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using static TradeSystem.Common.EntityValidationConstants.CorporativeClientConstants;
 using static TradeSystem.Common.GeneralApplicationConstants;
+using TradeSystem.Data.Common.Base;
 
 namespace TradeSystem.Data.Models
 {

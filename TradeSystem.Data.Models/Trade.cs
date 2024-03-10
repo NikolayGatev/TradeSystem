@@ -2,11 +2,12 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using static TradeSystem.Common.EntityValidationConstants.OrderAndTradesConstants;
+using TradeSystem.Data.Common.Base;
 
 
 namespace TradeSystem.Data.Models
 {
-    public class Trade
+    public class Trade : BaseDeletableModel
     {
         /// <summary>
         /// This class contains informations about each trade.
@@ -18,8 +19,6 @@ namespace TradeSystem.Data.Models
         [Key]
 
         public Guid Id { get; set; }
-
-        public DateTime CreatedOn { get; set; }
 
         public uint Volume { get; set; }
 

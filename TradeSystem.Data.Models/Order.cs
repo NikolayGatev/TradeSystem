@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TradeSystem.Data.Common.Base;
 using static TradeSystem.Common.EntityValidationConstants.OrderAndTradesConstants;
 
 namespace TradeSystem.Data.Models
@@ -8,7 +9,7 @@ namespace TradeSystem.Data.Models
     /// <summary>
     /// This class contains informations about each order.
     /// </summary>
-    public class Order
+    public class Order : BaseDeletableModel
     {
         public Order()
         {
@@ -17,8 +18,6 @@ namespace TradeSystem.Data.Models
         [Key]
 
         public Guid Id { get; set; }
-
-        public DateTime CreatedOn { get; set; }
 
         public bool IsBid { get; set; }
 
