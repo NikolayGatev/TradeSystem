@@ -1,19 +1,20 @@
-using Microsoft.EntityFrameworkCore;
-using TradeSystem.Data.Models;
-using TradeSystem.Data;
+using TradeSystem.Web.ModelBinding;
 
 namespace TradeSystem.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddApplicationDbContext(builder.Configuration);
             builder.Services.AddApplicationIdentity(builder.Configuration);
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(options =>
+            {
+                options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
+            });
 
             builder.Services.AddApplicationServices();
 
@@ -43,7 +44,7 @@ namespace TradeSystem.Web
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
 
-            app.Run();
+            await app.RunAsync();
         }
     }
 }

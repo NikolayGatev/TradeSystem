@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TradeSystem.Data.Models;
 using TradeSystem.Data;
+using TradeSystem.Data.Common;
+using TradeSystem.Data.Repositories;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -17,6 +19,12 @@ namespace Microsoft.Extensions.DependencyInjection
                 config.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             services.AddDbContext<TradeSystemDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
+            services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            services.AddScoped<IDbQueryRunner, DbQueryRunner>();
+
+            services.AddDatabaseDeveloperPageExceptionFilter();
 
             return services;
         }
@@ -35,6 +43,8 @@ namespace Microsoft.Extensions.DependencyInjection
                     config.GetValue<bool>("Identity:Password:RequireNonAlphanumeric");
                 options.Password.RequiredLength =
                     config.GetValue<int>("Identity:Password:RequiredLength");
+                options.Password.RequireDigit =
+                    config.GetValue<bool>("Identity:Password:RequireDigit");
             })
                .AddEntityFrameworkStores<TradeSystemDbContext>();
             return services; 
