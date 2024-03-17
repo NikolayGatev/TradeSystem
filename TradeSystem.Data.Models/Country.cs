@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TradeSystem.Data.Common.Base;
 using static TradeSystem.Common.EntityValidationConstants.CountryAndTownConstants;
 
 namespace TradeSystem.Data.Models
@@ -6,7 +7,7 @@ namespace TradeSystem.Data.Models
     /// <summary>
     /// This class is for the countries the clients may be from.
     /// </summary>
-    public class Country
+    public class Country : BaseDeletableModel
     {
         public Country()
         {

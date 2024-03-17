@@ -4,7 +4,7 @@ using TradeSystem.Data.Models;
 
 namespace TradeSystem.Data.Configurations.Seed
 {
-    public class DivisionEntityConfiguration : IEntityTypeConfiguration<Division>
+    internal class DivisionEntityConfiguration : IEntityTypeConfiguration<Division>
     {
         public void Configure(EntityTypeBuilder<Division> builder)
         {

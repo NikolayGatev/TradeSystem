@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TradeSystem.Common\TradeSystem.Common.csproj" />
+    <ProjectReference Include="..\TradeSystem.Data.Common\TradeSystem.Data.Common.csproj" />
   </ItemGroup>
 
 </Project>

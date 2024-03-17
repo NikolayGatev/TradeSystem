@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TradeSystem.Common
+﻿namespace TradeSystem.Common
 {
     public static class EntityValidationConstants
     {
@@ -50,6 +44,8 @@ namespace TradeSystem.Common
         {
             public const int MaxNumberOfDigits = 18;
             public const int FloatingPointPrecision = 5;
+            public const string PriceMaxLegnth = "2000.00";
+            public const string PriceMinLegnth = "0.00";
         }
 
         public static class CountryAndTownConstants

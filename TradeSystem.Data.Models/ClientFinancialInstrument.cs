@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TradeSystem.Data.Common.Base;
 
 namespace TradeSystem.Data.Models
 {
@@ -7,7 +8,7 @@ namespace TradeSystem.Data.Models
     /// This class many-to-many relations between FinancialInstrument and Client,
     /// aand contains information about owners of financial instruments.
     /// </summary>
-    public class ClientFinancialInstrument
+    public class ClientFinancialInstrument : BaseDeletableModel
     {        
         [Required]
         [ForeignKey(nameof(ClientId))]  

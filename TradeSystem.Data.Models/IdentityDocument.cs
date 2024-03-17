@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TradeSystem.Data.Common.Base;
 
 namespace TradeSystem.Data.Models
 {
     /// <summary>
     /// This class contains documents uploaded by a client 
     /// </summary>
-    public class IdentityDocument
+    public class IdentityDocument : BaseModel
     {
         [Key]
         public Guid Id { get; set; }

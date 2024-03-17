@@ -1,5 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using TradeSystem.Data.Common.Base;
 using static TradeSystem.Common.GeneralApplicationConstants;
 
 
@@ -8,8 +9,14 @@ namespace TradeSystem.Data.Models
     /// <summary>
     /// This class contains information about each employee.
     /// </summary>
-    public class Adminstrator
+    public class Administrator : BaseDeletableModel
     {
+        public Administrator()
+        {
+            this.CorporativeClients = new HashSet<DataOfCorporateveClient>();
+            this.IndividualClients = new HashSet<DataOfIndividualClient>();
+        }
+
         [Key]
 
         public Guid Id { get; set; }
@@ -42,5 +49,9 @@ namespace TradeSystem.Data.Models
         public Division Division { get; set; } = null!;
 
         public int DivisionId { get; set; }
+
+        public virtual ICollection<DataOfCorporateveClient> CorporativeClients { get; set; } = null!;
+
+        public virtual ICollection<DataOfIndividualClient> IndividualClients { get; set; } = null!;
     }
 }

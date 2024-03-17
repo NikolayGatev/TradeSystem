@@ -1,37 +1,22 @@
-using Microsoft.EntityFrameworkCore;
-using TradeSystem.Data.Models;
-using TradeSystem.Web.Data;
+using TradeSystem.Web.ModelBinding;
 
 namespace TradeSystem.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var connectionString = 
-                builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            
-            builder.Services.AddDbContext<TradeSystemDbContext>(options =>
-                options.UseSqlServer(connectionString));
+            builder.Services.AddApplicationDbContext(builder.Configuration);
+            builder.Services.AddApplicationIdentity(builder.Configuration);
 
-            builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
-                {
-                    options.SignIn.RequireConfirmedAccount = 
-                        builder.Configuration.GetValue<bool>("Identity:SignIn:RequireConfirmedAccount");
-                    options.Password.RequireLowercase =
-                        builder.Configuration.GetValue<bool>("Identity:Password:RequireLowercase");
-                    options.Password.RequireUppercase =
-                        builder.Configuration.GetValue<bool>("Identity:Password:RequireUppercase");
-                    options.Password.RequireNonAlphanumeric =
-                        builder.Configuration.GetValue<bool>("Identity:Password:RequireNonAlphanumeric");
-                    options.Password.RequiredLength =
-                        builder.Configuration.GetValue<int>("Identity:Password:RequiredLength");
-                })
-                .AddEntityFrameworkStores<TradeSystemDbContext>();
+            builder.Services.AddControllersWithViews(options =>
+            {
+                options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
+            });
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddApplicationServices();
 
             var app = builder.Build();
 
@@ -59,7 +44,7 @@ namespace TradeSystem.Web
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
 
-            app.Run();
+            await app.RunAsync();
         }
     }
 }

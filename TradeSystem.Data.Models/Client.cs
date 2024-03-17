@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TradeSystem.Data.Common.Base;
 using static TradeSystem.Common.EntityValidationConstants.ClientsConstants;
 
 namespace TradeSystem.Data.Models
@@ -8,7 +9,7 @@ namespace TradeSystem.Data.Models
     /// <summary>
     /// This class contains information about customer accounts.
     /// </summary>
-    public class Client
+    public class Client : BaseDeletableModel
     {
         public Client()
         {
@@ -22,28 +23,7 @@ namespace TradeSystem.Data.Models
 
         public Guid Id { get; set; }
 
-        public DateTime CreatedOn { get; set; }
-
-        [Required]
-        [ForeignKey(nameof(ApplicationUserId))]
-
-        public virtual ApplicationUser ApplicationUser { get; set; } = null!;
-
-        public Guid ApplicationUserId { get; set; }
-
         public bool IsIndividual { get; set; }
-
-        [ForeignKey(nameof(DataOfIndividualClientId))]
-
-        public virtual DataOfIndividualClient? DataOfIndividualClient { get; set; }
-
-        public Guid? DataOfIndividualClientId { get; set; }
-
-        [ForeignKey(nameof(DataOfCorporateClientId))]
-
-        public virtual DataOfCorporateveClient? DataOfCorporateClient { get; set; }
-
-        public Guid? DataOfCorporateClientId { get; set; }
 
         [Precision(MaxNumberOfDigits,FloatingPointPrecision)]
 

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TradeSystem.Data.Common.Base;
 using static TradeSystem.Common.EntityValidationConstants.CountryAndTownConstants;
 
 namespace TradeSystem.Data.Models
@@ -7,7 +8,7 @@ namespace TradeSystem.Data.Models
     /// <summary>
     /// This class contains information clients` towns.
     /// </summary>
-    public class Town
+    public class Town : BaseDeletableModel
     {
         public int Id { get; set; }
 

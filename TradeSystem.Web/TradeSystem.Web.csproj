@@ -22,7 +22,14 @@
     <ProjectReference Include="..\TradeSystem.Common\TradeSystem.Common.csproj" />
     <ProjectReference Include="..\TradeSystem.Data.Models\TradeSystem.Data.Models.csproj" />
     <ProjectReference Include="..\TradeSystem.Data\TradeSystem.Data.csproj" />
+    <ProjectReference Include="..\TradeSystem.Services\TradeSystem.Core.csproj" />
     <ProjectReference Include="..\TradeSystem.Web.ViewModels\TradeSystem.Web.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Client\" />
+    <Folder Include="Views\FinancialInstrument\" />
+    <Folder Include="Views\Trade\" />
   </ItemGroup>
 
 </Project>

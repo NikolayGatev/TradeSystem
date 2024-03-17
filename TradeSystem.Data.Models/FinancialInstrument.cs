@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TradeSystem.Data.Common.Base;
 using static TradeSystem.Common.EntityValidationConstants.FinancialInstrumentonstants;
 
 namespace TradeSystem.Data.Models
@@ -6,7 +7,7 @@ namespace TradeSystem.Data.Models
     /// <summary>
     /// This class contains information about the financial instrument that are traded.
     /// </summary>
-    public class FinancialInstrument
+    public class FinancialInstrument : BaseDeletableModel
     {
         public FinancialInstrument()
         {

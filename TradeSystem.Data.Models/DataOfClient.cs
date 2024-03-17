@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TradeSystem.Data.Common.Base;
+using TradeSystem.Data.Models.Enumerations;
 using static TradeSystem.Common.GeneralApplicationConstants;
 
 namespace TradeSystem.Data.Models
@@ -8,13 +10,15 @@ namespace TradeSystem.Data.Models
     /// This is abstract class, which contains the submitted information about each client,
     /// and is no different for corporate or individual client.
     /// </summary>
-    public abstract class DataOfClients
+    public abstract class DataOfClient : BaseModel
     {
         [Key]
 
         public Guid Id { get; set; }
 
-        public bool IsCreatedAcount { get; set; }
+        [Required] 
+
+        public ResultFromChecking DataChecking { get; set; }
 
         public int NationalityId { get; set; }
 
@@ -37,12 +41,10 @@ namespace TradeSystem.Data.Models
 
         [ForeignKey(nameof(IdentityDocumentId))]
 
-        public virtual IdentityDocument IdentityDocument { get; set; } = null!;
+        public virtual IdentityDocument? IdentityDocument { get; set; } = null!;
 
-        public Guid IdentityDocumentId { get; set; }
+        public Guid? IdentityDocumentId { get; set; }
 
-        public DateTime CreatedOn { get; set; }
-
-        public DateTime AuthorisedOn { get; set; }
+        public DateTime? AuthorisedOn { get; set; }
     }
 }

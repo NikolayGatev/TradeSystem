@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TradeSystem.Data.Common.Base;
 
 namespace TradeSystem.Data.Models
 {
     /// <summary>
     /// This class contains information about each Division in the organization.
     /// </summary>
-    public class Division
+    public class Division : BaseModel
     {
         [Key]
 
