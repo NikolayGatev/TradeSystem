@@ -5,7 +5,7 @@ using TradeSystem.Data.Configurations;
 using TradeSystem.Data.Configurations.Seed;
 using TradeSystem.Data.Models;
 
-namespace TradeSystem.Web.Data
+namespace TradeSystem.Data
 {
     public class TradeSystemDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {

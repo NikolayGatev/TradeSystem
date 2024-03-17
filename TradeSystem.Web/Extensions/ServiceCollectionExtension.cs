@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TradeSystem.Data.Models;
-using TradeSystem.Web.Data;
+using TradeSystem.Data;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TradeSystem.Data.Common;
 
-namespace TradeSystem.Web.Data.Repositories
+namespace TradeSystem.Data.Repositories
 {
     public class EfRepository<TEntity> : IRepository<TEntity>
         where TEntity : class

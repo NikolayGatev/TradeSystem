@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TradeSystem.Data.Common.Base;
+using TradeSystem.Data.Models.Enumerations;
 using static TradeSystem.Common.GeneralApplicationConstants;
 
 namespace TradeSystem.Data.Models
@@ -15,7 +16,9 @@ namespace TradeSystem.Data.Models
 
         public Guid Id { get; set; }
 
-        public bool IsCreatedAcount { get; set; }
+        [Required] 
+
+        public ResultFromChecking DataChecking { get; set; }
 
         public int NationalityId { get; set; }
 

@@ -1,4 +1,4 @@
-﻿namespace TradeSystem.Web.Data.Repositories
+﻿namespace TradeSystem.Data.Repositories
 {
     using System;
     using System.Collections.Generic;

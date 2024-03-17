@@ -2,7 +2,7 @@
 using TradeSystem.Data.Common;
 using TradeSystem.Data.Common.Base;
 
-namespace TradeSystem.Web.Data.Repositories
+namespace TradeSystem.Data.Repositories
 {
     public class EfDeletableEntityRepository<TEntity> : EfRepository<TEntity>, IDeletableEntityRepository<TEntity>
         where TEntity : class, IDeletableEntity
