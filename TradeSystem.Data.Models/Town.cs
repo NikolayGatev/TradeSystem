@@ -10,6 +10,12 @@ namespace TradeSystem.Data.Models
     /// </summary>
     public class Town : BaseDeletableModel
     {
+        public Town()
+        {
+            this.CorporativeClients = new HashSet<DataOfCorporateveClient>();
+            this.InvidualClients = new HashSet<DataOfIndividualClient>();
+        }
+
         public int Id { get; set; }
 
         [Required]
@@ -23,5 +29,9 @@ namespace TradeSystem.Data.Models
         [ForeignKey(nameof(CountryId))]
 
         public Country Country { get; set; } = null!;
+
+        public ICollection<DataOfCorporateveClient> CorporativeClients { get; set; } = null!;
+
+        public ICollection<DataOfIndividualClient> InvidualClients { get; set; } = null!;
     }
 }
