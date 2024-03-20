@@ -17,8 +17,6 @@ namespace TradeSystem.Data
             this.seedDb = seedDb;
         }
 
-        public DbSet<Address> Addresses { get; set; } = null!;
-
         public DbSet<Administrator> Adminstrators { get; set; } = null!;
 
         public DbSet<Client> Clients { get; set; } = null!;
@@ -65,7 +63,6 @@ namespace TradeSystem.Data
             {
                 builder.ApplyConfiguration(new DivisionEntityConfiguration());
                 builder.ApplyConfiguration(new FinancialInstrumentEntityConfiguration());
-                builder.ApplyConfiguration(new AddressEntityConfiguration());
                 builder.ApplyConfiguration(new AdministratorEntityConfiguration());
                 builder.ApplyConfiguration(new ApplicationUserEntityConfiguration());
                 builder.ApplyConfiguration(new CountryEntityConfiguration());
