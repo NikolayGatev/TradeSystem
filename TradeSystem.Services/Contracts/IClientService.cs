@@ -12,8 +12,8 @@ namespace TradeSystem.Core.Contracts
 
         public Task<int> GetTownIdAsync(string townName, int countryId);
 
-        public Task<Guid?> GetDataOfIndividualClientByIdAsync(Guid userId);
+        public Task<Guid?> GetIdOfDataOfIndividualClientByUserIdAsync(Guid userId);
 
-        public Task<Guid?> GetDataOfCorporativelClientByIdAsync(Guid userId);
+        public Task<Guid?> GetIdOfDataOfCorporativelClientByUserIdAsync(Guid userId);
     }
 }

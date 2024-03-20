@@ -31,7 +31,8 @@ namespace TradeSystem.Web.Controllers
         public async Task<IActionResult> AddDataNewIndividualClient(IndividualDataClentFormModel model)
         {
             Guid user = Guid.Parse(User.Id());
-            if (await clientService.GetDataOfIndividualClientByIdAsync(user) != null)
+
+            if (await clientService.GetIdOfDataOfIndividualClientByUserIdAsync(user) != null)
             {
                 ModelState.AddModelError(nameof(model.Surname), ExistClient);
             }

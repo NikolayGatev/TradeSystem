@@ -11,7 +11,7 @@ namespace TradeSystem.Core.Models.Clients
 
         [Required(ErrorMessage = RequiredMessage)]
         [StringLength(MaxLengthIndividualName, MinimumLength = MinLengthIndividualName
-            , ErrorMessage = LengthMessage)]
+            ,ErrorMessage = LengthMessage)]
 
         public string FirstName { get; set; } = string.Empty;
 

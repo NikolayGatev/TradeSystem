@@ -13,6 +13,8 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IClientService, ClientService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
+
             return services;
         }
 

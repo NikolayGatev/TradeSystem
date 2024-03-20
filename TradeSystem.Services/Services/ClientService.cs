@@ -19,7 +19,7 @@ namespace TradeSystem.Core.Services
         private readonly IRepository<DataOfCorporateveClient> dataCorporativeClientRepozitory;
         private readonly IRepository<DataOfIndividualClient> dataIndividualClientRepozitory;
         private readonly IDeletableEntityRepository<DepositedMoney> depositMoneyRepozitory;
-        private readonly IRepository<Division> devisionRepozitory;
+        private readonly IRepository<Division> divisionRepozitory;
         private readonly IDeletableEntityRepository<FinancialInstrument> finInstrRepozitory;
         private readonly IRepository<IdentityDocument> identityDocRepozitory;
         private readonly IDeletableEntityRepository<Order> orderRepozitory;
@@ -36,7 +36,7 @@ namespace TradeSystem.Core.Services
            ,IRepository<DataOfCorporateveClient> dataCorporativeClientRepozitory
            ,IRepository<DataOfIndividualClient> dataIndividualClientRepozitory
            ,IDeletableEntityRepository<DepositedMoney> depositMoneyRepozitory
-           ,IRepository<Division> devisionRepozitory
+           ,IRepository<Division> divisionRepozitory
            ,IDeletableEntityRepository<FinancialInstrument> finInstrRepozitory
            ,IRepository<IdentityDocument> identityDocRepozitory
            ,IDeletableEntityRepository<Order> orderRepozitory
@@ -52,7 +52,7 @@ namespace TradeSystem.Core.Services
             this.dataCorporativeClientRepozitory = dataCorporativeClientRepozitory;
             this.dataIndividualClientRepozitory = dataIndividualClientRepozitory;
             this.depositMoneyRepozitory = depositMoneyRepozitory;
-            this.devisionRepozitory = devisionRepozitory;
+            this.divisionRepozitory = divisionRepozitory;
             this.finInstrRepozitory = finInstrRepozitory;
             this.identityDocRepozitory = identityDocRepozitory;
             this.orderRepozitory = orderRepozitory;
@@ -119,13 +119,13 @@ namespace TradeSystem.Core.Services
             return client.Id;
         }
 
-        public async Task<Guid?> GetDataOfCorporativelClientByIdAsync(Guid userId)
+        public async Task<Guid?> GetIdOfDataOfCorporativelClientByUserIdAsync(Guid userId)
         {
             return (await dataCorporativeClientRepozitory.AllAsNoTracking()
                 .FirstOrDefaultAsync(c => c.ApplicationUserId == userId))?.Id;
         }
 
-        public async Task<Guid?> GetDataOfIndividualClientByIdAsync(Guid userId)
+        public async Task<Guid?> GetIdOfDataOfIndividualClientByUserIdAsync(Guid userId)
         {
             return (await dataIndividualClientRepozitory.AllAsNoTracking()
                 .FirstOrDefaultAsync(c => c.ApplicationUserId == userId))?.Id;

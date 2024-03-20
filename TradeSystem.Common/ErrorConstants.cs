@@ -6,5 +6,6 @@
 
         public static string ExistClient = "You are already our client";
 
+        public static string UnknownDivision = "This division does not exist";
     }
 }
