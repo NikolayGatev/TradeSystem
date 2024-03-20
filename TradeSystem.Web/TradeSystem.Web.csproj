@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Client\" />
+    <Folder Include="FilesWhitIdDicuments\" />
     <Folder Include="Views\FinancialInstrument\" />
     <Folder Include="Views\Trade\" />
   </ItemGroup>

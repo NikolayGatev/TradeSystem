@@ -3,6 +3,8 @@ using TradeSystem.Data.Models;
 using TradeSystem.Data;
 using TradeSystem.Data.Common;
 using TradeSystem.Data.Repositories;
+using TradeSystem.Core.Contracts;
+using TradeSystem.Core.Services;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -10,6 +12,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            services.AddScoped<IClientService, ClientService>();
             return services;
         }
 

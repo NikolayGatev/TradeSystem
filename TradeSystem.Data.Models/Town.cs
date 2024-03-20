@@ -16,6 +16,8 @@ namespace TradeSystem.Data.Models
             this.InvidualClients = new HashSet<DataOfIndividualClient>();
         }
 
+        [Key]
+
         public int Id { get; set; }
 
         [Required]

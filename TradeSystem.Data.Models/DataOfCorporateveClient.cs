@@ -31,11 +31,11 @@ namespace TradeSystem.Data.Models
 
         public String NameOfRepresentative { get; set; } = String.Empty;
 
-        [ForeignKey(nameof(AdministratorId))]
+        [ForeignKey(nameof(EmployeeId))]
 
-        public virtual Administrator? Adminstrator { get; set; }
+        public virtual Employee? Employee { get; set; }
 
-        public Guid? AdministratorId { get; set; }
+        public Guid? EmployeeId { get; set; }
 
         [Required]
         [ForeignKey(nameof(ApplicationUserId))]
@@ -48,6 +48,6 @@ namespace TradeSystem.Data.Models
 
         public virtual Client? Client { get; set; }
 
-        public Guid? ClientId { get; set; }
+        public Guid? ClientId { get; set; }       
     }
 }

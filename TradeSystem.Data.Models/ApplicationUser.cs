@@ -11,7 +11,7 @@ namespace TradeSystem.Data.Models
     {
         public ApplicationUser() 
         {
-            this.Administrators = new HashSet<Administrator>();
+            this.Administrators = new HashSet<Employee>();
             this.IndividualClients = new HashSet<DataOfIndividualClient>();
             this.CorporativeClients = new HashSet<DataOfCorporateveClient>();
         }
@@ -24,7 +24,7 @@ namespace TradeSystem.Data.Models
 
         public DateTime? DeletedOn { get ; set ; }
 
-        ICollection<Administrator> Administrators { get; set; } = null!;
+        ICollection<Employee> Administrators { get; set; } = null!;
 
         public virtual ICollection<DataOfCorporateveClient> CorporativeClients { get; set; } = null!;
 

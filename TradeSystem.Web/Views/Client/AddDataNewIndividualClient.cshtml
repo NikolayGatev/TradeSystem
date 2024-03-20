@@ -1,0 +1,12 @@
+﻿@model IndividualDataClentFormModel
+@{
+    ViewData["Title"] = "Data for new individual client";
+}
+<h2 class="text-center">@ViewData["Title"]</h2>
+<hr />
+
+<partial name="_IndividualClientFormPartial" model="@Model" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

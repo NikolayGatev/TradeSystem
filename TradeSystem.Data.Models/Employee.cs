@@ -9,9 +9,9 @@ namespace TradeSystem.Data.Models
     /// <summary>
     /// This class contains information about each employee.
     /// </summary>
-    public class Administrator : BaseDeletableModel
+    public class Employee : BaseDeletableModel
     {
-        public Administrator()
+        public Employee()
         {
             this.CorporativeClients = new HashSet<DataOfCorporateveClient>();
             this.IndividualClients = new HashSet<DataOfIndividualClient>();

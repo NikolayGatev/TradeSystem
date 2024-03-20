@@ -25,7 +25,11 @@ namespace TradeSystem.Data.Models
         [Required]
         [ForeignKey(nameof(NationalityId))]
 
-        public Country Nationality { get; set; } = null!;
+        public Country Nationality { get; set; } = null!;             
+
+        [Required]
+
+        public string Address { get; set; } = null!;
 
         public int TownId { get; set; }
 
@@ -33,10 +37,6 @@ namespace TradeSystem.Data.Models
         [ForeignKey(nameof(TownId))]
 
         public Town Town { get; set; } = null!;
-
-        [Required]
-
-        public string Address { get; set; } = null!;
 
         [Required]
         [MaxLength(MaxLengthPhoneNumber)]

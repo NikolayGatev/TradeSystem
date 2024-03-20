@@ -32,11 +32,11 @@ namespace TradeSystem.Data.Models
         
         public DateTime DateOfBirth { get; set; }
 
-        [ForeignKey(nameof(AdministratorId))]
+        [ForeignKey(nameof(EmployeeId))]
 
-        public virtual Administrator? Adminstrator { get; set; }
+        public virtual Employee? Employee { get; set; }
 
-        public Guid? AdministratorId { get; set; }
+        public Guid? EmployeeId { get; set; }
 
         [Required]
         [ForeignKey(nameof(ApplicationUserId))]
