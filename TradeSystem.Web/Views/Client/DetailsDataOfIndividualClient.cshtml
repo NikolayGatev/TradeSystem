@@ -10,8 +10,8 @@
 <div class="container" style="display:inline">
     <div class="row">
         <div class="col-4">
-            <img class="card-img-top" style="width: 20rem;"
-                 src="@Model.UrlToIDCart" alt="Id Cart">
+            <a class="btn btn-warning" asp-controller="Client" asp-action="Download"
+               asp-route-filename="@Model.UserId.@Model.ExtentionIdCardFile">Download</a>
         </div>
         <div class="card col-8 border-0">
             <p style="font-size:25px;"><u>@Model.Surname</u>, @Model.FirstName @Model.SecondName</p>
@@ -25,9 +25,9 @@
             <div class="form-inline">
                 @if (this.User.Identity.Name == Model.ApplicationName)
                 {
-                    <a class="btn btn-warning" asp-controller="House" asp-action="Edit"
+                    <a class="btn btn-warning" asp-controller="Client" asp-action="Edit"
                        asp-route-id="@Model.Id">Edit</a>
-                    <a class="ml-2 btn btn-danger" asp-controller="House" asp-action="Delete"
+                    <a class="ml-2 btn btn-danger" asp-controller="Client" asp-action="Delete"
                        asp-route-id="@Model.Id">Delete</a>
                 }
             </div>

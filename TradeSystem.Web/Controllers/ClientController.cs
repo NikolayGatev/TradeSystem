@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.FileProviders;
 using System.Security.Claims;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Models.Clients;
@@ -68,6 +70,21 @@ namespace TradeSystem.Web.Controllers
             var model = await clientService.DetailsOfDataOnIndividualClientAsync(dataOfdIndividualClientId);
 
             return View(model);
+        }
+
+        public IActionResult Download(string filename)
+        {
+            string path = Path.Combine(Environment.CurrentDirectory, "FilesWhitIdDicuments");
+           
+            IFileProvider fileProvider = new PhysicalFileProvider(path);
+            
+            IFileInfo fileInfo = fileProvider.GetFileInfo(filename.Substring(filename.LastIndexOf('\\') + 1));
+            
+            var stream = fileInfo.CreateReadStream();
+            
+            var mineType = "application/octet-stream";
+
+            return File(stream, mineType, filename);
         }
 
     }

@@ -82,11 +82,13 @@ namespace TradeSystem.Core.Services
         public async Task<Guid> CreateDataOfIndividualClientAsync(IndividualDataClentFormModel model, Guid userId)
         {
             string path = Path.Combine(Environment.CurrentDirectory, "FilesWhitIdDicuments");
-            var identityDoc = new IdentityDocument();
 
             var file = model.File;
 
-            string filename = Path.Combine(path, userId.ToString());
+            var identityDoc = new IdentityDocument();
+            identityDoc.Extension = file.FileName.Substring(file.FileName.LastIndexOf('.') + 1);
+
+            string filename = Path.Combine(path, $"{userId.ToString()}.{identityDoc.Extension}");
 
             using (var filestream = new FileStream(filename, FileMode.Create))
             {
@@ -95,8 +97,7 @@ namespace TradeSystem.Core.Services
 
             identityDoc.CreatedOn = DateTime.UtcNow;
             identityDoc.UserId = userId;
-            identityDoc.Extension = file.FileName.Substring(file.FileName.LastIndexOf('.') + 1);
-            
+            identityDoc.RemoteImageUrl = filename;            
             
             DataOfIndividualClient client = new DataOfIndividualClient()
             {
@@ -139,6 +140,8 @@ namespace TradeSystem.Core.Services
                     DateOfBirth = d.DateOfBirth.ToString(DateFormat),
                     NationalIdentityNumber = d.NationalIdentityNumber,
                     UrlToIDCart = d.IdentityDocument.RemoteImageUrl,
+                    UserId = d.ApplicationUserId,
+                    ExtentionIdCardFile = d.IdentityDocument.Extension,
                 })
                 .FirstAsync();
 

@@ -51,5 +51,9 @@ namespace TradeSystem.Core.Models.Clients
         public string NationalIdentityNumber { get; set; } = string.Empty;
         
         public string UrlToIDCart { get; set; } = null!;
+
+        public Guid UserId { get; set; }
+
+        public string ExtentionIdCardFile { get; set; }
     }
 }
