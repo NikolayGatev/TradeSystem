@@ -66,7 +66,6 @@ namespace TradeSystem.Data
                 builder.ApplyConfiguration(new EmployeeEntityConfiguration());
                 builder.ApplyConfiguration(new ApplicationUserEntityConfiguration());
                 builder.ApplyConfiguration(new CountryEntityConfiguration());
-                builder.ApplyConfiguration(new TradeSystem.Data.Configurations.Seed.DataOfIndividualClientEntityConfiguration());
                 builder.ApplyConfiguration(new TradeSystem.Data.Configurations.Seed.TownEntityConfiguration());
             }
 

@@ -2,6 +2,9 @@
 using System.Security.Claims;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Models.Clients;
+using TradeSystem.Core.Services;
+using TradeSystem.Data.Models;
+using TradeSystem.Web.Attributes;
 using static TradeSystem.Common.ErrorConstants;
 
 namespace TradeSystem.Web.Controllers
@@ -15,7 +18,9 @@ namespace TradeSystem.Web.Controllers
         {
             this.clientService = clientService;
         }
+
         [HttpGet]
+        [HaveNotIndividualClientData]
 
         public async Task<IActionResult> AddDataNewIndividualClient()
         {
@@ -27,6 +32,7 @@ namespace TradeSystem.Web.Controllers
         }
 
         [HttpPost]
+        [HaveNotIndividualClientData]
 
         public async Task<IActionResult> AddDataNewIndividualClient(IndividualDataClentFormModel model)
         {
@@ -49,9 +55,19 @@ namespace TradeSystem.Web.Controllers
                 return View(model);
             }
 
-            Guid newClient = await clientService.CreateDataOfIndividualClientAsync(model, user);
+            Guid newClientId = await clientService.CreateDataOfIndividualClientAsync(model, user);
             
-            return View();
+            return RedirectToAction(nameof(DetailsDataOfIndividualClient), new { dataOfdIndividualClientId = newClientId });
+        }
+
+        [HttpGet]
+        [MustHaveIndividualClientData]
+
+        public async Task<IActionResult> DetailsDataOfIndividualClient(Guid dataOfdIndividualClientId)
+        {
+            var model = await clientService.DetailsOfDataOnIndividualClientAsync(dataOfdIndividualClientId);
+
+            return View(model);
         }
 
     }

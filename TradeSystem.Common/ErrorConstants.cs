@@ -7,5 +7,7 @@
         public static string ExistClient = "You are already our client";
 
         public static string UnknownDivision = "This division does not exist";
+
+        public static string UnexpectedError = "Unexpected error occurred while registering you as an agent! Please try again later or contact administrator.";
     }
 }

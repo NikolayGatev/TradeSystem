@@ -4,6 +4,14 @@ namespace TradeSystem.Core.Contracts
 {
     public interface IClientService
     {
+        public Task<bool> ExixtByIndividualClientDataIdAsync(Guid dataOfIndividualId);
+
+        public Task<bool> ExixtByCorporativeClientDataIdAsync(Guid dataOfCorporativeId);
+
+        public Task<bool> ExistDataIndividualClientByUserIdAsync(Guid userId);
+
+        public Task<bool> ExistDataCorporativeClientByUserIdAsync(Guid userId);
+
         public Task<IEnumerable<CountryServiceModel>> AllCountriesAsync();
 
         public Task<bool> CountryExistsAsync(int countryId);
@@ -15,5 +23,7 @@ namespace TradeSystem.Core.Contracts
         public Task<Guid?> GetIdOfDataOfIndividualClientByUserIdAsync(Guid userId);
 
         public Task<Guid?> GetIdOfDataOfCorporativelClientByUserIdAsync(Guid userId);
+
+        public Task<DataOfIndividualClientServiceModel> DetailsOfDataOnIndividualClientAsync(Guid dataOfdIndividualClientId);
     }
 }

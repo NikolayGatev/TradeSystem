@@ -1,0 +1,36 @@
+﻿@model DataOfIndividualClientServiceModel
+
+@{
+    ViewBag.Title = "Individual Client Details on: ";
+}
+
+<h2 class="text-center">@ViewBag.Title@Model.FirstName @Model.Surname</h2>
+<hr />
+
+<div class="container" style="display:inline">
+    <div class="row">
+        <div class="col-4">
+            <img class="card-img-top" style="width: 20rem;"
+                 src="@Model.UrlToIDCart" alt="Id Cart">
+        </div>
+        <div class="card col-8 border-0">
+            <p style="font-size:25px;"><u>@Model.Surname</u>, @Model.FirstName @Model.SecondName</p>
+            <p>Nationality: <b>@Model.Nationality</b></p>
+            <p>Town: <b>@Model.Town</b></p>
+            <p>Address: <b>@Model.Address</b></p>            
+            <p>Email: <b>@Model.ApplicationName</b></p>
+            <p>Phone number: <b>@Model.PhoneNumber</b></p>
+            <p>Date of birth: <b>@Model.DateOfBirth</b></p>
+            <p>National Identity Number: <b>@Model.NationalIdentityNumber</b></p>
+            <div class="form-inline">
+                @if (this.User.Identity.Name == Model.ApplicationName)
+                {
+                    <a class="btn btn-warning" asp-controller="House" asp-action="Edit"
+                       asp-route-id="@Model.Id">Edit</a>
+                    <a class="ml-2 btn btn-danger" asp-controller="House" asp-action="Delete"
+                       asp-route-id="@Model.Id">Delete</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>

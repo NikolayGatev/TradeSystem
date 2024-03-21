@@ -38,7 +38,7 @@ namespace TradeSystem.Core.Models.Clients
         public string Address { get; set; } = null!;
 
         [Required(ErrorMessage = RequiredMessage)]
-        [Display(Name = "Address(contains only letters and space")]
+        [Display(Name = "Town(contains only letters and space")]
 
         public string Town { get; set; } = null!;
 
@@ -67,6 +67,6 @@ namespace TradeSystem.Core.Models.Clients
         [Required(ErrorMessage = RequiredMessage)]
         [Display(Name = "Upload ID document")]
 
-        public IFormFile File { get; set; } = null!;
+        public virtual IFormFile File { get; set; } = null!;
     }
 }

@@ -43,6 +43,7 @@ namespace TradeSystem.Data.Models
 
         public string PhoneNumber { get; set; } = null!;
 
+        [Required]
         [ForeignKey(nameof(IdentityDocumentId))]
 
         public virtual IdentityDocument? IdentityDocument { get; set; } = null!;

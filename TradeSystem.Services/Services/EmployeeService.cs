@@ -94,6 +94,36 @@ namespace TradeSystem.Core.Services
                 .AnyAsync(d => d.Id == divisionId);
         }
 
+        public async Task<EmployeeDetailsServiceModel> DetailsOfEmployeeByIdAsync(Guid employeeId)
+        {
+            var model = await employeeRepozitory.AllAsNoTracking()
+                .Where(e => e.Id == employeeId)
+                .Select(e => new EmployeeDetailsServiceModel()
+                {
+                    Id=e.Id,
+                    ApplicationName = e.ApplicationUser.UserName,
+                    FirstName = e.FirstName,
+                    LastName = e.LastName,
+                    PhoneNumber = e.PhoneNumber,
+                    DivisionId=e.DivisionId,
+                    DivisionName = e.Division.Name,
+                })
+                .FirstAsync();
+            return model;
+        }
+
+        public async Task<bool> ExistsByUserIdAsync(Guid userId)
+        {
+            return await employeeRepozitory.AllAsNoTracking()
+                .AnyAsync(e => e.ApplicationUserId == userId);
+        }
+
+        public async Task<bool> ExixtByEmployeeIdAsync(Guid employeeId)
+        {
+            return await employeeRepozitory.AllAsNoTracking()
+                .AnyAsync(e => e.Id == employeeId);
+        }
+
         public async Task<Guid?> GetIdOfEmployeeByUserIdAsync(Guid userId)
         {
             return (await employeeRepozitory.AllAsNoTracking()

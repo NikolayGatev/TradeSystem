@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Globalization;
 using TradeSystem.Core.Contracts;
@@ -117,6 +118,55 @@ namespace TradeSystem.Core.Services
             await dataIndividualClientRepozitory.SaveChangesAsync();
 
             return client.Id;
+        }
+
+        public async Task<DataOfIndividualClientServiceModel> DetailsOfDataOnIndividualClientAsync(Guid dataOfdIndividualClientId)
+        {
+            var model = await dataIndividualClientRepozitory.AllAsNoTracking()
+                .Where(d => d.Id == dataOfdIndividualClientId)
+                .Select(d => new DataOfIndividualClientServiceModel()
+                {
+                    Id = d.Id,
+                    ApplicationName = d.ApplicationUser.UserName,
+                    Nationality = d.Nationality.Name,
+                    FirstName = d.FirstName,
+                    SecondName = d.SecondName,
+                    Surname = d.Surname,
+                    NationalityId = d.NationalityId,
+                    Address = d.Address,
+                    Town = d.Town.Name,
+                    PhoneNumber = d.PhoneNumber,
+                    DateOfBirth = d.DateOfBirth.ToString(DateFormat),
+                    NationalIdentityNumber = d.NationalIdentityNumber,
+                    UrlToIDCart = d.IdentityDocument.RemoteImageUrl,
+                })
+                .FirstAsync();
+
+            return model;
+        }
+
+        public async Task<bool> ExistDataCorporativeClientByUserIdAsync(Guid userId)
+        {
+            return await dataCorporativeClientRepozitory.AllAsNoTracking()
+                .AnyAsync(d => d.ApplicationUserId == userId);
+        }
+
+        public async Task<bool> ExistDataIndividualClientByUserIdAsync(Guid userId)
+        {
+            return await dataIndividualClientRepozitory.AllAsNoTracking()
+                .AnyAsync(d => d.ApplicationUserId == userId);
+        }
+
+        public async Task<bool> ExixtByCorporativeClientDataIdAsync(Guid dataOfCorporativeId)
+        {
+            return await dataCorporativeClientRepozitory.AllAsNoTracking()
+                .AnyAsync(d => d.Id == dataOfCorporativeId);
+        }
+
+        public async Task<bool> ExixtByIndividualClientDataIdAsync(Guid dataOfIndividualId)
+        {
+            return await dataIndividualClientRepozitory.AllAsNoTracking()
+                .AnyAsync(d => d.Id == dataOfIndividualId);
         }
 
         public async Task<Guid?> GetIdOfDataOfCorporativelClientByUserIdAsync(Guid userId)

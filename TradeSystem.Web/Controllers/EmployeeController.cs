@@ -2,6 +2,8 @@
 using System.Security.Claims;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Models.Employees;
+using TradeSystem.Data.Models;
+using TradeSystem.Web.Attributes;
 using static TradeSystem.Common.ErrorConstants;
 
 namespace TradeSystem.Web.Controllers
@@ -16,6 +18,7 @@ namespace TradeSystem.Web.Controllers
         }
 
         [HttpGet]
+        [NotEmployee]
 
         public async Task<IActionResult> AddNewEmployee()
         {
@@ -28,6 +31,7 @@ namespace TradeSystem.Web.Controllers
         }
 
         [HttpPost]
+        [NotEmployee]
 
         public async Task<IActionResult> AddNewEmployee(EmployeeFormModel model)
         {
@@ -44,9 +48,20 @@ namespace TradeSystem.Web.Controllers
 
                 return View(model);
             }
-            var newEmployee = await employeeServise.CreateEmployeeAsync(model, userId);
+            
+            var newEmployeeId = await employeeServise.CreateEmployeeAsync(model, userId);
 
-            return View();
+            return RedirectToAction(nameof(EmployeeDetails), new {employeeId = newEmployeeId});
         }
+
+        [HttpGet]
+        [MustBeEmployee]
+
+        public async Task<IActionResult> EmployeeDetails(Guid employeeId)
+        {           
+            var model = await employeeServise.DetailsOfEmployeeByIdAsync(employeeId);
+
+            return View(model);
+        }        
     }
 }
