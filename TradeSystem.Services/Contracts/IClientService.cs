@@ -25,5 +25,6 @@ namespace TradeSystem.Core.Contracts
         public Task<Guid?> GetIdOfDataOfCorporativelClientByUserIdAsync(Guid userId);
 
         public Task<DataOfIndividualClientServiceModel> DetailsOfDataOnIndividualClientAsync(Guid dataOfdIndividualClientId);
+
     }
 }

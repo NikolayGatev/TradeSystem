@@ -1,24 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.FileProviders;
 using System.Security.Claims;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Models.Clients;
-using TradeSystem.Core.Services;
-using TradeSystem.Data.Models;
 using TradeSystem.Web.Attributes;
 using static TradeSystem.Common.ErrorConstants;
 
 namespace TradeSystem.Web.Controllers
-{    
+{
     public class ClientController : BaseController
     {
         private readonly IClientService clientService;
+        private readonly IEmployeeService employeeService;
 
         public ClientController(
-            IClientService clientService)
+            IClientService clientService
+            ,IEmployeeService employeeService)
         {
             this.clientService = clientService;
+            this.employeeService = employeeService;
         }
 
         [HttpGet]
@@ -63,7 +63,6 @@ namespace TradeSystem.Web.Controllers
         }
 
         [HttpGet]
-        [MustHaveIndividualClientData]
 
         public async Task<IActionResult> DetailsDataOfIndividualClient(Guid dataOfdIndividualClientId)
         {
@@ -72,16 +71,25 @@ namespace TradeSystem.Web.Controllers
             return View(model);
         }
 
-        public IActionResult Download(string filename)
+        public async Task<IActionResult> Download(string filename)
         {
+            bool isGuid = Guid.TryParse(filename.Substring(0, filename.LastIndexOf('.') - 1), out Guid userId);
+
+            if(!isGuid 
+                || (userId != Guid.Parse(User.Id())) 
+                    || (await employeeService.ExistsByUserIdAsync(Guid.Parse(User.Id())) == false))
+            {
+                BadRequest();
+            }
+
             string path = Path.Combine(Environment.CurrentDirectory, "FilesWhitIdDicuments");
-           
+
             IFileProvider fileProvider = new PhysicalFileProvider(path);
-            
+
             IFileInfo fileInfo = fileProvider.GetFileInfo(filename.Substring(filename.LastIndexOf('\\') + 1));
-            
+
             var stream = fileInfo.CreateReadStream();
-            
+
             var mineType = "application/octet-stream";
 
             return File(stream, mineType, filename);
