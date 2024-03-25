@@ -12,13 +12,16 @@ namespace TradeSystem.Web.Controllers
     {
         private readonly IClientService clientService;
         private readonly IEmployeeService employeeService;
+        private readonly ILogger<ClientController> logger;
 
         public ClientController(
             IClientService clientService
-            ,IEmployeeService employeeService)
+            ,IEmployeeService employeeService
+            ,ILogger<ClientController> logger)
         {
             this.clientService = clientService;
             this.employeeService = employeeService;
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -59,16 +62,24 @@ namespace TradeSystem.Web.Controllers
 
             Guid newClientId = await clientService.CreateDataOfIndividualClientAsync(model, user);
             
-            return RedirectToAction(nameof(DetailsDataOfIndividualClient), new { dataOfdIndividualClientId = newClientId });
+            return RedirectToAction(nameof(DetailsDataOfClient), new { dataOfClientId = newClientId });
         }
 
         [HttpGet]
 
-        public async Task<IActionResult> DetailsDataOfIndividualClient(Guid dataOfdIndividualClientId)
-        {
-            var model = await clientService.DetailsOfDataOnIndividualClientAsync(dataOfdIndividualClientId);
+        public async Task<IActionResult> DetailsDataOfClient()
+        {            
+            try
+            {
+                var model = await clientService.DetailsOfDataOnClientAsync(Guid.Parse(User.Id()));
 
-            return View(model);
+                return View(model);
+            }
+            catch (UnauthorizedAccessException uae)
+            {
+                logger.LogError(uae, "ClientController/DetailsDataOfClient");
+                return Unauthorized();
+            }
         }
 
         public async Task<IActionResult> Download(string filename)

@@ -4,7 +4,10 @@ using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Models.Clients;
 using TradeSystem.Data.Common;
 using TradeSystem.Data.Models;
+using TradeSystem.Data.Models.Enumerations;
 using static TradeSystem.Common.GeneralApplicationConstants;
+using static TradeSystem.Common.ExeptionMessages;
+
 
 namespace TradeSystem.Core.Services
 {
@@ -119,31 +122,65 @@ namespace TradeSystem.Core.Services
             return client.Id;
         }
 
-        public async Task<DataOfIndividualClientServiceModel> DetailsOfDataOnIndividualClientAsync(Guid dataOfdIndividualClientId)
+        public async Task<DataOfClientServiceModel>  DetailsOfDataOnClientAsync(Guid userId)
         {
-            var model = await dataIndividualClientRepozitory.AllAsNoTracking()
-                .Where(d => d.Id == dataOfdIndividualClientId)
-                .Select(d => new DataOfIndividualClientServiceModel()
-                {
-                    Id = d.Id,
-                    ApplicationName = d.ApplicationUser.UserName,
-                    Nationality = d.Nationality.Name,
-                    FirstName = d.FirstName,
-                    SecondName = d.SecondName,
-                    Surname = d.Surname,
-                    NationalityId = d.NationalityId,
-                    Address = d.Address,
-                    Town = d.Town.Name,
-                    PhoneNumber = d.PhoneNumber,
-                    DateOfBirth = d.DateOfBirth.ToString(DateFormat),
-                    NationalIdentityNumber = d.NationalIdentityNumber,
-                    UrlToIDCart = d.IdentityDocument.RemoteImageUrl,
-                    UserId = d.ApplicationUserId,
-                    ExtentionIdCardFile = d.IdentityDocument.Extension,
-                })
-                .FirstAsync();
+            var IdDataIndividualClient = await GetIdOfDataOfIndividualClientByUserIdAsync(userId);
+            var IdDataCorporativeClient = await GetIdOfDataOfCorporativelClientByUserIdAsync(userId);
 
-            return model;
+            if (IdDataIndividualClient != null)
+            {
+                var model = await dataIndividualClientRepozitory.AllAsNoTracking()
+                    .Where(d => d.Id == IdDataIndividualClient)
+                    .Select(d => new DataOfClientServiceModel()
+                    {
+                        Id = d.Id,
+                        DataChecking = d.DataChecking,
+                        ApplicationName = d.ApplicationUser.UserName,
+                        Nationality = d.Nationality.Name,
+                        FirstName = d.FirstName,
+                        SecondName = d.SecondName,
+                        Surname = d.Surname,
+                        NationalityId = d.NationalityId,
+                        Address = d.Address,
+                        Town = d.Town.Name,
+                        PhoneNumber = d.PhoneNumber,
+                        DateOfBirth = d.DateOfBirth.ToString(DateFormat),
+                        NationalIdentityNumberIndividual = d.NationalIdentityNumber,
+                        UrlToIDCart = d.IdentityDocument.RemoteImageUrl,
+                        ExtentionIdCardFile = d.IdentityDocument.Extension,
+                    })
+                    .FirstAsync();
+
+                return model;
+            }
+
+            else if (IdDataCorporativeClient != null)
+            {
+                var model = await dataCorporativeClientRepozitory.AllAsNoTracking()
+                    .Where(d => d.Id == IdDataCorporativeClient)
+                    .Select(d => new DataOfClientServiceModel()
+                    {
+                        Id = d.Id,
+                        ApplicationName = d.ApplicationUser.UserName,
+                        Nationality = d.Nationality.Name,
+                        Name = d.Name,
+                        NationalityId = d.NationalityId,
+                        Address = d.Address,
+                        Town = d.Town.Name,
+                        PhoneNumber = d.PhoneNumber,
+                        NationalIdentityNumber = d.NationalIdentityNumber,
+                        LegalForm = d.LegalForm,
+                        NameOfRepresentative = d.NameOfRepresentative,
+                        UrlToIDCart = d.IdentityDocument.RemoteImageUrl,
+                        ExtentionIdCardFile = d.IdentityDocument.Extension,
+                        DataChecking = d.DataChecking,
+                    })
+                    .FirstAsync();
+
+                return model;
+            }
+
+            throw new UnauthorizedAccessException(MessageUnauthoriseActionExeption);
         }
 
         public async Task<bool> ExistDataCorporativeClientByUserIdAsync(Guid userId)
