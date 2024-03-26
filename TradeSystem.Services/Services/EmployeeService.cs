@@ -1,9 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TradeSystem.Core.Contracts;
+using TradeSystem.Core.Exeptions;
 using TradeSystem.Core.Models.Clients;
 using TradeSystem.Core.Models.Employees;
+using TradeSystem.Core.Models.Enums;
 using TradeSystem.Data.Common;
 using TradeSystem.Data.Models;
+using TradeSystem.Data.Models.Enumerations;
+using static TradeSystem.Common.ExeptionMessages;
 
 namespace TradeSystem.Core.Services
 {
@@ -24,6 +28,7 @@ namespace TradeSystem.Core.Services
         private readonly IDeletableEntityRepository<Town> townRepozitory;
         private readonly IDeletableEntityRepository<Trade> tradeRepozitory;
         private readonly IDeletableEntityRepository<TradeOrder> tradeOrderRepozitory;
+        private readonly IClientService clientService;
 
         public EmployeeService(
                    IDeletableEntityRepository<Employee> employeeRepozitory
@@ -40,8 +45,9 @@ namespace TradeSystem.Core.Services
                    , IDeletableEntityRepository<Order> orderRepozitory
                    , IDeletableEntityRepository<Town> townRepozitory
                    , IDeletableEntityRepository<Trade> tradeRepozitory
-                   , IDeletableEntityRepository<TradeOrder> tradeOrderRepozitory)
-
+                   , IDeletableEntityRepository<TradeOrder> tradeOrderRepozitory
+                   ,IClientService clientService)
+                   
         {
             this.employeeRepozitory = employeeRepozitory;
             this.aplicationUserRepozitory = aplicationUserRepozitory;
@@ -58,6 +64,7 @@ namespace TradeSystem.Core.Services
             this.townRepozitory = townRepozitory;
             this.tradeRepozitory = tradeRepozitory;
             this.tradeOrderRepozitory = tradeOrderRepozitory;
+            this.clientService = clientService;
         }
 
         public async Task<IEnumerable<DivisionServiceModel>> AllDivisionsAsync()
@@ -128,6 +135,234 @@ namespace TradeSystem.Core.Services
         {
             return (await employeeRepozitory.AllAsNoTracking()
                 .FirstOrDefaultAsync(e => e.ApplicationUserId == userId))?.Id;
+        }
+
+        public async Task<ClientsDataQueryServiceModel> AllClientsDataAsync(
+                                                                        string? nationality = null
+                                                                        , string? status = null
+                                                                        , string? searchTerm = null
+                                                                        , string? typeOfClient = null
+                                                                        , int currentPage = 1
+                                                                        , int datasPerPage = 1)
+        {
+            var dataOfIndividualClient = dataIndividualClientRepozitory.AllAsNoTracking();
+            var dataOfCorporativeClients = dataCorporativeClientRepozitory.AllAsNoTracking();            
+
+            if (status != null )
+            {
+                dataOfCorporativeClients = dataOfCorporativeClients
+                    .Where(d => d.DataChecking == Enum.Parse<ResultFromChecking>(status));
+
+                dataOfIndividualClient = dataOfIndividualClient
+                    .Where(d => d.DataChecking == Enum.Parse<ResultFromChecking>(status));
+            }
+
+            if(nationality != null )
+            {
+                dataOfCorporativeClients = dataOfCorporativeClients
+                    .Where(d => d.Nationality.Name == nationality);
+
+                dataOfIndividualClient = dataOfIndividualClient
+                    .Where(d => d.Nationality.Name == nationality);
+            }
+
+            if(searchTerm != null )
+            {
+                string normalizedSearchTerm = searchTerm.ToLower();
+
+                dataOfCorporativeClients = dataOfCorporativeClients
+                    .Where(d => d.Name.ToLower().Contains(normalizedSearchTerm)
+                        || d.Address.ToLower().Contains(normalizedSearchTerm)
+                        || d.LegalForm.ToLower().Contains(normalizedSearchTerm)
+                        || d.NationalIdentityNumber.ToLower().Contains(normalizedSearchTerm)
+                        || d.PhoneNumber.ToLower().Contains(normalizedSearchTerm));
+
+                dataOfIndividualClient = dataOfIndividualClient
+                    .Where(d => d.FirstName.ToLower().Contains(normalizedSearchTerm)
+                        || d.Surname.ToLower().Contains(normalizedSearchTerm)
+                        || d.Address.ToLower().Contains(normalizedSearchTerm)
+                        || d.NationalIdentityNumber.ToLower().Contains(normalizedSearchTerm)
+                        || d.PhoneNumber.ToLower().Contains(normalizedSearchTerm));
+            }
+
+            var dataOfClientToshow = new List<DataOfClientServiseModelForCheching>();
+
+            if (typeOfClient == AllTypeOfClientsName()[0] || typeOfClient == null)
+            {
+                var dataOfIndividualClientToshow = await dataOfIndividualClient
+                .Select(d => new DataOfClientServiseModelForCheching()
+                {
+                    Id = d.Id,
+                    UserId = d.ApplicationUserId,
+                    DataChecking = d.DataChecking.ToString(),
+                    ApplicationName = d.ApplicationUser.UserName,
+                    Nationality = d.Nationality.Name,
+                    Address = d.Address,
+                    PhoneNumber = d.PhoneNumber,
+                    TypeOfClient = TypeOfDataClients.IndividualClient.ToString(),
+                    FirstName = d.FirstName,
+                    SecondName = d.SecondName,
+                    Surname = d.Surname,
+                    NationalIdentityNumberIndividual = d.NationalIdentityNumber,
+                })
+                .ToListAsync();
+
+                dataOfClientToshow.AddRange(dataOfIndividualClientToshow);
+            }
+            
+            if(typeOfClient == AllTypeOfClientsName()[1] || typeOfClient == null)
+            {
+                var dataOfCorporativeClientToshow = await dataOfCorporativeClients
+               .Select(d => new DataOfClientServiseModelForCheching()
+               {
+                   Id = d.Id,
+                   UserId = d.ApplicationUserId,
+                   DataChecking = d.DataChecking.ToString(),
+                   ApplicationName = d.ApplicationUser.UserName,
+                   Nationality = d.Nationality.Name,
+                   Address = d.Address,
+                   PhoneNumber = d.PhoneNumber,
+                   TypeOfClient = TypeOfDataClients.CorporativeClient.ToString(),
+                   FirstName = d.Name,
+                   SecondName = d.LegalForm,
+                   NationalIdentityNumber = d.NationalIdentityNumber,
+               })
+               .ToListAsync();
+
+                dataOfClientToshow.AddRange(dataOfCorporativeClientToshow);
+            }
+           
+            dataOfClientToshow
+                .Skip((currentPage - 1) * datasPerPage)
+                .Take(datasPerPage)
+                .ToList();
+
+            int totalDateOfClient = dataOfClientToshow.Count();
+
+            return new ClientsDataQueryServiceModel()
+            {
+                ClientsData = dataOfClientToshow,
+                TotalClientsDataCount = totalDateOfClient
+            };
+        }
+
+        public async Task<IEnumerable<string>> AllCountriesNameAsync()
+        {
+            return await countryRepozitory.AllAsNoTracking()
+                .Select(c => c.Name)
+                .Distinct()
+                .ToListAsync();
+        }
+
+        public List<string> AllStatusesName()
+        {
+            return Enum.GetNames(typeof(ResultFromChecking)).ToList();
+        }
+
+        public List<string> AllTypeOfClientsName()
+        {
+            return Enum.GetNames(typeof(TypeOfDataClients)).ToList();
+        }
+
+        public async Task<DataOfClientServiceModel> RejectDataDetailsAsync(Guid userId)
+        {
+            if (await clientService.ExistDataCorporativeClientByUserIdAsync(userId) == false
+                && await clientService.ExistDataIndividualClientByUserIdAsync(userId) == false)
+            {
+                throw new NotDataOfClientException(MessageNotDataException);
+            }
+
+            return await clientService.DetailsOfDataOnClientAsync(userId);
+        }
+
+        public async Task RejectClientDataAsync(Guid userEmployeeId, Guid userClientId)
+        {
+            if (await clientService.ExistDataCorporativeClientByUserIdAsync(userClientId) == false
+                && await clientService.ExistDataIndividualClientByUserIdAsync(userClientId) == false)
+            {
+                throw new NotDataOfClientException(MessageNotDataException);
+            }
+
+            var dataId = await clientService.GetIdOfDataOfCorporativelClientByUserIdAsync(userClientId)
+                ?? await clientService.GetIdOfDataOfIndividualClientByUserIdAsync(userClientId);
+
+            var dataCorporativeClient = await dataCorporativeClientRepozitory.All()
+                .FirstOrDefaultAsync(d => d.Id == dataId);
+            var dataIndividualClient = await dataIndividualClientRepozitory.All()
+                .FirstOrDefaultAsync(d => d.Id == dataId);
+
+            if (dataCorporativeClient != null)
+            {
+                dataCorporativeClient.DataChecking = ResultFromChecking.Rejected;
+                dataCorporativeClient.AuthorisedOn = DateTime.UtcNow;
+                dataCorporativeClient.EmployeeId = await GetIdOfEmployeeByUserIdAsync(userEmployeeId);
+
+                await dataCorporativeClientRepozitory.SaveChangesAsync();
+            }
+            else if (dataIndividualClient != null)
+            {
+                dataIndividualClient.DataChecking = ResultFromChecking.Rejected;
+                dataIndividualClient.AuthorisedOn = DateTime.UtcNow;
+                dataIndividualClient.EmployeeId = await GetIdOfEmployeeByUserIdAsync(userEmployeeId);
+
+                await dataIndividualClientRepozitory.SaveChangesAsync();
+            }          
+        }
+
+        public async Task AcceptClientDataAsync(Guid userEmployeeId, Guid userClientId)
+        {
+            if (await clientService.ExistDataCorporativeClientByUserIdAsync(userClientId) == false
+               && await clientService.ExistDataIndividualClientByUserIdAsync(userClientId) == false)
+            {
+                throw new NotDataOfClientException(MessageNotDataException);
+            }
+
+            var dataId = await clientService.GetIdOfDataOfCorporativelClientByUserIdAsync(userClientId)
+                ?? await clientService.GetIdOfDataOfIndividualClientByUserIdAsync(userClientId);
+
+            var dataCorporativeClient = await dataCorporativeClientRepozitory.All()
+                .FirstOrDefaultAsync(d => d.Id == dataId);
+            var dataIndividualClient = await dataIndividualClientRepozitory.All()
+                .FirstOrDefaultAsync(d => d.Id == dataId);
+
+            if (dataCorporativeClient != null)
+            {
+                dataCorporativeClient.DataChecking = ResultFromChecking.Accepted;
+                dataCorporativeClient.AuthorisedOn = DateTime.UtcNow;
+                dataCorporativeClient.EmployeeId = await GetIdOfEmployeeByUserIdAsync(userEmployeeId);
+
+                var client = new Client()
+                {
+                    IsIndividual = false,
+                    Balance = 0,
+                };
+
+                await clientRepozitory.AddAsync(client);
+                await clientRepozitory.SaveChangesAsync();
+
+                dataCorporativeClient.Client = client;
+
+                await dataCorporativeClientRepozitory.SaveChangesAsync();
+            }
+            else if (dataIndividualClient != null)
+            {
+                dataIndividualClient.DataChecking = ResultFromChecking.Accepted;
+                dataIndividualClient.AuthorisedOn = DateTime.UtcNow;
+                dataIndividualClient.EmployeeId = await GetIdOfEmployeeByUserIdAsync(userEmployeeId);
+
+                var client = new Client()
+                {
+                    IsIndividual = true,
+                    Balance = 0,
+                };
+
+                await clientRepozitory.AddAsync(client);
+                await clientRepozitory.SaveChangesAsync();
+
+                dataIndividualClient.ClientId = client.Id;
+
+                await dataIndividualClientRepozitory.SaveChangesAsync();
+            }
         }
     }
 }

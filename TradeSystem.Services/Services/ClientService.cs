@@ -7,6 +7,7 @@ using TradeSystem.Data.Models;
 using TradeSystem.Data.Models.Enumerations;
 using static TradeSystem.Common.GeneralApplicationConstants;
 using static TradeSystem.Common.ExeptionMessages;
+using TradeSystem.Core.Models.Enums;
 
 
 namespace TradeSystem.Core.Services
@@ -101,7 +102,7 @@ namespace TradeSystem.Core.Services
             identityDoc.RemoteImageUrl = filename;            
             
             DataOfIndividualClient client = new DataOfIndividualClient()
-            {
+            {                
                 FirstName = model.FirstName,
                 SecondName = model.SecondName,
                 Surname = model.Surname,
@@ -134,6 +135,8 @@ namespace TradeSystem.Core.Services
                     .Select(d => new DataOfClientServiceModel()
                     {
                         Id = d.Id,
+                        UserId = userId,
+                        TypeOfClient = TypeOfDataClients.IndividualClient.ToString(),
                         DataChecking = d.DataChecking,
                         ApplicationName = d.ApplicationUser.UserName,
                         Nationality = d.Nationality.Name,
@@ -161,6 +164,8 @@ namespace TradeSystem.Core.Services
                     .Select(d => new DataOfClientServiceModel()
                     {
                         Id = d.Id,
+                        UserId = userId,
+                        TypeOfClient = TypeOfDataClients.CorporativeClient.ToString(),
                         ApplicationName = d.ApplicationUser.UserName,
                         Nationality = d.Nationality.Name,
                         Name = d.Name,
@@ -180,7 +185,7 @@ namespace TradeSystem.Core.Services
                 return model;
             }
 
-            throw new UnauthorizedAccessException(MessageUnauthoriseActionExeption);
+            throw new UnauthorizedAccessException(MessageUnauthoriseActionException);
         }
 
         public async Task<bool> ExistDataCorporativeClientByUserIdAsync(Guid userId)

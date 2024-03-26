@@ -1,0 +1,26 @@
+﻿@model DataOfClientServiceModel
+
+@{
+    ViewBag.Title = "Accept client`s data";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<form asp-action="Accept">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label asp-for="ApplicationName" class="control-label"></label>
+                <input asp-for="ApplicationName" class="form-control" disabled="disabled" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" disabled="disabled" />
+            </div>
+            <div class="form-group">
+                <input asp-route-userId="@Model.UserId" type="submit" value="Accept" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</form>

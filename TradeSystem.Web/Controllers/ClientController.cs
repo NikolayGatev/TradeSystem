@@ -67,11 +67,11 @@ namespace TradeSystem.Web.Controllers
 
         [HttpGet]
 
-        public async Task<IActionResult> DetailsDataOfClient()
+        public async Task<IActionResult> DetailsDataOfClient(Guid? userId)
         {            
             try
             {
-                var model = await clientService.DetailsOfDataOnClientAsync(Guid.Parse(User.Id()));
+                var model = await clientService.DetailsOfDataOnClientAsync(userId ?? Guid.Parse(User.Id()));
 
                 return View(model);
             }

@@ -2,6 +2,8 @@
 {
     public static class ExeptionMessages
     {
-        public const string MessageUnauthoriseActionExeption = "The user has not data!";
+        public const string MessageUnauthoriseActionException = "The user has not data!";
+
+        public const string MessageNotDataException = "The data is missing!";
     }
 }

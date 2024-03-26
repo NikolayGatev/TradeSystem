@@ -25,9 +25,9 @@ namespace TradeSystem.Data.Models
 
         public bool IsIndividual { get; set; }
 
-        [Precision(MaxNumberOfDigits,FloatingPointPrecision)]
+        [Precision(MaxNumberOfDigits, FloatingPointPrecision)]
 
-        public decimal Balance { get; set; }
+        public decimal Balance { get; set; } = 0;
 
         public virtual ICollection<DepositedMoney> AllDepositedsMoney { get; set; } = null!;
 
