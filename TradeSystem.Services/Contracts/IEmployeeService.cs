@@ -1,5 +1,6 @@
 ﻿using TradeSystem.Core.Models.Clients;
 using TradeSystem.Core.Models.Employees;
+using TradeSystem.Data.Models;
 
 namespace TradeSystem.Core.Contracts
 {
@@ -39,5 +40,10 @@ namespace TradeSystem.Core.Contracts
 
         public Task AcceptClientDataAsync(Guid userEmployeeId, Guid userClientId);
 
+        public Task<EmployeeFormModel> GetEmployeeFormByIdAsync(Guid employeeId);
+
+        public Task EditAsync(Guid employeeId, EmployeeFormModel model);
+
+        public Task SoftDeleteAsync(Guid employeeId);
     }
 }

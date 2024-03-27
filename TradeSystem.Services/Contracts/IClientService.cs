@@ -12,6 +12,8 @@ namespace TradeSystem.Core.Contracts
 
         public Task<bool> ExistDataCorporativeClientByUserIdAsync(Guid userId);
 
+        public Task<bool> ExistClientByUserIdAsync(Guid userId);
+
         public Task<IEnumerable<CountryServiceModel>> AllCountriesAsync();
 
         public Task<bool> CountryExistsAsync(int countryId);

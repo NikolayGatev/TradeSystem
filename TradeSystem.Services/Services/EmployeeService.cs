@@ -116,6 +116,11 @@ namespace TradeSystem.Core.Services
                     DivisionName = e.Division.Name,
                 })
                 .FirstAsync();
+
+            if (model == null)
+            {
+                throw new NotEmployeeException(MessageNotEmployeeException);
+            }
             return model;
         }
 
@@ -363,6 +368,63 @@ namespace TradeSystem.Core.Services
 
                 await dataIndividualClientRepozitory.SaveChangesAsync();
             }
+        }
+
+        public async Task<EmployeeFormModel> GetEmployeeFormByIdAsync(Guid employeeId)
+        {
+            var employee = await employeeRepozitory.AllAsNoTracking()
+
+                .Where(e => e.Id == employeeId)
+                .Select(e => new EmployeeFormModel()
+                {
+                    FirstName = e.FirstName,
+                    LastName = e.LastName,
+                    PhoneNumber = e.PhoneNumber,
+                    DivisionId = e.DivisionId,
+                })
+                .FirstOrDefaultAsync();
+
+            if (employee == null)
+            {
+                throw new NotEmployeeException(MessageNotEmployeeException);
+            }
+
+            employee.Divisions = await AllDivisionsAsync();            
+
+            return employee;
+        }
+
+        public async Task EditAsync(Guid employeeId, EmployeeFormModel model)
+        {
+            var employee = await employeeRepozitory.All()
+                .Where(e => e.Id == employeeId)
+                .FirstOrDefaultAsync();
+
+            if (employee == null)
+            {
+                throw new NotEmployeeException(MessageNotEmployeeException);
+            }
+
+            employee.FirstName = model.FirstName;
+            employee.LastName = model.LastName;
+            employee.PhoneNumber = model.PhoneNumber;
+            employee.DivisionId = model.DivisionId;
+
+            await employeeRepozitory.SaveChangesAsync();
+        }
+
+        public async Task SoftDeleteAsync(Guid employeeId)
+        {
+            if(await ExixtByEmployeeIdAsync(employeeId) == false)
+            {
+                throw new NotEmployeeException(MessageNotEmployeeException);
+            }
+            var entity = await employeeRepozitory.All()
+                .FirstAsync(e => e.Id == employeeId);
+
+            employeeRepozitory.Delete(entity);
+
+            await employeeRepozitory.SaveChangesAsync();
         }
     }
 }

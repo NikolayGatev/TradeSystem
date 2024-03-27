@@ -15,11 +15,11 @@
             <div class="form-inline">
                 @if (this.User.Identity.Name == Model.ApplicationName)
                 {
-                    <a class="btn btn-warning" asp-controller="House" asp-action="Edit"
-                       asp-route-id="@Model.Id">Edit</a>
-                    <a class="ml-2 btn btn-danger" asp-controller="House" asp-action="Delete"
-                       asp-route-id="@Model.Id">Delete</a>                    
-                }
+                    <a class="btn btn-warning" asp-controller="Employee" asp-action="Edit"
+                   asp-route-employeeId="@Model.Id">Edit</a>
+                    <a class="ml-2 btn btn-danger" asp-controller="Employee" asp-action="Delete"
+                   asp-route-employeeId="@Model.Id">Delete</a>
+            }
             </div>
             <p></p>
             <div class="card" style="width: 18rem;">

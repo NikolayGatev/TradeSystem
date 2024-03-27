@@ -188,6 +188,26 @@ namespace TradeSystem.Core.Services
             throw new UnauthorizedAccessException(MessageUnauthoriseActionException);
         }
 
+        public async Task<bool> ExistClientByUserIdAsync(Guid userId)
+        {
+            var result = false;
+
+            if(await ExistDataCorporativeClientByUserIdAsync(userId))
+            {
+                result = await dataCorporativeClientRepozitory.AllAsNoTracking()
+                    .Where(d => d.ApplicationUserId == userId && d.ClientId != null)
+                    .FirstOrDefaultAsync() == null ? false : true;
+            }
+            else if(await ExistDataIndividualClientByUserIdAsync(userId))
+            {
+                result = await dataIndividualClientRepozitory.AllAsNoTracking()
+                    .Where(d => d.ApplicationUserId == userId && d.ClientId != null)
+                    .FirstOrDefaultAsync() == null ? false : true;
+            }
+
+            return result;
+        }
+
         public async Task<bool> ExistDataCorporativeClientByUserIdAsync(Guid userId)
         {
             return await dataCorporativeClientRepozitory.AllAsNoTracking()

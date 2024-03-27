@@ -69,11 +69,21 @@ namespace TradeSystem.Web.Controllers
         [HttpGet]
         [MustBeEmployee]
 
-        public async Task<IActionResult> EmployeeDetails(Guid employeeId)
-        {           
-            var model = await employeeService.DetailsOfEmployeeByIdAsync(employeeId);
+        public async Task<IActionResult> EmployeeDetails(Guid? employeeId)
+        {            
+            Guid newId = (employeeId ?? await employeeService.GetIdOfEmployeeByUserIdAsync(Guid.Parse(User.Id()))) ?? Guid.Empty;
+            
+            try
+            {
+                var model = await employeeService.DetailsOfEmployeeByIdAsync(newId);
 
-            return View(model);
+                return View(model);
+            }
+            catch (NotEmployeeException nee)
+            {
+                logger.LogError(nee, "EmployeeController/EmployeeDetails");
+                return BadRequest();
+            }
         }
 
         [HttpGet]
@@ -128,6 +138,88 @@ namespace TradeSystem.Web.Controllers
             catch (NotDataOfClientException nde)
             {
                 logger.LogError(nde, "EmployeeController/Reject");
+                return BadRequest();
+            }
+        }
+
+        [MustBeEmployee]
+        [HttpGet]
+
+        public async Task<IActionResult> Edit(Guid employeeId)
+        {
+            try
+            {
+                var model = await employeeService.GetEmployeeFormByIdAsync(employeeId);
+                return View(model);
+            }
+            catch (NotEmployeeException nee)
+            {
+                logger.LogError(nee, "EmployeeController/Edit");
+                return BadRequest();
+            }
+        }
+
+        [MustBeEmployee]
+        [HttpPost]
+
+        public async Task<IActionResult> Edit(Guid employeeId, EmployeeFormModel model)
+        {
+            if(await employeeService.DivisionExistsAsync(model.DivisionId) == false)
+            {
+                ModelState.AddModelError(nameof(model.DivisionId), UnknownDivision);
+            }
+
+            if(ModelState.IsValid == false)
+            {
+                model.Divisions = await employeeService.AllDivisionsAsync();
+
+                return View(model);
+            }
+
+            try
+            {
+                await employeeService.EditAsync(employeeId, model);
+
+                return RedirectToAction(nameof(EmployeeDetails), new { employeeId });
+            }
+            catch (NotEmployeeException nee)
+            {
+                logger.LogError(nee, "EmployeeController/Edit");
+                return BadRequest();
+            }
+        }
+
+        [MustBeEmployee]
+        [HttpGet]
+
+        public async Task<IActionResult> Delete(Guid employeeId)
+        {
+            try
+            {
+                var model = await employeeService.DetailsOfEmployeeByIdAsync(employeeId);
+                return View(model);
+            }
+            catch (NotEmployeeException nee)
+            {
+                logger.LogError(nee, "EmployeeController/Edit");
+                return BadRequest();
+            }
+        }
+
+        [MustBeEmployee]
+        [HttpPost]
+
+        public async Task<IActionResult> Delete(EmployeeDetailsServiceModel model, Guid employeeId)
+        {
+            try
+            {
+                await employeeService.SoftDeleteAsync(employeeId);
+
+                return RedirectToAction(nameof(Index), "Home");
+            }
+            catch (NotEmployeeException nee)
+            {
+                logger.LogError(nee, "EmployeeController/Delete");
                 return BadRequest();
             }
         }

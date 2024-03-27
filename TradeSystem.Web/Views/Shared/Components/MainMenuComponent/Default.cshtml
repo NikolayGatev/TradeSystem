@@ -1,4 +1,7 @@
-﻿<ul class="navbar-nav flex-grow-1">
+﻿@inject IClientService clientService
+@inject IEmployeeService employeeService
+
+<ul class="navbar-nav flex-grow-1">
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="" asp-controller="Trade" asp-action="RealTimeTrades">Real Time Trades</a>
     </li>
@@ -7,23 +10,38 @@
     </li>
     @if (this.User?.Identity?.IsAuthenticated ?? false)
     {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="MineTrades">My Trades</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="MineOrders">My Orders</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="DetailsDataOfClient">My Data</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="AllDataOfClients">All Clients` Data</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="AddDataNewIndividualClient">New Client</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="AddNewEmployee">New Employee</a>
-        </li>
+        @if (await clientService.ExistClientByUserIdAsync(Guid.Parse(User.Id())))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="DetailsDataOfClient">For me</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="MineTrades">My Trades</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="MineOrders">My Orders</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="NewOrder">New Orders</a>
+            </li>
+        }
+        else if (await employeeService.ExistsByUserIdAsync(Guid.Parse(User.Id())))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="AllDataOfClients">All Clients` Data</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="EmployeeDetails">For me</a>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="AddDataNewIndividualClient">New Client</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="AddNewEmployee">New Employee</a>
+            </li>
+        }      
     }
 </ul>

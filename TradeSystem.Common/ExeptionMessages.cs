@@ -5,5 +5,7 @@
         public const string MessageUnauthoriseActionException = "The user has not data!";
 
         public const string MessageNotDataException = "The data is missing!";
+
+        public const string MessageNotEmployeeException = "The employee is missing!";
     }
 }
