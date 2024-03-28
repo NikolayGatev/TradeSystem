@@ -1,0 +1,39 @@
+﻿@model FinInstrumentDetailsServiceModel
+@inject IEmployeeService employeeService
+@inject IClientService clientService
+
+@{
+    ViewBag.Title = "Finacial instrument Details";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<div class="container" style="display:inline">
+    <div class="row">       
+        <div class="card col-8 border-0">
+            <p style="font-size:25px;"><u>@Model.Name</u></p>
+            <p>Description: <b>@Model.Description</b></p>
+            <p>ISIN: <b>@Model.ISIN</b></p>
+            
+                @if (this.User.Identity.IsAuthenticated)
+                {
+                    if (await employeeService.ExistsByUserIdAsync(Guid.Parse(User.Id())))
+                    {
+                    <a class="btn btn-warning" asp-controller="FinancialInstrument" asp-action="Edit"
+                           asp-route-id="@Model.Id">Edit</a>
+                    <a class="ml-2 btn btn-danger" asp-controller="FinancialInstrument" asp-action="Delete"
+                           asp-route-id="@Model.Id">Delete</a>
+                    }
+                @if (await clientService.ExistClientByUserIdAsync(Guid.Parse(User.Id())))
+                    {
+                    <a class="btn btn-warning" asp-controller="Trade" asp-action="Buy"
+                       asp-route-id="@Model.Id">Buy</a>
+                    <a class="ml-2 btn btn-warning" asp-controller="Trade" asp-action="Sell"
+                       asp-route-id="@Model.Id">Sell</a>
+                    }                    
+                }
+        </div>
+    </div>
+</div>
+

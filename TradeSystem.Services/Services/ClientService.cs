@@ -6,7 +6,7 @@ using TradeSystem.Data.Common;
 using TradeSystem.Data.Models;
 using TradeSystem.Data.Models.Enumerations;
 using static TradeSystem.Common.GeneralApplicationConstants;
-using static TradeSystem.Common.ExeptionMessages;
+using static TradeSystem.Common.ExceptionMessages;
 using TradeSystem.Core.Models.Enums;
 using TradeSystem.Core.Exeptions;
 using Microsoft.AspNetCore.Http;

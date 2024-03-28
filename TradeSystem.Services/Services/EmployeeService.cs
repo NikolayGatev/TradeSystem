@@ -7,7 +7,7 @@ using TradeSystem.Core.Models.Enums;
 using TradeSystem.Data.Common;
 using TradeSystem.Data.Models;
 using TradeSystem.Data.Models.Enumerations;
-using static TradeSystem.Common.ExeptionMessages;
+using static TradeSystem.Common.ExceptionMessages;
 
 namespace TradeSystem.Core.Services
 {
