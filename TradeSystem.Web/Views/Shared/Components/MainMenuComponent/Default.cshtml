@@ -10,20 +10,24 @@
     </li>
     @if (this.User?.Identity?.IsAuthenticated ?? false)
     {
-        @if (await clientService.ExistClientByUserIdAsync(Guid.Parse(User.Id())))
+        @if ((await clientService.ExistDataCorporativeClientByUserIdAsync(Guid.Parse(User.Id()))) 
+            || (await clientService.ExistDataIndividualClientByUserIdAsync(Guid.Parse(User.Id()))))
         {
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="DetailsDataOfClient">For me</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="MineTrades">My Trades</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="MineOrders">My Orders</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="NewOrder">New Orders</a>
-            </li>
+            @if (await clientService.ExistClientByUserIdAsync(Guid.Parse(User.Id())))
+            {
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="MineTrades">My Trades</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="MineOrders">My Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="NewOrder">New Orders</a>
+                </li>
+            }            
         }
         else if (await employeeService.ExistsByUserIdAsync(Guid.Parse(User.Id())))
         {
@@ -37,7 +41,10 @@
         else
         {
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="AddDataNewIndividualClient">New Client</a>
+                <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="AddDataNewIndividualClient">New Individual Client</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="AddDataNewCorporativeClient">New Corporative Client</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="AddNewEmployee">New Employee</a>

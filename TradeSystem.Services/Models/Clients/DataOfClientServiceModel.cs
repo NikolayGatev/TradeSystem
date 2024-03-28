@@ -37,13 +37,9 @@ namespace TradeSystem.Core.Models.Clients
 
         public string PhoneNumber { get; set; } = null!;
 
-        [Required]
+        public string? UrlToIDCart { get; set; } = null!;
 
-        public string UrlToIDCart { get; set; } = null!;
-
-        [Required]
-
-        public string ExtentionIdCardFile { get; set; } = null!;
+        public string? ExtentionIdCardFile { get; set; }
 
         [Required]
 

@@ -2,7 +2,10 @@
 using Microsoft.Extensions.FileProviders;
 using System.Security.Claims;
 using TradeSystem.Core.Contracts;
+using TradeSystem.Core.Exeptions;
 using TradeSystem.Core.Models.Clients;
+using TradeSystem.Core.Models.Employees;
+using TradeSystem.Data.Models;
 using TradeSystem.Web.Attributes;
 using static TradeSystem.Common.ErrorConstants;
 
@@ -41,9 +44,9 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> AddDataNewIndividualClient(IndividualDataClentFormModel model)
         {
-            Guid user = Guid.Parse(User.Id());
+            Guid userId = Guid.Parse(User.Id());
 
-            if (await clientService.GetIdOfDataOfIndividualClientByUserIdAsync(user) != null)
+            if (await clientService.GetIdOfDataOfIndividualClientByUserIdAsync(userId) != null)
             {
                 ModelState.AddModelError(nameof(model.Surname), ExistClient);
             }
@@ -60,8 +63,49 @@ namespace TradeSystem.Web.Controllers
                 return View(model);
             }
 
-            Guid newClientId = await clientService.CreateDataOfIndividualClientAsync(model, user);
+            Guid newClientId = await clientService.CreateDataOfIndividualClientAsync(model, userId);
             
+            return RedirectToAction(nameof(DetailsDataOfClient), new { dataOfClientId = newClientId });
+        }
+
+        [HttpGet]
+        [HaveNotIndividualClientData]
+
+        public async Task<IActionResult> AddDataNewCorporativeClient()
+        {
+            var model = new CorporativeDataClentFormModel()
+            {
+                Nationalities = await clientService.AllCountriesAsync(),
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [HaveNotIndividualClientData]
+
+        public async Task<IActionResult> AddDataNewCorporativeClient(CorporativeDataClentFormModel model)
+        {
+            Guid userId = Guid.Parse(User.Id());
+
+            if (await clientService.GetIdOfDataOfCorporativelClientByUserIdAsync(userId) != null)
+            {
+                ModelState.AddModelError(nameof(model.Name), ExistClient);
+            }
+
+            if (await clientService.CountryExistsAsync(model.NationalityId) == false)
+            {
+                ModelState.AddModelError(nameof(model.NationalityId), NationalityRestricted);
+            }
+
+            if (ModelState.IsValid == false)
+            {
+                model.Nationalities = await clientService.AllCountriesAsync();
+
+                return View(model);
+            }
+
+            Guid newClientId = await clientService.CreateDataOfCorporativeClientAsync(model, userId);
+
             return RedirectToAction(nameof(DetailsDataOfClient), new { dataOfClientId = newClientId });
         }
 
@@ -106,5 +150,140 @@ namespace TradeSystem.Web.Controllers
             return File(stream, mineType, filename);
         }
 
+        [NotEmployee]
+        [HttpGet]
+
+        public async Task<IActionResult> EditIndividual(Guid dataId)
+        {       
+            
+                try
+                {
+                    var model = await clientService.GetDataOfIdividualClientFormByIdAsync(dataId);
+
+                    return View(model);
+                }
+                catch (NotDataOfClientException nde)
+                {
+                    logger.LogError(nde, "ClientController/EditIndividual");
+                    return BadRequest();
+                }
+        }
+
+        [NotEmployee]
+        [HttpPost]
+
+        public async Task<IActionResult> EditIndividual(
+            Guid dataId
+            , IndividualDataClentFormModel individualDataModel)
+        {
+            
+                if (await clientService.CountryExistsAsync(individualDataModel.NationalityId) == false)
+                {
+                    ModelState.AddModelError(nameof(individualDataModel.NationalityId), NationalityRestricted);
+                }
+
+                if (ModelState.IsValid == false)
+                {
+                    individualDataModel.Nationalities = await clientService.AllCountriesAsync();
+                    return View(individualDataModel);
+                }
+
+                try
+                {
+                    await clientService.EditDataOfIndividualClientAsync(dataId, individualDataModel);
+
+                    return RedirectToAction(nameof(DetailsDataOfClient), new { userId = Guid.Parse(User.Id()) });
+                }
+                catch (NotEmployeeException nee)
+                {
+                    logger.LogError(nee, "ClientController/EditIndividual");
+                    return BadRequest();
+                }
+        }
+
+        [NotEmployee]
+        [HttpGet]
+
+        public async Task<IActionResult> EditCorporative(Guid dataId)
+        {
+                try
+                {
+                    var model = await clientService.GetDataOfCorporativeClientFormByIdAsync(dataId);
+
+                    return View(model);
+                }
+                catch (NotDataOfClientException nde)
+                {
+                    logger.LogError(nde, "ClientController/EditCorporative");
+                    return BadRequest();
+                }
+        }
+
+        [NotEmployee]
+        [HttpPost]
+
+        public async Task<IActionResult> EditCorporative(
+            Guid dataId
+            , CorporativeDataClentFormModel corporativeDataModel)
+        {
+            
+                if (await clientService.CountryExistsAsync(corporativeDataModel.NationalityId) == false)
+                {
+                    ModelState.AddModelError(nameof(corporativeDataModel.NationalityId), NationalityRestricted);
+                }
+
+                if (ModelState.IsValid == false)
+                {
+                    corporativeDataModel.Nationalities = await clientService.AllCountriesAsync();
+                    return View(corporativeDataModel);
+                }
+
+                try
+                {
+                    await clientService.EditDataOfCorporativeClientAsync(dataId, corporativeDataModel);
+
+                    return RedirectToAction(nameof(DetailsDataOfClient), new { userId = Guid.Parse(User.Id()) });
+                }
+                catch (NotEmployeeException nee)
+                {
+                    logger.LogError(nee, "ClientController/EditCorporative");
+                    return BadRequest();
+                }            
+        }
+
+        [NotEmployee]
+        [HttpGet]
+
+        public async Task<IActionResult> Delete(Guid dataId)
+        {
+            try
+            {
+                var model = await clientService.DetailsOfDataOnClientAsync(Guid.Parse(User.Id()));
+                return View(model);
+            }
+            catch (NotDataOfClientException nee)
+            {
+                logger.LogError(nee, "ClientController/Delete");
+                return BadRequest();
+            }
+        }
+
+        [NotEmployee]
+        [HttpPost]
+
+        public async Task<IActionResult> Delete(DataOfClientServiceModel model, Guid dataId)
+        {
+            try
+            {
+                await clientService.DeleteAsync(dataId);
+
+                return RedirectToAction(nameof(Index), "Home");
+            }
+            catch (NotDataOfClientException nee)
+            {
+                logger.LogError(nee, "ClientController/Delete");
+                return BadRequest();
+            }
+        }
     }
 }

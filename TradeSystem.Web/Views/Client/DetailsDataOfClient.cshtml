@@ -1,5 +1,5 @@
 ﻿@model DataOfClientServiceModel
-@inject IClientService clientServise
+@inject IClientService clientService
 @inject IEmployeeService employeeService
 
 @{
@@ -26,7 +26,7 @@ else if (Model.DataChecking.ToString() == "Accepted")
                asp-route-filename="@Model.UserId.@Model.ExtentionIdCardFile">Download</a>
         </div>
         <div class="card col-8 border-0">
-           @if(await clientServise.ExistDataIndividualClientByUserIdAsync(Model.UserId))
+           @if(await clientService.ExistDataIndividualClientByUserIdAsync(Model.UserId))
             {
                 <p style="font-size:25px;"><u>@Model.Surname</u>, @Model.FirstName @Model.SecondName</p>
                 <p>Nationality: <b>@Model.Nationality</b></p>
@@ -38,7 +38,7 @@ else if (Model.DataChecking.ToString() == "Accepted")
                 <p>National Identity Number: <b>@Model.NationalIdentityNumberIndividual</b></p>
                 <p>DataChecking: <b>@Model.DataChecking</b></p>
             }
-            else if (await clientServise.ExistDataCorporativeClientByUserIdAsync(Model.UserId))
+            else if (await clientService.ExistDataCorporativeClientByUserIdAsync(Model.UserId))
             {
                 <p style="font-size:25px;"><u>@Model.Name</u>, Name Of Representative @Model.NameOfRepresentative</p>
                 <p>Nationality: <b>@Model.Nationality</b></p>
@@ -54,10 +54,21 @@ else if (Model.DataChecking.ToString() == "Accepted")
             <div class="form-inline">
                 @if (this.User?.Identity?.Name != null && this.User.Identity.Name == Model.ApplicationName)
                 {
-                    <a class="btn btn-warning" asp-controller="Client" asp-action="Edit"
-                       asp-route-id="@Model.Id">Edit</a>
-                    <a class="ml-2 btn btn-danger" asp-controller="Client" asp-action="Delete"
-                       asp-route-id="@Model.Id">Delete</a>
+                    @if (await clientService.ExistDataIndividualClientByUserIdAsync(Guid.Parse(User.Id())))
+                    {
+                        <a class="btn btn-warning" asp-controller="Client" asp-action="EditIndividual"
+                           asp-route-dataId="@Model.Id">Edit</a>
+                        <a class="ml-2 btn btn-danger" asp-controller="Client" asp-action="Delete"
+                           asp-route-dataId="@Model.Id">Delete</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-warning" asp-controller="Client" asp-action="EditCorporative"
+                           asp-route-dataId="@Model.Id">Edit</a>
+                        <a class="ml-2 btn btn-danger" asp-controller="Client" asp-action="Delete"
+                           asp-route-dataId="@Model.Id">Delete</a>
+                    }
+
                 }
                 else if (await employeeService.ExistsByUserIdAsync(Guid.Parse(User.Id())))
                 {

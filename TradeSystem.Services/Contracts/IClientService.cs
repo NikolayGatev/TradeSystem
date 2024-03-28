@@ -1,4 +1,5 @@
 ﻿using TradeSystem.Core.Models.Clients;
+using TradeSystem.Data.Models;
 
 namespace TradeSystem.Core.Contracts
 {
@@ -20,6 +21,8 @@ namespace TradeSystem.Core.Contracts
 
         public Task<Guid> CreateDataOfIndividualClientAsync(IndividualDataClentFormModel model, Guid userId);
 
+        public Task<Guid> CreateDataOfCorporativeClientAsync(CorporativeDataClentFormModel model, Guid userId);
+
         public Task<int> GetTownIdAsync(string townName, int countryId);
 
         public Task<Guid?> GetIdOfDataOfIndividualClientByUserIdAsync(Guid userId);
@@ -28,5 +31,14 @@ namespace TradeSystem.Core.Contracts
 
         public Task<DataOfClientServiceModel> DetailsOfDataOnClientAsync(Guid userId);
 
+        public Task<IndividualDataClentFormModel> GetDataOfIdividualClientFormByIdAsync(Guid dataId);
+
+        public Task<CorporativeDataClentFormModel> GetDataOfCorporativeClientFormByIdAsync(Guid dataId);
+
+        public Task EditDataOfCorporativeClientAsync(Guid dataOfClientId, CorporativeDataClentFormModel corporativeDataModel);
+
+        public Task EditDataOfIndividualClientAsync(Guid dataOfClientId, IndividualDataClentFormModel individualDataModel);
+
+        public Task DeleteAsync(Guid dataId);
     }
 }

@@ -1,0 +1,15 @@
+﻿@model CorporativeDataClentFormModel
+@inject IClientService clientService
+
+@{
+    ViewData["Title"] = "Corporative client";
+}
+<h2 class="text-center">@ViewData["Title"]</h2>
+<hr />
+
+<partial name="_DataNewCorporativeClientPartitial" model="@Model" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

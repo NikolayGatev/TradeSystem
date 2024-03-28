@@ -29,19 +29,19 @@ namespace TradeSystem.Data.Configurations.Seed
                 NormalizedEmail = "admin@mail.com"
             };
             user.PasswordHash =
-                hasher.HashPassword(user, "1111");
+                hasher.HashPassword(user, "111111");
             users.Add(user);
 
             user = new ApplicationUser()
             {
                 Id = Guid.Parse("6d5800ce-d726-4fc8-83d9-d6b3ac1f591e"),
-                UserName = "client.com",
-                NormalizedUserName = "client.com",
-                Email = "client.com",
-                NormalizedEmail = "client.com"
+                UserName = "client@gmail.com",
+                NormalizedUserName = "client@gmail.com",
+                Email = "client@gmail.com",
+                NormalizedEmail = "client@gmail.com"
             };
             user.PasswordHash =
-                hasher.HashPassword(user, "1111");
+                hasher.HashPassword(user, "111111");
             users.Add(user);
 
             return users.ToArray();

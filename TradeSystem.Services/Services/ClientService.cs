@@ -8,6 +8,9 @@ using TradeSystem.Data.Models.Enumerations;
 using static TradeSystem.Common.GeneralApplicationConstants;
 using static TradeSystem.Common.ExeptionMessages;
 using TradeSystem.Core.Models.Enums;
+using TradeSystem.Core.Exeptions;
+using Microsoft.AspNetCore.Http;
+using System.Runtime.InteropServices;
 
 
 namespace TradeSystem.Core.Services
@@ -81,32 +84,58 @@ namespace TradeSystem.Core.Services
                 .AnyAsync(c => c.Id == countryId);
         }
 
-        public async Task<Guid> CreateDataOfIndividualClientAsync(IndividualDataClentFormModel model, Guid userId)
+        public async Task<Guid> CreateDataOfCorporativeClientAsync(CorporativeDataClentFormModel model, Guid userId)
         {
-            string path = Path.Combine(Environment.CurrentDirectory, "FilesWhitIdDicuments");
-
-            var file = model.File;
-
-            var identityDoc = new IdentityDocument();
-            identityDoc.Extension = file.FileName.Substring(file.FileName.LastIndexOf('.') + 1);
-
-            string filename = Path.Combine(path, $"{userId.ToString()}.{identityDoc.Extension}");
-
-            using (var filestream = new FileStream(filename, FileMode.Create))
+            DataOfCorporateveClient client = new DataOfCorporateveClient()
             {
-                await file.CopyToAsync(filestream);
+                Name = model.Name,
+                LegalForm = model.LegalForm,
+                NameOfRepresentative = model.NameOfRepresentative,
+                NationalityId = model.NationalityId,
+                DataChecking = 0,
+                Address = model.Address,
+                PhoneNumber = model.PhoneNumber,
+                TownId = await GetTownIdAsync(model.Town.ToUpper().Trim(), model.NationalityId),
+                NationalIdentityNumber = model.NationalIdentityNumber,
+                ApplicationUserId = userId,
+            };
+
+            if(model.File != null )
+            {
+                string path = Path.Combine(Environment.CurrentDirectory, "FilesWhitIdDicuments");
+
+                var file = model.File;
+
+                var identityDoc = new IdentityDocument();
+                identityDoc.Extension = file.FileName.Substring(file.FileName.LastIndexOf('.') + 1);
+
+                string filename = Path.Combine(path, $"{userId.ToString()}.{identityDoc.Extension}");
+
+                using (var filestream = new FileStream(filename, FileMode.Create))
+                {
+                    await file.CopyToAsync(filestream);
+                }
+
+                identityDoc.CreatedOn = DateTime.UtcNow;
+                identityDoc.UserId = userId;
+                identityDoc.RemoteImageUrl = filename;
+
+                client.IdentityDocument = identityDoc;
             }
 
-            identityDoc.CreatedOn = DateTime.UtcNow;
-            identityDoc.UserId = userId;
-            identityDoc.RemoteImageUrl = filename;            
-            
+            await dataCorporativeClientRepozitory.AddAsync(client);
+            await dataCorporativeClientRepozitory.SaveChangesAsync();
+
+            return client.Id;
+        }
+
+        public async Task<Guid> CreateDataOfIndividualClientAsync(IndividualDataClentFormModel model, Guid userId)
+        {            
             DataOfIndividualClient client = new DataOfIndividualClient()
             {                
                 FirstName = model.FirstName,
                 SecondName = model.SecondName,
                 Surname = model.Surname,
-                IdentityDocument = identityDoc,
                 NationalityId = model.NationalityId,
                 DataChecking = 0,
                 Address = model.Address,
@@ -117,10 +146,82 @@ namespace TradeSystem.Core.Services
                 ApplicationUserId = userId,
             };
 
+            if (model.File != null)
+            {
+                string path = Path.Combine(Environment.CurrentDirectory, "FilesWhitIdDicuments");
+
+                var file = model.File;
+
+                var identityDoc = new IdentityDocument();
+                identityDoc.Extension = file.FileName.Substring(file.FileName.LastIndexOf('.') + 1);
+
+                string filename = Path.Combine(path, $"{userId.ToString()}.{identityDoc.Extension}");
+
+                using (var filestream = new FileStream(filename, FileMode.Create))
+                {
+                    await file.CopyToAsync(filestream);
+                }
+
+                identityDoc.CreatedOn = DateTime.UtcNow;
+                identityDoc.UserId = userId;
+                identityDoc.RemoteImageUrl = filename;
+
+                client.IdentityDocument = identityDoc;
+            }
+
             await dataIndividualClientRepozitory.AddAsync(client);
             await dataIndividualClientRepozitory.SaveChangesAsync();
 
             return client.Id;
+        }
+
+        public async Task DeleteAsync(Guid dataId)
+        {            
+            var isCorporativ = await ExixtByCorporativeClientDataIdAsync(dataId);
+            var Isindividua = await ExixtByIndividualClientDataIdAsync(dataId);
+
+            if (isCorporativ == false && Isindividua == false)
+            {
+                throw new NotDataOfClientException(MessageNotDataException);
+            }
+            var clientId = isCorporativ
+                ? await dataCorporativeClientRepozitory.All().Where(d => d.Id == dataId)
+                    .Select(d => d.ClientId)
+                    .FirstOrDefaultAsync()
+                : await dataIndividualClientRepozitory.All().Where(d => d.Id == dataId)
+                    .Select(d => d.ClientId)
+                    .FirstOrDefaultAsync();
+
+            if(clientId != null)
+            {
+                var orders = await orderRepozitory.All().Where(o => o.ClientId == clientId).ToListAsync();
+
+                foreach(var order in orders)
+                {
+                    order.IsDeleted = true;
+                }
+
+                await orderRepozitory.SaveChangesAsync();
+
+                var client = await clientRepozitory.All().FirstAsync(c => c.Id == clientId);
+                clientRepozitory.Delete(client);
+                await clientRepozitory.SaveChangesAsync();
+            }
+
+            if(isCorporativ)
+            {
+                var data = await dataCorporativeClientRepozitory.All().FirstAsync(d => d.Id == dataId);
+
+                dataCorporativeClientRepozitory.Delete(data);
+                await dataCorporativeClientRepozitory.SaveChangesAsync();
+            }
+            else if(Isindividua)
+            {
+                var data = await dataIndividualClientRepozitory.All().FirstAsync(d => d.Id == dataId);
+
+                dataIndividualClientRepozitory.Delete(data);
+                await dataIndividualClientRepozitory.SaveChangesAsync();
+            }
         }
 
         public async Task<DataOfClientServiceModel>  DetailsOfDataOnClientAsync(Guid userId)
@@ -149,8 +250,8 @@ namespace TradeSystem.Core.Services
                         PhoneNumber = d.PhoneNumber,
                         DateOfBirth = d.DateOfBirth.ToString(DateFormat),
                         NationalIdentityNumberIndividual = d.NationalIdentityNumber,
-                        UrlToIDCart = d.IdentityDocument.RemoteImageUrl,
-                        ExtentionIdCardFile = d.IdentityDocument.Extension,
+                        UrlToIDCart = d.IdentityDocument != null ? d.IdentityDocument.RemoteImageUrl : null,
+                        ExtentionIdCardFile = d.IdentityDocument != null ? d.IdentityDocument.Extension : null,
                     })
                     .FirstAsync();
 
@@ -176,8 +277,8 @@ namespace TradeSystem.Core.Services
                         NationalIdentityNumber = d.NationalIdentityNumber,
                         LegalForm = d.LegalForm,
                         NameOfRepresentative = d.NameOfRepresentative,
-                        UrlToIDCart = d.IdentityDocument.RemoteImageUrl,
-                        ExtentionIdCardFile = d.IdentityDocument.Extension,
+                        UrlToIDCart = d.IdentityDocument != null ? d.IdentityDocument.RemoteImageUrl : null,
+                        ExtentionIdCardFile = d.IdentityDocument != null ? d.IdentityDocument.Extension : null,
                         DataChecking = d.DataChecking,
                     })
                     .FirstAsync();
@@ -186,6 +287,53 @@ namespace TradeSystem.Core.Services
             }
 
             throw new UnauthorizedAccessException(MessageUnauthoriseActionException);
+        }
+
+        public async Task EditDataOfCorporativeClientAsync(Guid dataOfClientId, CorporativeDataClentFormModel corporativeDataModel)
+        {
+            var data = await dataCorporativeClientRepozitory.All()
+                .Where(d => d.Id == dataOfClientId)
+                .FirstOrDefaultAsync();
+
+            if (data == null)
+            {
+                throw new NotDataOfClientException(MessageNotDataException);
+            }
+
+            data.Name = corporativeDataModel.Name;
+            data.LegalForm = corporativeDataModel.LegalForm;
+            data.NameOfRepresentative = corporativeDataModel.NameOfRepresentative;
+            data.NationalityId = corporativeDataModel.NationalityId;
+            data.TownId = await GetTownIdAsync(corporativeDataModel.Town.ToUpper().Trim(), corporativeDataModel.NationalityId);
+            data.Address = corporativeDataModel.Address;
+            data.PhoneNumber = corporativeDataModel.PhoneNumber;
+            data.NationalIdentityNumber = corporativeDataModel.NationalIdentityNumber;
+
+            await employeeRepozitory.SaveChangesAsync();
+        }
+
+        public async Task EditDataOfIndividualClientAsync(Guid dataOfClientId, IndividualDataClentFormModel individualDataModel)
+        {
+            var data = await dataIndividualClientRepozitory.All()
+               .Where(d => d.Id == dataOfClientId)
+               .FirstOrDefaultAsync();
+
+            if (data == null)
+            {
+                throw new NotDataOfClientException(MessageNotDataException);
+            }
+
+            data.FirstName = individualDataModel.FirstName;
+            data.SecondName = individualDataModel.SecondName;
+            data.Surname = individualDataModel.Surname;
+            data.DateOfBirth = DateTime.ParseExact(individualDataModel.DateOfBirth, DateFormat, CultureInfo.InvariantCulture);
+            data.NationalityId = individualDataModel.NationalityId;
+            data.TownId = await GetTownIdAsync(individualDataModel.Town.ToUpper().Trim(), individualDataModel.NationalityId);
+            data.Address = individualDataModel.Address;
+            data.PhoneNumber = individualDataModel.PhoneNumber;
+            data.NationalIdentityNumber = individualDataModel.NationalIdentityNumber;
+
+            await employeeRepozitory.SaveChangesAsync();
         }
 
         public async Task<bool> ExistClientByUserIdAsync(Guid userId)
@@ -232,6 +380,63 @@ namespace TradeSystem.Core.Services
                 .AnyAsync(d => d.Id == dataOfIndividualId);
         }
 
+        public async Task<CorporativeDataClentFormModel> GetDataOfCorporativeClientFormByIdAsync(Guid dataId)
+        {
+            if(await ExixtByCorporativeClientDataIdAsync(dataId) == false)
+            {
+                throw new NotDataOfClientException(MessageNotDataException);
+            }
+
+            var data =  await dataCorporativeClientRepozitory.AllAsNoTracking()
+                .Where(d => d.Id == dataId)
+                .FirstAsync();
+
+            var model = new CorporativeDataClentFormModel()
+            {
+                NationalityId = data.NationalityId,
+                Address = data.Address,
+                Town = await townRepozitory.AllAsNoTracking().Where(t => t.Id == data.TownId).Select(t => t.Name).FirstAsync(),
+                PhoneNumber = data.PhoneNumber,
+                NationalIdentityNumber = data.NationalIdentityNumber,
+                Name = data.Name,
+                LegalForm = data.LegalForm,
+                NameOfRepresentative = data.NameOfRepresentative,
+            };
+
+            model.Nationalities = await AllCountriesAsync();
+
+            return model;
+        }
+
+        public async Task<IndividualDataClentFormModel> GetDataOfIdividualClientFormByIdAsync(Guid dataId)
+        {
+            if (await ExixtByIndividualClientDataIdAsync(dataId) == false)
+            {
+                throw new NotDataOfClientException(MessageNotDataException);
+            }
+
+            var data = await dataIndividualClientRepozitory.AllAsNoTracking()
+                .Where(d => d.Id == dataId)
+                .FirstAsync();
+
+            var model = new IndividualDataClentFormModel()
+            {
+                NationalityId = data.NationalityId,
+                Address = data.Address,
+                Town = await townRepozitory.AllAsNoTracking().Where(t => t.Id == data.TownId).Select(t => t.Name).FirstAsync(),
+                PhoneNumber = data.PhoneNumber,
+                NationalIdentityNumber = data.NationalIdentityNumber,
+                FirstName = data.FirstName,
+                SecondName = data.SecondName,
+                Surname = data.Surname,
+                DateOfBirth = data.DateOfBirth.ToString(DateFormat),
+            };
+
+            model.Nationalities = await AllCountriesAsync();
+
+            return model;
+        }
+
         public async Task<Guid?> GetIdOfDataOfCorporativelClientByUserIdAsync(Guid userId)
         {
             return (await dataCorporativeClientRepozitory.AllAsNoTracking()
@@ -240,8 +445,8 @@ namespace TradeSystem.Core.Services
 
         public async Task<Guid?> GetIdOfDataOfIndividualClientByUserIdAsync(Guid userId)
         {
-            return (await dataIndividualClientRepozitory.AllAsNoTracking()
-                .FirstOrDefaultAsync(c => c.ApplicationUserId == userId))?.Id;
+            return (await dataIndividualClientRepozitory.AllAsNoTracking().Where(c => c.ApplicationUserId == userId)
+                .FirstOrDefaultAsync())?.Id;
         }
 
         public async Task<int> GetTownIdAsync(string townName, int countryId)
