@@ -1,0 +1,29 @@
+﻿@model OrderDetailsServiceModel
+@inject IEmployeeService employeeService
+@inject IClientService clientService
+
+@{
+    ViewBag.Title = "Order Details";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<div class="container" style="display:inline">
+    <div class="row">
+        <div class="card col-8 border-0">
+            <p style="font-size:25px;"><u>@Model.FinancialInstrumentName</u></p>
+            <p>Initial valume: <b>@Model.InitialVolume</b></p>
+            <p>Current valume: <b>@Model.UnfulfilledVolume</b></p>
+            <p>Prece per lot: <b>@Model.Price BGN</b></p>
+
+            @if (await employeeService.ExistsByUserIdAsync(Guid.Parse(User.Id()))
+            || await clientService.ExistClientByUserIdAsync(Guid.Parse(User.Id())))
+            {                                    
+               <a class="ml-2 btn btn-danger" asp-controller="Order" asp-action="Delete"
+                  asp-route-orderId="@Model.Id">Delete</a>
+                
+            }
+        </div>
+    </div>
+</div>

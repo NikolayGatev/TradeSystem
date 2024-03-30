@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TradeSystem.Core.Models.Clients;
-using TradeSystem.Data.Models.Enumerations;
 
 namespace TradeSystem.Core.Models.Employees
 {

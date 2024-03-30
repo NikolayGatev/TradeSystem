@@ -15,6 +15,8 @@ namespace TradeSystem.Core.Contracts
 
         public Task<bool> ExistClientByUserIdAsync(Guid userId);
 
+        public Task<Guid?> GetClientByUserIdAsync(Guid userId);
+
         public Task<IEnumerable<CountryServiceModel>> AllCountriesAsync();
 
         public Task<bool> CountryExistsAsync(int countryId);
@@ -40,5 +42,7 @@ namespace TradeSystem.Core.Contracts
         public Task EditDataOfIndividualClientAsync(Guid dataOfClientId, IndividualDataClentFormModel individualDataModel);
 
         public Task DeleteAsync(Guid dataId);
+
+        public Task<bool> ExistClientByIdAsync(Guid clientId);
     }
 }

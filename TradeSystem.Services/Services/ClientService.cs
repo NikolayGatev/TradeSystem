@@ -1,16 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using TradeSystem.Core.Contracts;
+using TradeSystem.Core.Exeptions;
 using TradeSystem.Core.Models.Clients;
+using TradeSystem.Core.Models.Enums;
 using TradeSystem.Data.Common;
 using TradeSystem.Data.Models;
-using TradeSystem.Data.Models.Enumerations;
-using static TradeSystem.Common.GeneralApplicationConstants;
 using static TradeSystem.Common.ExceptionMessages;
-using TradeSystem.Core.Models.Enums;
-using TradeSystem.Core.Exeptions;
-using Microsoft.AspNetCore.Http;
-using System.Runtime.InteropServices;
+using static TradeSystem.Common.GeneralApplicationConstants;
 
 
 namespace TradeSystem.Core.Services
@@ -336,6 +333,11 @@ namespace TradeSystem.Core.Services
             await employeeRepozitory.SaveChangesAsync();
         }
 
+        public async Task<bool> ExistClientByIdAsync(Guid clientId)
+        {
+            return await clientRepozitory.AllAsNoTrackingWithDeleted().AnyAsync(c => c.Id == clientId);
+        }
+
         public async Task<bool> ExistClientByUserIdAsync(Guid userId)
         {
             var result = false;
@@ -378,6 +380,28 @@ namespace TradeSystem.Core.Services
         {
             return await dataIndividualClientRepozitory.AllAsNoTracking()
                 .AnyAsync(d => d.Id == dataOfIndividualId);
+        }
+
+        public async Task<Guid?> GetClientByUserIdAsync(Guid userId)
+        {
+            Guid? result = new Guid();
+
+            if (await ExistDataCorporativeClientByUserIdAsync(userId))
+            {
+                result = await dataCorporativeClientRepozitory.AllAsNoTracking()
+                    .Where(d => d.ApplicationUserId == userId && d.ClientId != null)
+                    .Select(d => d.ClientId)
+                    .FirstOrDefaultAsync();
+            }
+            else if (await ExistDataIndividualClientByUserIdAsync(userId))
+            {
+                result = await dataIndividualClientRepozitory.AllAsNoTracking()
+                    .Where(d => d.ApplicationUserId == userId && d.ClientId != null)
+                    .Select(d => d.ClientId)
+                    .FirstOrDefaultAsync();
+            }
+
+            return result;
         }
 
         public async Task<CorporativeDataClentFormModel> GetDataOfCorporativeClientFormByIdAsync(Guid dataId)

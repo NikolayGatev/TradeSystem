@@ -1,0 +1,31 @@
+﻿@model OrderDetailsServiceModel
+
+<tr>
+    <th>@Model.FinancialInstrumentName</th>
+    <td>@Model.Price</td>
+    <td>@Model.InitialVolume</td>
+    <td>@Model.UnfulfilledVolume</td>
+    <td>@if (Model.IsBid)
+        {
+            <p>Buy</p>
+        }
+        else
+        {
+            <p>Sell</p>
+        }
+    </td>
+    <td>
+        @if (Model.IsDelete)
+        {
+            <p>Non Active</p>
+        }
+        else
+        {
+            <p>Active</p>
+        }
+    </td>
+    <td>
+        <a asp-controller="Order" asp-action="Details" asp-route-orderId="@Model.Id"
+           class="btn btn-success">Details</a>
+    </td>
+</tr>

@@ -132,6 +132,7 @@ namespace TradeSystem.Web.Controllers
         }
 
         [HttpGet]
+        [MustBeEmployee]
 
         public async Task<IActionResult> Delete(int id)
         {

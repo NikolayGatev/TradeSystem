@@ -158,7 +158,7 @@ namespace TradeSystem.Core.Services
 
         public async Task<FinancialInstrument?> GetFinancialInstrumentByIdAsync(int Id)
         {
-            return await finInstrRepozitory.All().Where(f => f.Id == Id).FirstAsync();
+            return await finInstrRepozitory.All().Where(f => f.Id == Id).FirstOrDefaultAsync();
         }
 
         public async Task<FinancialInstrumentQueryServiceModel> AllAsyn(

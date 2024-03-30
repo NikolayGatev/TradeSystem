@@ -45,7 +45,10 @@
             public const int MaxNumberOfDigits = 18;
             public const int FloatingPointPrecision = 5;
             public const string PriceMaxLegnth = "2000.00";
-            public const string PriceMinLegnth = "0.00";
+            public const string PriceMinLegnth = "0.01";
+
+            public const int VolumeMaxLegnth = 500;
+            public const int VolumeMinLegnth = 1;
         }
 
         public static class CountryAndTownConstants
