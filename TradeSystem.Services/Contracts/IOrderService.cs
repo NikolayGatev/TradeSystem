@@ -28,5 +28,7 @@ namespace TradeSystem.Core.Contracts
             , int ordersPerPage = 1);
 
         Task<IEnumerable<string>> AllClintsIdAsync(Guid userId);
+
+        Task<bool> NotEnoughMoneyAsync(Guid? clientId, decimal sum);
     }
 }

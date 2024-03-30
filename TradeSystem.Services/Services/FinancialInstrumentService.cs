@@ -70,7 +70,7 @@ namespace TradeSystem.Core.Services
             if(await finInstrRepozitory.AllAsNoTracking().AnyAsync(f => f.ISIN == model.ISIN 
                                                                     || f.Name == model.Name))
             {
-                throw new ExistFinancialInstrumentWithThisNameOrISIN(MessageNotVacantNameOrISIN);
+                throw new NonExistFinancialInstrumentWithThisNameOrISIN(MessageNotVacantNameOrISIN);
             }
 
             var finInstrument = new FinancialInstrument()

@@ -53,7 +53,7 @@ namespace TradeSystem.Web.Controllers
             {
                 id = await finInsinstrumentService.CreateAsync(model);
             }
-            catch (ExistFinancialInstrumentWithThisNameOrISIN efi)
+            catch (NonExistFinancialInstrumentWithThisNameOrISIN efi)
             {
                 logger.LogError(efi, "FinacialInstrumentController/Add");
 

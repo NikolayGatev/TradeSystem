@@ -119,7 +119,7 @@ namespace TradeSystem.Core.Services
 
             if (model == null)
             {
-                throw new NotEmployeeException(MessageNotEmployeeException);
+                throw new NonEmployeeException(MessageNotEmployeeException);
             }
             return model;
         }
@@ -199,6 +199,7 @@ namespace TradeSystem.Core.Services
                 {
                     Id = d.Id,
                     UserId = d.ApplicationUserId,
+                    ClientId = d.ClientId,
                     DataChecking = d.DataChecking.ToString(),
                     ApplicationName = d.ApplicationUser.UserName,
                     Nationality = d.Nationality.Name,
@@ -222,6 +223,7 @@ namespace TradeSystem.Core.Services
                {
                    Id = d.Id,
                    UserId = d.ApplicationUserId,
+                   ClientId = d.ClientId,
                    DataChecking = d.DataChecking.ToString(),
                    ApplicationName = d.ApplicationUser.UserName,
                    Nationality = d.Nationality.Name,
@@ -274,7 +276,7 @@ namespace TradeSystem.Core.Services
             if (await clientService.ExistDataCorporativeClientByUserIdAsync(userId) == false
                 && await clientService.ExistDataIndividualClientByUserIdAsync(userId) == false)
             {
-                throw new NotDataOfClientException(MessageNotDataException);
+                throw new NonDataOfClientException(MessageNotDataException);
             }
 
             return await clientService.DetailsOfDataOnClientAsync(userId);
@@ -285,7 +287,7 @@ namespace TradeSystem.Core.Services
             if (await clientService.ExistDataCorporativeClientByUserIdAsync(userClientId) == false
                 && await clientService.ExistDataIndividualClientByUserIdAsync(userClientId) == false)
             {
-                throw new NotDataOfClientException(MessageNotDataException);
+                throw new NonDataOfClientException(MessageNotDataException);
             }
 
             var dataId = await clientService.GetIdOfDataOfCorporativelClientByUserIdAsync(userClientId)
@@ -319,7 +321,7 @@ namespace TradeSystem.Core.Services
             if (await clientService.ExistDataCorporativeClientByUserIdAsync(userClientId) == false
                && await clientService.ExistDataIndividualClientByUserIdAsync(userClientId) == false)
             {
-                throw new NotDataOfClientException(MessageNotDataException);
+                throw new NonDataOfClientException(MessageNotDataException);
             }
 
             var dataId = await clientService.GetIdOfDataOfCorporativelClientByUserIdAsync(userClientId)
@@ -386,7 +388,7 @@ namespace TradeSystem.Core.Services
 
             if (employee == null)
             {
-                throw new NotEmployeeException(MessageNotEmployeeException);
+                throw new NonEmployeeException(MessageNotEmployeeException);
             }
 
             employee.Divisions = await AllDivisionsAsync();            
@@ -402,7 +404,7 @@ namespace TradeSystem.Core.Services
 
             if (employee == null)
             {
-                throw new NotEmployeeException(MessageNotEmployeeException);
+                throw new NonEmployeeException(MessageNotEmployeeException);
             }
 
             employee.FirstName = model.FirstName;
@@ -417,7 +419,7 @@ namespace TradeSystem.Core.Services
         {
             if(await ExixtByEmployeeIdAsync(employeeId) == false)
             {
-                throw new NotEmployeeException(MessageNotEmployeeException);
+                throw new NonEmployeeException(MessageNotEmployeeException);
             }
             var entity = await employeeRepozitory.All()
                 .FirstAsync(e => e.Id == employeeId);

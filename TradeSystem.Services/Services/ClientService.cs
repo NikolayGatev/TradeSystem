@@ -179,7 +179,7 @@ namespace TradeSystem.Core.Services
 
             if (isCorporativ == false && Isindividua == false)
             {
-                throw new NotDataOfClientException(MessageNotDataException);
+                throw new NonDataOfClientException(MessageNotDataException);
             }
             var clientId = isCorporativ
                 ? await dataCorporativeClientRepozitory.All().Where(d => d.Id == dataId)
@@ -219,6 +219,28 @@ namespace TradeSystem.Core.Services
                 dataIndividualClientRepozitory.Delete(data);
                 await dataIndividualClientRepozitory.SaveChangesAsync();
             }
+        }
+
+        public async Task<ClientAcountServiceModel> DetailsOfAcountOnClientAsync(Guid userId)
+        {
+            var clientId = await GetClientIdByUserIdAsync(userId);
+
+            if(clientId == null)
+            {
+                throw new UnauthorizedAccessException(MessageUnauthoriseActionException);
+            }
+
+            var model = await clientRepozitory.AllAsNoTrackingWithDeleted()
+                .Where(d => d.Id == clientId)
+                .Select(c => new ClientAcountServiceModel()
+                {
+                    Balance = c.Balance,
+                    BlockedSum = c.BlockedSum,
+                    AllAmountDeposited = c.AllDepositedsMoney.Sum(d => d.Amount),
+                })
+                .FirstAsync();
+
+            return model;
         }
 
         public async Task<DataOfClientServiceModel>  DetailsOfDataOnClientAsync(Guid userId)
@@ -294,7 +316,7 @@ namespace TradeSystem.Core.Services
 
             if (data == null)
             {
-                throw new NotDataOfClientException(MessageNotDataException);
+                throw new NonDataOfClientException(MessageNotDataException);
             }
 
             data.Name = corporativeDataModel.Name;
@@ -317,7 +339,7 @@ namespace TradeSystem.Core.Services
 
             if (data == null)
             {
-                throw new NotDataOfClientException(MessageNotDataException);
+                throw new NonDataOfClientException(MessageNotDataException);
             }
 
             data.FirstName = individualDataModel.FirstName;
@@ -382,7 +404,7 @@ namespace TradeSystem.Core.Services
                 .AnyAsync(d => d.Id == dataOfIndividualId);
         }
 
-        public async Task<Guid?> GetClientByUserIdAsync(Guid userId)
+        public async Task<Guid?> GetClientIdByUserIdAsync(Guid userId)
         {
             Guid? result = new Guid();
 
@@ -408,7 +430,7 @@ namespace TradeSystem.Core.Services
         {
             if(await ExixtByCorporativeClientDataIdAsync(dataId) == false)
             {
-                throw new NotDataOfClientException(MessageNotDataException);
+                throw new NonDataOfClientException(MessageNotDataException);
             }
 
             var data =  await dataCorporativeClientRepozitory.AllAsNoTracking()
@@ -436,7 +458,7 @@ namespace TradeSystem.Core.Services
         {
             if (await ExixtByIndividualClientDataIdAsync(dataId) == false)
             {
-                throw new NotDataOfClientException(MessageNotDataException);
+                throw new NonDataOfClientException(MessageNotDataException);
             }
 
             var data = await dataIndividualClientRepozitory.AllAsNoTracking()

@@ -12,6 +12,8 @@ namespace TradeSystem.Core.Models.Employees
 
         [Required]
 
+        public Guid? ClientId { get; set; }
+
         public string DataChecking { get; set; } = null!;
 
         [Required]

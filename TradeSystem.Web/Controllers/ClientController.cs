@@ -162,7 +162,7 @@ namespace TradeSystem.Web.Controllers
 
                     return View(model);
                 }
-                catch (NotDataOfClientException nde)
+                catch (NonDataOfClientException nde)
                 {
                     logger.LogError(nde, "ClientController/EditIndividual");
                     return BadRequest();
@@ -194,7 +194,7 @@ namespace TradeSystem.Web.Controllers
 
                     return RedirectToAction(nameof(DetailsDataOfClient), new { userId = Guid.Parse(User.Id()) });
                 }
-                catch (NotEmployeeException nee)
+                catch (NonEmployeeException nee)
                 {
                     logger.LogError(nee, "ClientController/EditIndividual");
                     return BadRequest();
@@ -212,7 +212,7 @@ namespace TradeSystem.Web.Controllers
 
                     return View(model);
                 }
-                catch (NotDataOfClientException nde)
+                catch (NonDataOfClientException nde)
                 {
                     logger.LogError(nde, "ClientController/EditCorporative");
                     return BadRequest();
@@ -244,7 +244,7 @@ namespace TradeSystem.Web.Controllers
 
                     return RedirectToAction(nameof(DetailsDataOfClient), new { userId = Guid.Parse(User.Id()) });
                 }
-                catch (NotEmployeeException nee)
+                catch (NonEmployeeException nee)
                 {
                     logger.LogError(nee, "ClientController/EditCorporative");
                     return BadRequest();
@@ -261,7 +261,7 @@ namespace TradeSystem.Web.Controllers
                 var model = await clientService.DetailsOfDataOnClientAsync(Guid.Parse(User.Id()));
                 return View(model);
             }
-            catch (NotDataOfClientException nee)
+            catch (NonDataOfClientException nee)
             {
                 logger.LogError(nee, "ClientController/Delete");
                 return BadRequest();
@@ -279,10 +279,27 @@ namespace TradeSystem.Web.Controllers
 
                 return RedirectToAction(nameof(Index), "Home");
             }
-            catch (NotDataOfClientException nee)
+            catch (NonDataOfClientException nee)
             {
                 logger.LogError(nee, "ClientController/Delete");
                 return BadRequest();
+            }
+        }
+
+        [HttpGet]
+
+        public async Task<IActionResult> DetailsAcauntOfClient(Guid? userId)
+        {
+            try
+            {
+                var model = await clientService.DetailsOfAcountOnClientAsync(userId ?? Guid.Parse(User.Id()));
+
+                return View(model);
+            }
+            catch (UnauthorizedAccessException uae)
+            {
+                logger.LogError(uae, "ClientController/DetailsDataOfClient");
+                return Unauthorized();
             }
         }
     }

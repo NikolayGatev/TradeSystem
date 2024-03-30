@@ -53,7 +53,20 @@ namespace TradeSystem.Web.Controllers
                 return View(model);
             }
 
-            var clientId = await clientService.GetClientByUserIdAsync(Guid.Parse(User.Id()));
+            var clientId = await clientService.GetClientIdByUserIdAsync(Guid.Parse(User.Id()));
+
+            try
+            {
+                if(await orderService.NotEnoughMoneyAsync(clientId, (model.Price * model.InitialVolume)))
+                {
+
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
 
             Guid id;
 
@@ -61,7 +74,7 @@ namespace TradeSystem.Web.Controllers
             {
                 id = await orderService.CreateAsync(model, clientId);
             }
-            catch (ExistFinancialInstrumentWithThisNameOrISIN efi)
+            catch (NonExistFinancialInstrumentWithThisNameOrISIN efi)
             {
                 logger.LogError(efi, "OrderController/Add");
 
@@ -166,21 +179,30 @@ namespace TradeSystem.Web.Controllers
         {
             var userId = Guid.Parse(User.Id());
 
-            var model = await orderService.AllAsyn(
+            try
+            {
+                var model = await orderService.AllAsyn(
                 userId
-                ,query.ClientAccountId
-                ,query.IsBid
-                ,query.IsNotActive
-                ,query.ISIN
+                , query.ClientAccountId
+                , query.IsBid
+                , query.IsNotActive
+                , query.ISIN
                 , query.SearchTerm
                 , query.Sorting
                 , query.CurrentPage
                 , query.OrdersPerPage);
 
-            query.TotalOrdersCount = model.TotalOrdersCount;
-            query.Orders = model.Orders;
-            query.ISINs = await financialInstrumentService.AllISINsAsync();
-            query.ClientAccountIds = await orderService.AllClintsIdAsync(userId);
+                query.TotalOrdersCount = model.TotalOrdersCount;
+                query.Orders = model.Orders;
+                query.ISINs = await financialInstrumentService.AllISINsAsync();
+                query.ClientAccountIds = await orderService.AllClintsIdAsync(userId);
+            }
+            catch (UnauthoriseActionException ua)
+            {
+                logger.LogError(ua, "OrderController/Delete");
+
+                RedirectToAction(nameof(Index), "Home");
+            }
 
             return View(query);
         }

@@ -18,5 +18,17 @@
         <a asp-controller="Client" asp-action="DetailsDataOfClient" asp-route-userId="@Model.UserId"
          class="btn btn-success">Details</a>
     </td>
+    <td>
+        @if(Model.ClientId != null)
+        {
+            <a asp-controller="Client" asp-action="DetailsAcauntOfClient" asp-route-userId="@Model.UserId"
+            class="btn btn-success">AcountDetails</a>
+        }
+        else
+        {
+            <p>Not acount</p>
+        }
+
+    </td>
 </tr>
 

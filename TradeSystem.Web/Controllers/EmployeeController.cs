@@ -79,7 +79,7 @@ namespace TradeSystem.Web.Controllers
 
                 return View(model);
             }
-            catch (NotEmployeeException nee)
+            catch (NonEmployeeException nee)
             {
                 logger.LogError(nee, "EmployeeController/EmployeeDetails");
                 return BadRequest();
@@ -118,7 +118,7 @@ namespace TradeSystem.Web.Controllers
 
                 return RedirectToAction(nameof(AllDataOfClients));
             }
-            catch (NotDataOfClientException nde)
+            catch (NonDataOfClientException nde)
             {
                 logger.LogError(nde, "EmployeeController/Reject");
                 return BadRequest();
@@ -135,7 +135,7 @@ namespace TradeSystem.Web.Controllers
 
                 return RedirectToAction(nameof(AllDataOfClients));
             }
-            catch (NotDataOfClientException nde)
+            catch (NonDataOfClientException nde)
             {
                 logger.LogError(nde, "EmployeeController/Reject");
                 return BadRequest();
@@ -152,7 +152,7 @@ namespace TradeSystem.Web.Controllers
                 var model = await employeeService.GetEmployeeFormByIdAsync(employeeId);
                 return View(model);
             }
-            catch (NotEmployeeException nee)
+            catch (NonEmployeeException nee)
             {
                 logger.LogError(nee, "EmployeeController/Edit");
                 return BadRequest();
@@ -182,7 +182,7 @@ namespace TradeSystem.Web.Controllers
 
                 return RedirectToAction(nameof(EmployeeDetails), new { employeeId });
             }
-            catch (NotEmployeeException nee)
+            catch (NonEmployeeException nee)
             {
                 logger.LogError(nee, "EmployeeController/Edit");
                 return BadRequest();
@@ -199,7 +199,7 @@ namespace TradeSystem.Web.Controllers
                 var model = await employeeService.DetailsOfEmployeeByIdAsync(employeeId);
                 return View(model);
             }
-            catch (NotEmployeeException nee)
+            catch (NonEmployeeException nee)
             {
                 logger.LogError(nee, "EmployeeController/Edit");
                 return BadRequest();
@@ -217,7 +217,7 @@ namespace TradeSystem.Web.Controllers
 
                 return RedirectToAction(nameof(Index), "Home");
             }
-            catch (NotEmployeeException nee)
+            catch (NonEmployeeException nee)
             {
                 logger.LogError(nee, "EmployeeController/Delete");
                 return BadRequest();

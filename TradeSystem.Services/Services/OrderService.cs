@@ -85,7 +85,7 @@ namespace TradeSystem.Core.Services
         {
             if (await finInstrRepozitory.AllAsNoTracking().AnyAsync(f => f.Id == model.FinancialInstrumentId) == false)
             {
-                throw new NotFinancialInstrumentException(MessageNotFinancialInstrumentException);
+                throw new NonFinancialInstrumentException(MessageNotFinancialInstrumentException);
             }
 
             if(clientId == null)
@@ -112,7 +112,8 @@ namespace TradeSystem.Core.Services
         public async Task<OrderDetailsServiceModel> GetOrderDetailsByIdAsync(Guid orderId, Guid userId)
         {
             var entity = await GetOrderByIdAsync(orderId);
-            var clientId = await clientService.GetClientByUserIdAsync(userId);
+
+            var clientId = await clientService.GetClientIdByUserIdAsync(userId);
 
             if (entity == null)
             {
@@ -140,16 +141,17 @@ namespace TradeSystem.Core.Services
 
         public async Task<Order?> GetOrderByIdAsync(Guid orderId)
         {
-            return await orderRepozitory.AllAsNoTracking().Where(o => o.Id == orderId)
+            return await orderRepozitory.AllAsNoTrackingWithDeleted().Where(o => o.Id == orderId)
                 .FirstOrDefaultAsync();
         }
 
         public async Task DeleteAsync(Guid orderId, Guid userId)
         {
             var entity = await GetOrderByIdAsync(orderId);
-            var clientId = await clientService.GetClientByUserIdAsync(userId);
+            var clientId = await clientService.GetClientIdByUserIdAsync(userId);
 
-            if (entity == null)
+            if (entity == null
+                || entity.IsDeleted)
             {
                 throw new Exception(MessageNotDataException);
             }
@@ -177,7 +179,7 @@ namespace TradeSystem.Core.Services
             , int currentPage = 1
             , int ordersPerPage = 1)
         {
-            var clientId = await clientService.GetClientByUserIdAsync(userId);
+            var clientId = await clientService.GetClientIdByUserIdAsync(userId);
 
             if (clientId == null
                 && await employeeService.ExistsByUserIdAsync(userId) == false)
@@ -269,7 +271,7 @@ namespace TradeSystem.Core.Services
 
         public async Task<IEnumerable<string>> AllClintsIdAsync(Guid userId)
         {
-            var clientId = await clientService.GetClientByUserIdAsync(userId);
+            var clientId = await clientService.GetClientIdByUserIdAsync(userId);
 
             return clientId != null
                 ? new List<string>() { clientId.ToString() }
@@ -277,6 +279,18 @@ namespace TradeSystem.Core.Services
                 .Select(c => c.Id.ToString())
                 .OrderBy(c => c)
                 .ToListAsync();
+        }
+
+        public async Task<bool> NotEnoughMoneyAsync(Guid? clientId, decimal sum)
+        {
+            if(clientId == null)
+            {
+                throw new UnauthoriseActionException(MessageUnauthoriseActionException);
+            }
+
+            Client client = await clientRepozitory.AllAsNoTracking().Where(c => c.Id == clientId).FirstAsync();
+
+            return client.Balance >= sum;
         }
     }
 }

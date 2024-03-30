@@ -29,6 +29,10 @@ namespace TradeSystem.Data.Models
 
         public decimal Balance { get; set; } = 0;
 
+        [Precision(MaxNumberOfDigits, FloatingPointPrecision)]
+
+        public decimal BlockedSum { get; set; } = 0;
+
         public virtual ICollection<DepositedMoney> AllDepositedsMoney { get; set; } = null!;
 
         public virtual ICollection<Order> Orders { get; set; } = null!;
