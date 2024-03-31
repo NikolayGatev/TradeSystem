@@ -191,7 +191,7 @@ namespace TradeSystem.Core.Services
                 FinInstrumentsSorting.Name => finInstrumentsToShow
                     .OrderBy(f => f.Name)
                     .ThenByDescending(f => f.CreatedOn),
-                FinInstrumentsSorting.Sherholders => finInstrumentsToShow
+                FinInstrumentsSorting.Sharesholders => finInstrumentsToShow
                     .OrderByDescending(f => f.OwnersOfThisInstruments.Count())
                     .ThenByDescending(f => f.CreatedOn),
                 _ => finInstrumentsToShow

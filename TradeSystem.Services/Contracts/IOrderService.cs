@@ -7,7 +7,7 @@ namespace TradeSystem.Core.Contracts
 {
     public interface IOrderService
     {
-        Task<IEnumerable<FinInstrumentServiceModel>> AllFinancialInstrumentsAsync();
+        Task<IEnumerable<FinInstrumentServiceModel>> AllFinancialInstrumentsAsync(Guid? userId);
 
         Task<Guid> CreateAsync(OrderFormModel model, Guid? clientId);
 
@@ -30,5 +30,7 @@ namespace TradeSystem.Core.Contracts
         Task<IEnumerable<string>> AllClintsIdAsync(Guid userId);
 
         Task<bool> NotEnoughMoneyAsync(Guid? clientId, decimal sum);
+
+        Task<decimal> GetBalanceByUserIdAsync(Guid userId);
     }
 }

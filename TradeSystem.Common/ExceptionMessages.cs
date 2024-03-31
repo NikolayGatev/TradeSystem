@@ -11,5 +11,6 @@
         public const string MessageNotVacantNameOrISIN = "The same name or ISIN is other financial instrument!";
 
         public const string MessageNotFinancialInstrumentException = "The financial instrument is missing!";
+
     }
 }

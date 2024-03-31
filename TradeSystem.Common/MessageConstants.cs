@@ -1,6 +1,6 @@
 ﻿namespace TradeSystem.Common
 {
-    public static class MassegeConstants
+    public static class MessageConstants
     {
         public const string RequiredMessage = "The {0} field is required";
 
@@ -13,5 +13,9 @@
         public const string PriceValue = "Price must be a positive number and less than {2} leva";
 
         public const string FileLength = "File size must be more 0 bytes and less {0}";
+
+        public static string ZeroBalance = "Your balace is 0 BGN, to submit an order you must fund your account!";
+
+        public static string DoNotEnoughMoney = "You do not enough momey for this order!";
     }
 }

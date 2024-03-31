@@ -42,11 +42,10 @@ namespace TradeSystem.Data.Models
         [MaxLength(MaxLengthPhoneNumber)]
 
         public string PhoneNumber { get; set; } = null!;
-
-        [Required]
+        
         [ForeignKey(nameof(IdentityDocumentId))]
 
-        public virtual IdentityDocument? IdentityDocument { get; set; } = null!;
+        public virtual IdentityDocument? IdentityDocument { get; set; } 
 
         public Guid? IdentityDocumentId { get; set; }
 

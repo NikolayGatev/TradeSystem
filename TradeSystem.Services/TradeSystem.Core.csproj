@@ -15,4 +15,8 @@
     <ProjectReference Include="..\TradeSystem.Data\TradeSystem.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>

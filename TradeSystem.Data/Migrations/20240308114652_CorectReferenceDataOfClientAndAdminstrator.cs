@@ -383,8 +383,7 @@ namespace TradeSystem.Data.Migrations
                 name: "IdentityDocumentId",
                 table: "DataOfIndividualClients",
                 type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"),
+                nullable: true,
                 oldClrType: typeof(Guid),
                 oldType: "uniqueidentifier",
                 oldNullable: true);
@@ -403,8 +402,7 @@ namespace TradeSystem.Data.Migrations
                 name: "IdentityDocumentId",
                 table: "DataOfCorporateClients",
                 type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"),
+                nullable: true,
                 oldClrType: typeof(Guid),
                 oldType: "uniqueidentifier",
                 oldNullable: true);

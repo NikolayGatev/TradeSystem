@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TradeSystem.Core.Attributes;
 using static TradeSystem.Common.GeneralApplicationConstants;
-using static TradeSystem.Common.MassegeConstants;
+using static TradeSystem.Common.MessageConstants;
 namespace TradeSystem.Core.Models.Clients
 {
     public class IndividualDataClentFormModel : DataOfClientFormModel

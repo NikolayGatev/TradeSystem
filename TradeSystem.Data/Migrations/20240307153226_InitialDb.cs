@@ -406,7 +406,7 @@ namespace TradeSystem.Data.Migrations
                     NationalityId = table.Column<int>(type: "int", nullable: false),
                     AddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(18)", maxLength: 18, nullable: false),
-                    IdentityDocumentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IdentityDocumentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     AuthorisedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -453,7 +453,7 @@ namespace TradeSystem.Data.Migrations
                     NationalityId = table.Column<int>(type: "int", nullable: false),
                     AddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(18)", maxLength: 18, nullable: false),
-                    IdentityDocumentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IdentityDocumentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     AuthorisedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },

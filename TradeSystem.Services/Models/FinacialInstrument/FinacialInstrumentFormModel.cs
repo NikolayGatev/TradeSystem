@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using static TradeSystem.Common.EntityValidationConstants.FinancialInstrumentonstants;
-using static TradeSystem.Common.MassegeConstants;
+using static TradeSystem.Common.MessageConstants;
 
 namespace TradeSystem.Core.Models.FinacialInstrument
 {

@@ -1,12 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Exeptions;
+using TradeSystem.Core.Models.Employees;
 using TradeSystem.Core.Models.Enums;
 using TradeSystem.Core.Models.FinacialInstrument;
 using TradeSystem.Core.Models.Orders;
 using TradeSystem.Data.Common;
+using TradeSystem.Data.Migrations;
 using TradeSystem.Data.Models;
 using static TradeSystem.Common.ExceptionMessages;
+using static TradeSystem.Common.MessageConstants;
 
 namespace TradeSystem.Core.Services
 {
@@ -69,16 +72,43 @@ namespace TradeSystem.Core.Services
             this.employeeService = employeeService;
         }
 
-        public async Task<IEnumerable<FinInstrumentServiceModel>> AllFinancialInstrumentsAsync()
-        {
-            return await finInstrRepozitory.AllAsNoTracking()
-                .Select(f => new FinInstrumentServiceModel()
+        public async Task<IEnumerable<FinInstrumentServiceModel>> AllFinancialInstrumentsAsync(Guid? userId)
+        {            
+            if (userId != null)
+            {
+                Guid clientId = await clientService.GetClientIdByUserIdAsync(userId ?? new Guid()) ?? new Guid();
+
+                var ordersSum = await orderRepozitory.AllAsNoTracking().Where(o => o.ClientId == clientId && o.IsBid == false)
+                    .ToListAsync();
+
+              var result = await finInstrRepozitory.AllAsNoTracking().Select(f => new FinInstrumentServiceModel()
+                {
+                    Id = f.Id,
+                    Name = f.Name,
+                    SharesHeld = (uint)f.OwnersOfThisInstruments.Where(o => o.ClientId == clientId).Sum(o => o.Volume),
+              })
+                .OrderBy(f => f.Name)
+                .ToListAsync();
+
+                foreach ( var fin in result )
+                {
+                    fin.SumOfAllOrdersSell = ordersSum.Select(x => x.FinancialInstrumentId).Contains(fin.Id)
+                    ? (uint)ordersSum.Where(x => x.FinancialInstrumentId == fin.Id).Sum(x => x.InitialVolume)
+                    : 0;
+                }
+
+                return result;
+            }
+            else
+            {
+                return await finInstrRepozitory.AllAsNoTracking().Select(f => new FinInstrumentServiceModel()
                 {
                     Id = f.Id,
                     Name = f.Name,
                 })
                 .OrderBy(f => f.Name)
                 .ToListAsync();
+            }
         }
 
         public async Task<Guid> CreateAsync(OrderFormModel model, Guid? clientId)
@@ -91,6 +121,11 @@ namespace TradeSystem.Core.Services
             if(clientId == null)
             {
                 throw new UnauthoriseActionException(MessageUnauthoriseActionException);
+            }
+
+            if (await NotEnoughMoneyAsync(clientId, (model.Price * model.InitialVolume)) == false) 
+            {
+                throw new Exception(DoNotEnoughMoney);
             }
 
             var order = new Order()
@@ -106,7 +141,132 @@ namespace TradeSystem.Core.Services
             await orderRepozitory.AddAsync(order);
             await orderRepozitory.SaveChangesAsync();
 
+            await ChechOrderForExecuting(order);
+
             return order.Id;
+        }
+
+        private async Task ChechOrderForExecuting(Order order)
+        {
+            var opositOrders = order.IsBid
+                ? await orderRepozitory.All()
+                    .Where(o => o.IsBid == false && o.Price <= order.Price)
+                    .OrderBy(o => o.Price)
+                    .ThenBy(o => o.CreatedOn)
+                    .ToListAsync()
+                : await orderRepozitory.All()
+                    .Where(o => o.IsBid && o.Price >= order.Price)
+                    .OrderByDescending(o => o.Price)
+                    .ThenBy(o => o.CreatedOn)
+                    .ToListAsync();
+
+            if(opositOrders != null)
+            {
+                List<Trade> trades = new List<Trade>();
+
+                for(int i = opositOrders.Count() - 1; i >=0; i-- )
+                {
+                    var value = opositOrders[i].ActiveVolume > order.ActiveVolume
+                        ? order.ActiveVolume
+                        : opositOrders[i].ActiveVolume;
+
+                    var trade = new Trade()
+                    {
+                        Volume = value,
+                        Price = opositOrders[i].Price,
+                        FinancialInstrumentId = order.FinancialInstrumentId,
+                    };
+
+                    trade.TradeOrders.Add(new TradeOrder()
+                    {
+                        Trade = trade,
+                        OrderId = order.Id
+                    });
+
+                    trade.TradeOrders.Add(new TradeOrder()
+                    {
+                        Trade = trade,
+                        OrderId = opositOrders[i].Id
+                    });
+
+                    trades.Add(trade);
+
+                    var bidderId = order.IsBid
+                        ? order.ClientId
+                        : opositOrders[i].ClientId;
+
+                    var sellerId = order.IsBid == false
+                        ? order.ClientId
+                        : opositOrders[i].ClientId;
+
+                    await ExecutingSettelmentTrade(sellerId, bidderId, trade.Volume, order, trade.Price);
+
+                    opositOrders[i].ActiveVolume -= value;
+                    order.ActiveVolume -= value;
+
+                    if (order.ActiveVolume == 0)
+                    {
+                        break;
+                    }
+                }
+
+                await tradeOrderRepozitory.SaveChangesAsync();
+            }
+        }
+
+        private async Task ExecutingSettelmentTrade(Guid sellerId, Guid bidderId, uint volume, Order order, decimal priceExecuting)
+        {
+            var counterparty = order.ClientId == sellerId
+                ? await clientRepozitory.All().Where(c => c.Id == bidderId).FirstAsync()
+                : await clientRepozitory.All().Where(c => c.Id == sellerId).FirstAsync();
+
+            if (order.IsBid)
+            {
+                order.Client.BlockedSum -= volume * order.Price;
+                order.Client.Balance = order.Price > priceExecuting
+                    ? order.Client.Balance + ((order.Price - priceExecuting) * volume)
+                    : order.Client.Balance;
+
+                counterparty.Balance += volume * order.Price;
+            }
+            if (order.IsBid == false)
+            {
+                counterparty.BlockedSum -= volume * priceExecuting;
+
+                order.Client.Balance += volume * order.Price;
+            }
+
+            await FinacialInstrumentSettelment(order.Client, volume, order.IsBid, order.FinancialInstrumentId);
+            await FinacialInstrumentSettelment(counterparty, volume, order.IsBid, order.FinancialInstrumentId);
+        }
+
+        private async Task FinacialInstrumentSettelment(Client client, uint volume, bool isBid, int finInstrId)
+        {            
+             if (client.FinancialInstruments.Any(si => si.FinancialInstrumentId == finInstrId))
+             {
+                 var clientFinInsr = await clientFinancialInstrumentRepozitory.All()
+                          .Where(f => f.FinancialInstrumentId == finInstrId
+                              && f.ClientId == client.Id)
+                          .FirstAsync();
+
+                 clientFinInsr.Volume = isBid ? clientFinInsr.Volume + volume
+                    : clientFinInsr.Volume - volume;
+
+                 
+             }
+             else
+             {
+                var clientFinInstr = new ClientFinancialInstrument()
+                {
+                    ClientId = client.Id,
+                    FinancialInstrumentId = finInstrId,
+                    Volume = volume,
+                };
+
+                await clientFinancialInstrumentRepozitory.AddAsync(clientFinInstr);
+             }
+
+            await clientFinancialInstrumentRepozitory.SaveChangesAsync();
         }
 
         public async Task<OrderDetailsServiceModel> GetOrderDetailsByIdAsync(Guid orderId, Guid userId)
@@ -291,6 +451,20 @@ namespace TradeSystem.Core.Services
             Client client = await clientRepozitory.AllAsNoTracking().Where(c => c.Id == clientId).FirstAsync();
 
             return client.Balance >= sum;
+        }
+
+        public async Task<decimal> GetBalanceByUserIdAsync(Guid userId)
+        {
+            var clientId = await clientService.GetClientIdByUserIdAsync(userId);
+
+            if (clientId == null)
+            {
+                throw new UnauthoriseActionException(MessageUnauthoriseActionException);
+            }
+
+            Client client = await clientRepozitory.AllAsNoTracking().Where(c => c.Id == clientId).FirstAsync();
+
+            return client.Balance;
         }
     }
 }

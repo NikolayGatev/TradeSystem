@@ -4,6 +4,6 @@
     {
         Newest = 0,
         Name = 1,
-        Sherholders = 2,
+        Sharesholders = 2,
     }
 }
