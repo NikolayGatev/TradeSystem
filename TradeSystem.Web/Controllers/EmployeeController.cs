@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Exeptions;
 using TradeSystem.Core.Models.Clients;
 using TradeSystem.Core.Models.Employees;
 using TradeSystem.Core.Services;
-using TradeSystem.Data.Models;
 using TradeSystem.Web.Attributes;
 using static TradeSystem.Common.ErrorConstants;
 
@@ -16,16 +14,19 @@ namespace TradeSystem.Web.Controllers
     {
         private readonly IEmployeeService employeeService;
         private readonly IClientService clientService;
+        private readonly IFinancialInstrumentService financialInstrumentService;
         private readonly ILogger<EmployeeController> logger;
 
         public EmployeeController(
             IEmployeeService employeeService
             ,IClientService clientService
+            ,IFinancialInstrumentService financialInstrumentService
             ,ILogger<EmployeeController> logger)
           
         {
             this.employeeService = employeeService;
             this.clientService = clientService;
+            this.financialInstrumentService = financialInstrumentService;
             this.logger = logger;
         }
 
@@ -91,7 +92,7 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> AllDataOfClients([FromQuery] AllClientsDataQueryModel query)
         {
-            var model = await employeeService.AllClientsDataAsync(
+            var model = await clientService.AllClientsDataAsync(
                 query.Nationality
                 , query.Status
                 , query.SearchTerm
@@ -103,7 +104,7 @@ namespace TradeSystem.Web.Controllers
             query.ClientsData = model.ClientsData;
             query.Nationalities = await employeeService.AllCountriesNameAsync();
             query.Statuses = employeeService.AllStatusesName();
-            query.TypeOfClients = employeeService.AllTypeOfClientsName();
+            query.TypeOfClients = clientService.AllTypeOfClientsName();
 
             return View(query);
         }
@@ -223,5 +224,60 @@ namespace TradeSystem.Web.Controllers
                 return BadRequest();
             }
         }
-    }
+
+        [MustBeEmployee]
+        [HttpGet]
+
+        public async Task<IActionResult> FundedCount()
+        {
+            var model = new ClientFinancialInstrumentFormModel()
+            {
+                Clients = await clientService.AllClientsAsync(),
+                FinancialInstruments = await financialInstrumentService.AllFinancialInstrumentsAsync()
+            };
+
+            return View(model);
+        }
+
+        [MustBeEmployee]
+        [HttpPost]
+
+        public async Task<IActionResult> FundedCount (ClientFinancialInstrumentFormModel model)
+        {
+            if (await financialInstrumentService.ExixtFinancialInstrumentAsync(model.FinancialInstrumentId) == false)
+            {
+                ModelState.AddModelError(nameof(model.FinancialInstrumentId), UnknownFinancialInstrument);
+            }
+
+            if (await clientService.ExistClientByIdAsync(model.ClientId) == false)
+            {
+                ModelState.AddModelError(nameof(model.ClientId), UnknownClient);
+            }
+
+            if (ModelState.IsValid == false)
+            {
+                model.Clients = await clientService.AllClientsAsync();
+                model.FinancialInstruments = await financialInstrumentService.AllFinancialInstrumentsAsync();
+
+                return View(model);
+            }
+
+            try
+            {
+                await financialInstrumentService.FundedAccountWithFinancialInstruments(model.ClientId, model.FinancialInstrumentId, model.Volume);
+            }
+            catch(NonFinancialInstrumentException nfi)
+            {
+                logger.LogError(nfi, "EmployeeController/FundedCount");
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "EmployeeController/FundedCount");
+                return BadRequest();
+            }
+
+            return RedirectToAction(nameof(AllDataOfClients));
+        }
+    }    
 }

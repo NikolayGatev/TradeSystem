@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Exeptions;
 using TradeSystem.Core.Models.Enums;
@@ -63,6 +64,44 @@ namespace TradeSystem.Core.Services
             this.tradeRepozitory = tradeRepozitory;
             this.tradeOrderRepozitory = tradeOrderRepozitory;
             this.clientService = clientService;
+        }
+        public async Task<IEnumerable<FinInstrumentServiceModel>> AllFinancialInstrumentsOfClientAsync(Guid? userId)
+        {
+            if (userId != null)
+            {
+                Guid clientId = await clientService.GetClientIdByUserIdAsync(userId ?? new Guid()) ?? new Guid();
+
+                var ordersSum = await orderRepozitory.AllAsNoTracking().Where(o => o.ClientId == clientId && o.IsBid == false)
+                    .ToListAsync();
+
+                var result = await finInstrRepozitory.AllAsNoTracking().Select(f => new FinInstrumentServiceModel()
+                {
+                    Id = f.Id,
+                    Name = f.Name,
+                    SharesHeld = (uint)f.OwnersOfThisInstruments.Where(o => o.ClientId == clientId).Sum(o => o.Volume),
+                })
+                  .OrderBy(f => f.Name)
+                  .ToListAsync();
+
+                foreach (var fin in result)
+                {
+                    fin.SumOfAllOrdersSell = ordersSum.Select(x => x.FinancialInstrumentId).Contains(fin.Id)
+                    ? (uint)ordersSum.Where(x => x.FinancialInstrumentId == fin.Id).Sum(x => x.InitialVolume)
+                    : 0;
+                }
+
+                return result;
+            }
+            else
+            {
+                return await finInstrRepozitory.AllAsNoTracking().Select(f => new FinInstrumentServiceModel()
+                {
+                    Id = f.Id,
+                    Name = f.Name,
+                })
+                .OrderBy(f => f.Name)
+                .ToListAsync();
+            }
         }
 
         public async Task<int> CreateAsync(FinacialInstrumentFormModel model)
@@ -222,6 +261,55 @@ namespace TradeSystem.Core.Services
         public async Task<IEnumerable<string>> AllISINsAsync()
         {
             return await finInstrRepozitory.AllAsNoTracking().Select(f => f.ISIN).OrderBy(n => n).ToListAsync();
+        }
+
+        public async Task FundedAccountWithFinancialInstruments(Guid clientId, int financialInstrumentId, uint count)
+        {
+            var client = await clientRepozitory.All().Where(c => c.Id == clientId).FirstOrDefaultAsync();
+
+            if(client == null)
+            {
+                throw new Exception(MessageUnauthoriseActionException);
+            }
+            if(await ExixtFinancialInstrumentAsync(financialInstrumentId) == false)
+            {
+                throw new NonFinancialInstrumentException(MessageNotFinancialInstrumentException);
+            } 
+
+            if (client.FinancialInstruments.Any(si => si.FinancialInstrumentId == financialInstrumentId))
+            {
+                var clientFinInsr = await clientFinancialInstrumentRepozitory.All()
+                         .Where(f => f.FinancialInstrumentId == financialInstrumentId
+                             && f.ClientId == client.Id)
+                .FirstAsync();
+
+                clientFinInsr.Volume += count;
+            }
+            else
+            {
+                var clientFinInstr = new ClientFinancialInstrument()
+                {
+                    ClientId = client.Id,
+                    FinancialInstrumentId = financialInstrumentId,
+                    Volume = count,
+                };
+
+                await clientFinancialInstrumentRepozitory.AddAsync(clientFinInstr);
+            }
+
+            await clientFinancialInstrumentRepozitory.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<FinInstrumentServiceModel>> AllFinancialInstrumentsAsync()
+        {
+            return await finInstrRepozitory.AllAsNoTracking()
+                .Select(f => new FinInstrumentServiceModel()
+                {
+                    Id = f.Id,
+                    Name = f.Name,
+                })
+                .OrderBy(f => f.Name)
+                .ToListAsync();
         }
     }
 }

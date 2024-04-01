@@ -3,9 +3,11 @@ using System.Globalization;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Exeptions;
 using TradeSystem.Core.Models.Clients;
+using TradeSystem.Core.Models.Employees;
 using TradeSystem.Core.Models.Enums;
 using TradeSystem.Data.Common;
 using TradeSystem.Data.Models;
+using TradeSystem.Data.Models.Enumerations;
 using static TradeSystem.Common.ExceptionMessages;
 using static TradeSystem.Common.GeneralApplicationConstants;
 
@@ -64,6 +66,34 @@ namespace TradeSystem.Core.Services
             this.tradeOrderRepozitory = tradeOrderRepozitory;
             this.dataIndividualClientRepozitory = dataIndividualClientRepozitory;
         }
+
+        public async Task<IEnumerable<ClientsForAddFinancialInstumentFormServiceModel>> AllClientsAsync()
+        {
+            var dataOfIndividualClient = await dataIndividualClientRepozitory.AllAsNoTracking()
+                .Where(d => d.ClientId != null)
+                .Select(d => new ClientsForAddFinancialInstumentFormServiceModel()
+                {
+                    ClientId = d.ClientId ?? new Guid(),
+                    ClientName = $"{d.FirstName} {d.Surname}",
+                })
+                .ToListAsync();
+            var dataOfCorporativeClients = await dataCorporativeClientRepozitory.AllAsNoTracking()
+                .Where(d => d.ClientId != null)
+                .Select(d => new ClientsForAddFinancialInstumentFormServiceModel()
+                {
+                    ClientId = d.ClientId ?? new Guid(),
+                    ClientName = d.Name,
+                })
+                .ToListAsync();
+            var result = new List<ClientsForAddFinancialInstumentFormServiceModel>();
+
+            result.AddRange(dataOfIndividualClient);
+            result.AddRange(dataOfCorporativeClients);
+
+            return result.OrderBy(x => x.ClientName);
+                ;
+        }
+
         public async Task<IEnumerable<CountryServiceModel>> AllCountriesAsync()
         {
             return await countryRepozitory.AllAsNoTracking()
@@ -514,6 +544,165 @@ namespace TradeSystem.Core.Services
             }
 
             return town.Id;
+        }
+
+        public async Task<ClientsDataQueryServiceModel> AllClientsDataAsync(
+                                                                        string? nationality = null
+                                                                        , string? status = null
+                                                                        , string? searchTerm = null
+                                                                        , string? typeOfClient = null
+                                                                        , int currentPage = 1
+                                                                        , int datasPerPage = 1)
+        {
+            var dataOfIndividualClient = dataIndividualClientRepozitory.AllAsNoTracking();
+            var dataOfCorporativeClients = dataCorporativeClientRepozitory.AllAsNoTracking();
+
+            if (status != null)
+            {
+                dataOfCorporativeClients = dataOfCorporativeClients
+                    .Where(d => d.DataChecking == Enum.Parse<ResultFromChecking>(status));
+
+                dataOfIndividualClient = dataOfIndividualClient
+                    .Where(d => d.DataChecking == Enum.Parse<ResultFromChecking>(status));
+            }
+
+            if (nationality != null)
+            {
+                dataOfCorporativeClients = dataOfCorporativeClients
+                    .Where(d => d.Nationality.Name == nationality);
+
+                dataOfIndividualClient = dataOfIndividualClient
+                    .Where(d => d.Nationality.Name == nationality);
+            }
+
+            if (searchTerm != null)
+            {
+                string normalizedSearchTerm = searchTerm.ToLower();
+
+                dataOfCorporativeClients = dataOfCorporativeClients
+                    .Where(d => d.Name.ToLower().Contains(normalizedSearchTerm)
+                        || d.Address.ToLower().Contains(normalizedSearchTerm)
+                        || d.LegalForm.ToLower().Contains(normalizedSearchTerm)
+                        || d.NationalIdentityNumber.ToLower().Contains(normalizedSearchTerm)
+                        || d.PhoneNumber.ToLower().Contains(normalizedSearchTerm));
+
+                dataOfIndividualClient = dataOfIndividualClient
+                    .Where(d => d.FirstName.ToLower().Contains(normalizedSearchTerm)
+                        || d.Surname.ToLower().Contains(normalizedSearchTerm)
+                        || d.Address.ToLower().Contains(normalizedSearchTerm)
+                        || d.NationalIdentityNumber.ToLower().Contains(normalizedSearchTerm)
+                        || d.PhoneNumber.ToLower().Contains(normalizedSearchTerm));
+            }
+
+            var dataOfClientToshow = new List<DataOfClientServiseModelForCheching>();
+
+            if (typeOfClient == AllTypeOfClientsName()[0] || typeOfClient == null)
+            {
+                var dataOfIndividualClientToshow = await dataOfIndividualClient
+                .Select(d => new DataOfClientServiseModelForCheching()
+                {
+                    Id = d.Id,
+                    UserId = d.ApplicationUserId,
+                    ClientId = d.ClientId,
+                    DataChecking = d.DataChecking.ToString(),
+                    ApplicationName = d.ApplicationUser.UserName,
+                    Nationality = d.Nationality.Name,
+                    Address = d.Address,
+                    PhoneNumber = d.PhoneNumber,
+                    TypeOfClient = TypeOfDataClients.IndividualClient.ToString(),
+                    FirstName = d.FirstName,
+                    SecondName = d.SecondName,
+                    Surname = d.Surname,
+                    NationalIdentityNumberIndividual = d.NationalIdentityNumber,
+                })
+                .ToListAsync();
+
+                dataOfClientToshow.AddRange(dataOfIndividualClientToshow);
+            }
+
+            if (typeOfClient == AllTypeOfClientsName()[1] || typeOfClient == null)
+            {
+                var dataOfCorporativeClientToshow = await dataOfCorporativeClients
+               .Select(d => new DataOfClientServiseModelForCheching()
+               {
+                   Id = d.Id,
+                   UserId = d.ApplicationUserId,
+                   ClientId = d.ClientId,
+                   DataChecking = d.DataChecking.ToString(),
+                   ApplicationName = d.ApplicationUser.UserName,
+                   Nationality = d.Nationality.Name,
+                   Address = d.Address,
+                   PhoneNumber = d.PhoneNumber,
+                   TypeOfClient = TypeOfDataClients.CorporativeClient.ToString(),
+                   FirstName = d.Name,
+                   SecondName = d.LegalForm,
+                   NationalIdentityNumber = d.NationalIdentityNumber,
+               })
+               .ToListAsync();
+
+                dataOfClientToshow.AddRange(dataOfCorporativeClientToshow);
+            }
+
+            dataOfClientToshow
+                .Skip((currentPage - 1) * datasPerPage)
+                .Take(datasPerPage)
+                .ToList();
+
+            int totalDateOfClient = dataOfClientToshow.Count();
+
+            return new ClientsDataQueryServiceModel()
+            {
+                ClientsData = dataOfClientToshow,
+                TotalClientsDataCount = totalDateOfClient
+            };
+        }
+
+        public List<string> AllTypeOfClientsName()
+        {
+            return Enum.GetNames(typeof(TypeOfDataClients)).ToList();
+        }
+
+        public async Task AddMoneyAsync(Guid userId, decimal amount)
+        {
+            var clientId = await GetClientIdByUserIdAsync(userId);
+
+            if (clientId == null)
+            {
+                throw new UnauthoriseActionException(MessageUnauthoriseActionException);
+            }
+
+            if (amount < 0)
+            {
+                throw new Exception(MessageNegativeSum);
+            }
+
+            var client = await clientRepozitory.All().FirstAsync(c => c.Id == clientId);
+
+            client.Balance += amount;
+
+            await clientRepozitory.SaveChangesAsync();
+        }
+
+        public async Task<ClientAddMoneyModel> GetClintDetailsAsync(Guid userId)
+        {
+            var clientId = await GetClientIdByUserIdAsync(userId);
+
+            if(clientId == null)
+            {
+                throw new UnauthoriseActionException(MessageUnauthoriseActionException);
+            }
+
+            var result =  await clientRepozitory.AllAsNoTracking()
+                .Where(c => c.Id == clientId)
+                .Select(c => new ClientAddMoneyModel()
+                {
+                    Id = c.Id,
+                    Balance = c.Balance,
+                    BlockedSum = c.BlockedSum,
+                })
+                .ToListAsync();
+
+            return result[0];
         }
     }
 }

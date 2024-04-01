@@ -1,4 +1,5 @@
 ﻿using TradeSystem.Core.Models.Clients;
+using TradeSystem.Core.Models.Employees;
 using TradeSystem.Data.Models;
 
 namespace TradeSystem.Core.Contracts
@@ -46,5 +47,21 @@ namespace TradeSystem.Core.Contracts
         public Task<bool> ExistClientByIdAsync(Guid clientId);
 
         public Task<ClientAcountServiceModel> DetailsOfAcountOnClientAsync(Guid userId);
+
+        public Task<IEnumerable<ClientsForAddFinancialInstumentFormServiceModel>> AllClientsAsync();
+
+        public Task<ClientsDataQueryServiceModel> AllClientsDataAsync(
+            string? nationality = null
+            , string? status = null
+            , string? searchTerm = null
+            , string? typeOfClient = null
+            , int currentPage = 1
+            , int datasPerPage = 1);
+
+        public List<string> AllTypeOfClientsName();
+
+        public Task AddMoneyAsync(Guid userId, decimal amount);
+
+        public Task<ClientAddMoneyModel> GetClintDetailsAsync(Guid userId);
     }
 }

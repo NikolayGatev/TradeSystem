@@ -1,4 +1,4 @@
-﻿namespace TradeSystem.Core.Models.Orders
+﻿namespace TradeSystem.Core.Models.FinacialInstrument
 {
     public class FinInstrumentServiceModel
     {

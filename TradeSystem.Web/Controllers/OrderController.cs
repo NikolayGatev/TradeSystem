@@ -38,7 +38,7 @@ namespace TradeSystem.Web.Controllers
         {
             var model = new OrderFormModel()
             {
-                FinancialInstruments = await orderService.AllFinancialInstrumentsAsync(Guid.Parse(User.Id())),
+                FinancialInstruments = await financialInstrumentService.AllFinancialInstrumentsOfClientAsync(Guid.Parse(User.Id())),
                 Balance = await orderService.GetBalanceByUserIdAsync(Guid.Parse(User.Id()))
             };
             return View(model);
@@ -51,7 +51,7 @@ namespace TradeSystem.Web.Controllers
         {
             if (ModelState.IsValid == false)
             {
-                model.FinancialInstruments = await orderService.AllFinancialInstrumentsAsync(Guid.Parse(User.Id()));
+                model.FinancialInstruments = await financialInstrumentService.AllFinancialInstrumentsOfClientAsync(Guid.Parse(User.Id()));
                 model.Balance = await orderService.GetBalanceByUserIdAsync(Guid.Parse(User.Id()));
 
                 return View(model);

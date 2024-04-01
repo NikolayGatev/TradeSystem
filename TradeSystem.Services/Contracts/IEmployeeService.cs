@@ -20,19 +20,9 @@ namespace TradeSystem.Core.Contracts
 
         public Task<EmployeeDetailsServiceModel> DetailsOfEmployeeByIdAsync(Guid employeeId);
 
-        public Task<ClientsDataQueryServiceModel> AllClientsDataAsync(
-            string? nationality = null
-            ,string? status = null
-            ,string? searchTerm = null
-            ,string? typeOfClient = null
-            , int currentPage = 1
-            , int datasPerPage = 1);
-
         public Task<IEnumerable<string>> AllCountriesNameAsync();
 
         public List<string> AllStatusesName();
-
-        public List<string> AllTypeOfClientsName();
 
         public Task<DataOfClientServiceModel> RejectDataDetailsAsync(Guid userId);
 

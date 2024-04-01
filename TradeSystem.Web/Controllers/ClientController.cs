@@ -5,6 +5,7 @@ using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Exeptions;
 using TradeSystem.Core.Models.Clients;
 using TradeSystem.Core.Models.Employees;
+using TradeSystem.Core.Models.FinacialInstrument;
 using TradeSystem.Data.Models;
 using TradeSystem.Web.Attributes;
 using static TradeSystem.Common.ErrorConstants;
@@ -299,6 +300,46 @@ namespace TradeSystem.Web.Controllers
             catch (UnauthorizedAccessException uae)
             {
                 logger.LogError(uae, "ClientController/DetailsDataOfClient");
+                return Unauthorized();
+            }
+        }
+
+        [HttpGet]
+        [MustBeClientAccount]
+
+        public async Task<IActionResult> AddMoney()
+        {
+            try
+            {
+                var model = await clientService.GetClintDetailsAsync(Guid.Parse(User.Id()));
+                return View(model);
+            }
+            catch (UnauthoriseActionException ua)
+            {
+                logger.LogError(ua, "ClientController/DetailsDataOfClient");
+                return Unauthorized();
+            }
+        }
+
+        [HttpPost]
+        [MustBeClientAccount]
+
+        public async Task<IActionResult> AddMoney(ClientAddMoneyModel model)
+        {
+            try
+            {
+                await clientService.AddMoneyAsync(Guid.Parse(User.Id()), model.AddedSum);
+
+                return RedirectToAction(nameof(DetailsAcauntOfClient));
+            }
+            catch (UnauthorizedAccessException uae)
+            {
+                logger.LogError(uae, "ClientController/AddMoney");
+                return Unauthorized();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "ClientController/AddMoney");
                 return Unauthorized();
             }
         }

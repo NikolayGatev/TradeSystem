@@ -8,9 +8,8 @@
 
         public static string UnknownDivision = "This division does not exist";
 
-        public static string UnexpectedError = "Unexpected error occurred while registering you as an agent! Please try again later or contact administrator.";
+        public static string UnknownFinancialInstrument = "This financial instrument does not exist";
 
-
-
+        public static string UnknownClient = "This client does not exist";
     }
 }

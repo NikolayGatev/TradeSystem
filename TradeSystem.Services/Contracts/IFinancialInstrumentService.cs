@@ -6,6 +6,8 @@ namespace TradeSystem.Core.Contracts
 {
     public interface IFinancialInstrumentService
     {
+       public Task<IEnumerable<FinInstrumentServiceModel>> AllFinancialInstrumentsOfClientAsync(Guid? userId);
+
         public Task<bool> ExixtFinancialInstrumentAsync(int Id);
 
         public Task<FinancialInstrument?> GetFinancialInstrumentByIdAsync(int Id);
@@ -28,5 +30,9 @@ namespace TradeSystem.Core.Contracts
             , int finInstrumentsPerPage = 1);
 
         public Task<IEnumerable<string>> AllISINsAsync();
+
+        public Task FundedAccountWithFinancialInstruments(Guid clientId, int financialInstrumentId, uint count);
+
+        public Task<IEnumerable<FinInstrumentServiceModel>> AllFinancialInstrumentsAsync();
     }
 }

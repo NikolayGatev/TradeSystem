@@ -72,45 +72,6 @@ namespace TradeSystem.Core.Services
             this.employeeService = employeeService;
         }
 
-        public async Task<IEnumerable<FinInstrumentServiceModel>> AllFinancialInstrumentsAsync(Guid? userId)
-        {            
-            if (userId != null)
-            {
-                Guid clientId = await clientService.GetClientIdByUserIdAsync(userId ?? new Guid()) ?? new Guid();
-
-                var ordersSum = await orderRepozitory.AllAsNoTracking().Where(o => o.ClientId == clientId && o.IsBid == false)
-                    .ToListAsync();
-
-              var result = await finInstrRepozitory.AllAsNoTracking().Select(f => new FinInstrumentServiceModel()
-                {
-                    Id = f.Id,
-                    Name = f.Name,
-                    SharesHeld = (uint)f.OwnersOfThisInstruments.Where(o => o.ClientId == clientId).Sum(o => o.Volume),
-              })
-                .OrderBy(f => f.Name)
-                .ToListAsync();
-
-                foreach ( var fin in result )
-                {
-                    fin.SumOfAllOrdersSell = ordersSum.Select(x => x.FinancialInstrumentId).Contains(fin.Id)
-                    ? (uint)ordersSum.Where(x => x.FinancialInstrumentId == fin.Id).Sum(x => x.InitialVolume)
-                    : 0;
-                }
-
-                return result;
-            }
-            else
-            {
-                return await finInstrRepozitory.AllAsNoTracking().Select(f => new FinInstrumentServiceModel()
-                {
-                    Id = f.Id,
-                    Name = f.Name,
-                })
-                .OrderBy(f => f.Name)
-                .ToListAsync();
-            }
-        }
-
         public async Task<Guid> CreateAsync(OrderFormModel model, Guid? clientId)
         {
             if (await finInstrRepozitory.AllAsNoTracking().AnyAsync(f => f.Id == model.FinancialInstrumentId) == false)

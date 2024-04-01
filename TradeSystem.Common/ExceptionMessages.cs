@@ -12,5 +12,7 @@
 
         public const string MessageNotFinancialInstrumentException = "The financial instrument is missing!";
 
+        public const string MessageNegativeSum = "The sum can not be negative!";
+
     }
 }

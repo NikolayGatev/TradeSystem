@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using TradeSystem.Core.Attributes;
+﻿using System.ComponentModel.DataAnnotations;
+using TradeSystem.Core.Models.FinacialInstrument;
 using static TradeSystem.Common.EntityValidationConstants.OrderAndTradesConstants;
 using static TradeSystem.Common.MessageConstants;
 
@@ -24,7 +23,7 @@ namespace TradeSystem.Core.Models.Orders
 
         [Required(ErrorMessage = RequiredMessage)]
         [Display(Name = "Volume for executing")]
-        [Range(VolumeMinLegnth, VolumeMaxLegnth)]
+        [Range(VolumeMin, VolumeMax)]
 
         public uint InitialVolume { get; set; } = 0;
 
@@ -34,7 +33,7 @@ namespace TradeSystem.Core.Models.Orders
             , ErrorMessage = PriceValue)]
         [Display(Name = "Price Per Lot")]
 
-        public decimal Price { get; set; }
+        public decimal Price { get; set; } = decimal.Parse(PriceMinLegnth);
 
         [Display(Name = "Financial instrument with your shares count")]
 

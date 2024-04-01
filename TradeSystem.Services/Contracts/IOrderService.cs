@@ -1,4 +1,5 @@
 ﻿using TradeSystem.Core.Models.Enums;
+using TradeSystem.Core.Models.FinacialInstrument;
 using TradeSystem.Core.Models.Orders;
 using TradeSystem.Data.Models;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -7,8 +8,6 @@ namespace TradeSystem.Core.Contracts
 {
     public interface IOrderService
     {
-        Task<IEnumerable<FinInstrumentServiceModel>> AllFinancialInstrumentsAsync(Guid? userId);
-
         Task<Guid> CreateAsync(OrderFormModel model, Guid? clientId);
 
         Task<OrderDetailsServiceModel> GetOrderDetailsByIdAsync(Guid orderId, Guid userId);
