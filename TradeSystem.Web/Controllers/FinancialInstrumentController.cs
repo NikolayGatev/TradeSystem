@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Exeptions;
+using TradeSystem.Core.Extensions;
 using TradeSystem.Core.Models.FinacialInstrument;
+using TradeSystem.Data.Models;
 using TradeSystem.Web.Attributes;
 
 namespace TradeSystem.Web.Controllers
@@ -47,28 +49,30 @@ namespace TradeSystem.Web.Controllers
                 return View(model);
             }
 
-            int id;
-
             try
             {
-                id = await finInsinstrumentService.CreateAsync(model);
+                int id = await finInsinstrumentService.CreateAsync(model);
+
+                return RedirectToAction(nameof(Details), new { id, financialInstrument = model.GetNameAndIsin() });
             }
             catch (NonExistFinancialInstrumentWithThisNameOrISIN efi)
             {
                 logger.LogError(efi, "FinacialInstrumentController/Add");
 
                 return View(model);
-            }
-            
-
-            return RedirectToAction(nameof(Details), new { id });
+            }            
         }
 
         [AllowAnonymous]
         [HttpGet]
 
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int id, string financialInstrument)
         {
+            if(await finInsinstrumentService.ExixtFinancialInstrumentAsync(id) == false)
+            {
+                return BadRequest();
+            }
+
             var model = new FinInstrumentDetailsServiceModel();
 
             try
@@ -82,14 +86,24 @@ namespace TradeSystem.Web.Controllers
                 RedirectToAction(nameof(Index), "Home");
             }
 
-            return View(model);
+
+            if (financialInstrument != model.GetNameAndIsin())
+            {
+                return BadRequest();
+            }
+
+                return View(model);
         }
 
         [HttpGet]
         [MustBeEmployee]
 
         public async Task<IActionResult> Edit(int id)
-        {                      
+        {
+            if (await finInsinstrumentService.ExixtFinancialInstrumentAsync(id) == false)
+            {
+                return BadRequest();
+            }
 
             var model = new FinacialInstrumentFormModel();
 
@@ -112,6 +126,11 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> Edit(int id, FinacialInstrumentFormModel model)
         {
+            if (await finInsinstrumentService.ExixtFinancialInstrumentAsync(id) == false)
+            {
+                return BadRequest();
+            }
+
             if (ModelState.IsValid == false)
             {
                 return View(model);
@@ -128,7 +147,7 @@ namespace TradeSystem.Web.Controllers
                 RedirectToAction(nameof(Index), "Home");
             }
 
-            return RedirectToAction(nameof(Details), new { id });
+            return RedirectToAction(nameof(Details), new { id, financialInstrument = model.GetNameAndIsin() });
         }
 
         [HttpGet]
@@ -136,6 +155,11 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
+            if (await finInsinstrumentService.ExixtFinancialInstrumentAsync(id) == false)
+            {
+                return BadRequest();
+            }
+
             var model = new FinInstrumentDetailsServiceModel();
 
             try

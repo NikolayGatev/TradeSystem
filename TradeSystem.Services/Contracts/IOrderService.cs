@@ -12,6 +12,8 @@ namespace TradeSystem.Core.Contracts
 
         Task<OrderDetailsServiceModel> GetOrderDetailsByIdAsync(Guid orderId, Guid userId);
 
+        Task<bool> ExistOrderByIdAsync(Guid orderId);
+
         Task<Order?> GetOrderByIdAsync(Guid orderId);
 
         Task DeleteAsync(Guid orderId, Guid userId);
@@ -25,10 +27,6 @@ namespace TradeSystem.Core.Contracts
             , OrderSorting sorting = OrderSorting.Newest
             , int currentPage = 1
             , int ordersPerPage = 1);
-
-        Task<IEnumerable<string>> AllClintsIdAsync(Guid userId);
-
-        Task<bool> NotEnoughMoneyAsync(Guid? clientId, decimal sum);
 
         Task<decimal> GetBalanceByUserIdAsync(Guid userId);
     }

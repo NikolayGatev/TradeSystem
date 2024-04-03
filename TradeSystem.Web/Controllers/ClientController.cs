@@ -45,7 +45,7 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> AddDataNewIndividualClient(IndividualDataClentFormModel model)
         {
-            Guid userId = Guid.Parse(User.Id());
+            Guid userId = User.Id();
 
             if (await clientService.GetIdOfDataOfIndividualClientByUserIdAsync(userId) != null)
             {
@@ -86,7 +86,7 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> AddDataNewCorporativeClient(CorporativeDataClentFormModel model)
         {
-            Guid userId = Guid.Parse(User.Id());
+            Guid userId = User.Id();
 
             if (await clientService.GetIdOfDataOfCorporativelClientByUserIdAsync(userId) != null)
             {
@@ -113,10 +113,10 @@ namespace TradeSystem.Web.Controllers
         [HttpGet]
 
         public async Task<IActionResult> DetailsDataOfClient(Guid? userId)
-        {            
+        {    
             try
             {
-                var model = await clientService.DetailsOfDataOnClientAsync(userId ?? Guid.Parse(User.Id()));
+                var model = await clientService.DetailsOfDataOnClientAsync(userId ?? User.Id());
 
                 return View(model);
             }
@@ -132,8 +132,8 @@ namespace TradeSystem.Web.Controllers
             bool isGuid = Guid.TryParse(filename.Substring(0, filename.LastIndexOf('.') - 1), out Guid userId);
 
             if(!isGuid 
-                || (userId != Guid.Parse(User.Id())) 
-                    || (await employeeService.ExistsByUserIdAsync(Guid.Parse(User.Id())) == false))
+                || (userId != User.Id()) 
+                    || (await employeeService.ExistsByUserIdAsync(User.Id()) == false))
             {
                 BadRequest();
             }
@@ -155,19 +155,23 @@ namespace TradeSystem.Web.Controllers
         [HttpGet]
 
         public async Task<IActionResult> EditIndividual(Guid dataId)
-        {       
-            
-                try
-                {
-                    var model = await clientService.GetDataOfIdividualClientFormByIdAsync(dataId);
+        {
+            if (await clientService.ExixtByIndividualClientDataIdAsync(dataId) == false)
+            {
+                return BadRequest();
+            }
 
-                    return View(model);
-                }
-                catch (NonDataOfClientException nde)
-                {
-                    logger.LogError(nde, "ClientController/EditIndividual");
-                    return BadRequest();
-                }
+            try
+            {
+                var model = await clientService.GetDataOfIdividualClientFormByIdAsync(dataId);
+
+                return View(model);
+            }
+            catch (NonDataOfClientException nde)
+            {
+                logger.LogError(nde, "ClientController/EditIndividual");
+                return BadRequest();
+            }
         }
 
         [NotEmployee]
@@ -177,29 +181,33 @@ namespace TradeSystem.Web.Controllers
             Guid dataId
             , IndividualDataClentFormModel individualDataModel)
         {
-            
-                if (await clientService.CountryExistsAsync(individualDataModel.NationalityId) == false)
-                {
-                    ModelState.AddModelError(nameof(individualDataModel.NationalityId), NationalityRestricted);
-                }
+            if(await clientService.ExixtByIndividualClientDataIdAsync(dataId) == false)
+            {
+                return BadRequest();
+            }
 
-                if (ModelState.IsValid == false)
-                {
-                    individualDataModel.Nationalities = await clientService.AllCountriesAsync();
-                    return View(individualDataModel);
-                }
+            if (await clientService.CountryExistsAsync(individualDataModel.NationalityId) == false)
+            {
+                ModelState.AddModelError(nameof(individualDataModel.NationalityId), NationalityRestricted);
+            }
 
-                try
-                {
-                    await clientService.EditDataOfIndividualClientAsync(dataId, individualDataModel);
+            if (ModelState.IsValid == false)
+            {
+                individualDataModel.Nationalities = await clientService.AllCountriesAsync();
+                return View(individualDataModel);
+            }
 
-                    return RedirectToAction(nameof(DetailsDataOfClient), new { userId = Guid.Parse(User.Id()) });
-                }
-                catch (NonEmployeeException nee)
-                {
-                    logger.LogError(nee, "ClientController/EditIndividual");
-                    return BadRequest();
-                }
+            try
+            {
+                await clientService.EditDataOfIndividualClientAsync(dataId, individualDataModel);
+
+                return RedirectToAction(nameof(DetailsDataOfClient), new { userId = User.Id() });
+            }
+            catch (NonEmployeeException nee)
+            {
+                logger.LogError(nee, "ClientController/EditIndividual");
+                return BadRequest();
+            }
         }
 
         [NotEmployee]
@@ -207,17 +215,22 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> EditCorporative(Guid dataId)
         {
-                try
-                {
-                    var model = await clientService.GetDataOfCorporativeClientFormByIdAsync(dataId);
+            if (await clientService.ExixtByCorporativeClientDataIdAsync(dataId) == false)
+            {
+                return BadRequest();
+            }
 
-                    return View(model);
-                }
-                catch (NonDataOfClientException nde)
-                {
-                    logger.LogError(nde, "ClientController/EditCorporative");
-                    return BadRequest();
-                }
+            try
+            {
+                var model = await clientService.GetDataOfCorporativeClientFormByIdAsync(dataId);
+
+                return View(model);
+            }
+            catch (NonDataOfClientException nde)
+            {
+                logger.LogError(nde, "ClientController/EditCorporative");
+                return BadRequest();
+            }
         }
 
         [NotEmployee]
@@ -227,29 +240,33 @@ namespace TradeSystem.Web.Controllers
             Guid dataId
             , CorporativeDataClentFormModel corporativeDataModel)
         {
-            
-                if (await clientService.CountryExistsAsync(corporativeDataModel.NationalityId) == false)
-                {
-                    ModelState.AddModelError(nameof(corporativeDataModel.NationalityId), NationalityRestricted);
-                }
+            if (await clientService.ExixtByCorporativeClientDataIdAsync(dataId) == false)
+            {
+                return BadRequest();
+            }
 
-                if (ModelState.IsValid == false)
-                {
-                    corporativeDataModel.Nationalities = await clientService.AllCountriesAsync();
-                    return View(corporativeDataModel);
-                }
+            if (await clientService.CountryExistsAsync(corporativeDataModel.NationalityId) == false)
+            {
+                ModelState.AddModelError(nameof(corporativeDataModel.NationalityId), NationalityRestricted);
+            }
 
-                try
-                {
-                    await clientService.EditDataOfCorporativeClientAsync(dataId, corporativeDataModel);
+            if (ModelState.IsValid == false)
+            {
+                corporativeDataModel.Nationalities = await clientService.AllCountriesAsync();
+                return View(corporativeDataModel);
+            }
 
-                    return RedirectToAction(nameof(DetailsDataOfClient), new { userId = Guid.Parse(User.Id()) });
-                }
-                catch (NonEmployeeException nee)
-                {
-                    logger.LogError(nee, "ClientController/EditCorporative");
-                    return BadRequest();
-                }            
+            try
+            {
+                await clientService.EditDataOfCorporativeClientAsync(dataId, corporativeDataModel);
+
+                return RedirectToAction(nameof(DetailsDataOfClient), new { userId = User.Id() });
+            }
+            catch (NonEmployeeException nee)
+            {
+                logger.LogError(nee, "ClientController/EditCorporative");
+                return BadRequest();
+            }            
         }
 
         [NotEmployee]
@@ -257,9 +274,15 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> Delete(Guid dataId)
         {
+            if ((await clientService.ExixtByCorporativeClientDataIdAsync(dataId) == false)
+                && (await clientService.ExixtByIndividualClientDataIdAsync(dataId) == false))
+            {
+                return BadRequest();
+            }
+
             try
             {
-                var model = await clientService.DetailsOfDataOnClientAsync(Guid.Parse(User.Id()));
+                var model = await clientService.DetailsOfDataOnClientAsync(User.Id());
                 return View(model);
             }
             catch (NonDataOfClientException nee)
@@ -274,6 +297,12 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> Delete(DataOfClientServiceModel model, Guid dataId)
         {
+            if ((await clientService.ExixtByCorporativeClientDataIdAsync(dataId) == false)
+                && (await clientService.ExixtByIndividualClientDataIdAsync(dataId) == false))
+            {
+                return BadRequest();
+            }
+
             try
             {
                 await clientService.DeleteAsync(dataId);
@@ -293,7 +322,7 @@ namespace TradeSystem.Web.Controllers
         {
             try
             {
-                var model = await clientService.DetailsOfAcountOnClientAsync(userId ?? Guid.Parse(User.Id()));
+                var model = await clientService.DetailsOfAcountOnClientAsync(userId ?? User.Id());
 
                 return View(model);
             }
@@ -311,7 +340,7 @@ namespace TradeSystem.Web.Controllers
         {
             try
             {
-                var model = await clientService.GetClintDetailsAsync(Guid.Parse(User.Id()));
+                var model = await clientService.GetClintDetailsAsync(User.Id());
                 return View(model);
             }
             catch (UnauthoriseActionException ua)
@@ -328,7 +357,7 @@ namespace TradeSystem.Web.Controllers
         {
             try
             {
-                await clientService.AddMoneyAsync(Guid.Parse(User.Id()), model.AddedSum);
+                await clientService.AddMoneyAsync(User.Id(), model.AddedSum);
 
                 return RedirectToAction(nameof(DetailsAcauntOfClient));
             }

@@ -20,7 +20,7 @@ namespace TradeSystem.Web.Attributes
             }
 
             if (clientService != null
-                && clientService.ExistClientByUserIdAsync(Guid.Parse(context.HttpContext.User.Id())).Result == false)
+                && clientService.ExistClientByUserIdAsync(context.HttpContext.User.Id()).Result == false)
             {
                 context.Result = new StatusCodeResult(StatusCodes.Status403Forbidden);
             }

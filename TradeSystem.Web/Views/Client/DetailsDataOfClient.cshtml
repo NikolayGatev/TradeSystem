@@ -54,7 +54,7 @@ else if (Model.DataChecking.ToString() == "Accepted")
             <div class="form-inline">
                 @if (this.User?.Identity?.Name != null && this.User.Identity.Name == Model.ApplicationName)
                 {
-                    @if (await clientService.ExistDataIndividualClientByUserIdAsync(Guid.Parse(User.Id())))
+                    @if (await clientService.ExistDataIndividualClientByUserIdAsync(User.Id()))
                     {
                         <a class="btn btn-warning" asp-controller="Client" asp-action="EditIndividual"
                            asp-route-dataId="@Model.Id">Edit</a>
@@ -70,7 +70,7 @@ else if (Model.DataChecking.ToString() == "Accepted")
                     }
 
                 }
-                else if (await employeeService.ExistsByUserIdAsync(Guid.Parse(User.Id())))
+                else if (this.User?.Identity?.Name != null && await employeeService.ExistsByUserIdAsync(User.Id()))
                 {
                     @if (Model.DataChecking.ToString() == "NotChecking")
                     {

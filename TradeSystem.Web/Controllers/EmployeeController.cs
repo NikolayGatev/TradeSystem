@@ -48,7 +48,7 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> AddNewEmployee(EmployeeFormModel model)
         {
-            Guid userId = Guid.Parse(User.Id());
+            Guid userId = User.Id();
 
             if(await employeeService.DivisionExistsAsync(model.DivisionId) == false)
             {
@@ -72,7 +72,7 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> EmployeeDetails(Guid? employeeId)
         {            
-            Guid newId = (employeeId ?? await employeeService.GetIdOfEmployeeByUserIdAsync(Guid.Parse(User.Id()))) ?? Guid.Empty;
+            Guid newId = (employeeId ?? await employeeService.GetIdOfEmployeeByUserIdAsync(User.Id())) ?? Guid.Empty;
             
             try
             {
@@ -115,7 +115,7 @@ namespace TradeSystem.Web.Controllers
         {
             try
             {
-                await employeeService.RejectClientDataAsync(Guid.Parse(User.Id()), userId);
+                await employeeService.RejectClientDataAsync(User.Id(), userId);
 
                 return RedirectToAction(nameof(AllDataOfClients));
             }
@@ -132,7 +132,7 @@ namespace TradeSystem.Web.Controllers
         {
             try
             {
-                await employeeService.AcceptClientDataAsync(Guid.Parse(User.Id()), userId);
+                await employeeService.AcceptClientDataAsync(User.Id(), userId);
 
                 return RedirectToAction(nameof(AllDataOfClients));
             }

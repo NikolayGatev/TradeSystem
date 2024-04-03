@@ -98,6 +98,7 @@ namespace TradeSystem.Core.Services
                 {
                     Id = f.Id,
                     Name = f.Name,
+                    ISIN = f.ISIN
                 })
                 .OrderBy(f => f.Name)
                 .ToListAsync();
@@ -307,6 +308,7 @@ namespace TradeSystem.Core.Services
                 {
                     Id = f.Id,
                     Name = f.Name,
+                    ISIN = f.ISIN
                 })
                 .OrderBy(f => f.Name)
                 .ToListAsync();

@@ -25,8 +25,8 @@
                 <p><b>Active</b></p>
             }
 
-            @if (await employeeService.ExistsByUserIdAsync(Guid.Parse(User.Id()))
-            || await clientService.ExistClientByUserIdAsync(Guid.Parse(User.Id())))
+            @if (await employeeService.ExistsByUserIdAsync(User.Id())
+            || await clientService.ExistClientByUserIdAsync(User.Id()))
             {                                    
                <a class="ml-2 btn btn-danger" asp-controller="Order" asp-action="Delete"
                   asp-route-orderId="@Model.Id">Delete</a>

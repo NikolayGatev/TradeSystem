@@ -24,10 +24,10 @@
                 <p>@Model.AllAmountDeposited</p>
             </div>
 
-            @if (await clientService.ExistClientByUserIdAsync(Guid.Parse(User.Id())))
+            @if (await clientService.ExistClientByUserIdAsync(User.Id()))
             {
                 <a class="ml-2 btn btn-danger" asp-controller="Deposit" asp-action="Add"
-                   asp-route-orderId="@Guid.Parse(User.Id())">Add Money</a>
+                   asp-route-orderId="@User.Id()">Add Money</a>
             }
         </div>
     </div>

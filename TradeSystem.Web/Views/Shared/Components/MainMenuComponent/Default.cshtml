@@ -3,23 +3,23 @@
 
 <ul class="navbar-nav flex-grow-1">
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="" asp-controller="Trade" asp-action="RealTimeTrades">Real Time Trades</a>
+        <a class="nav-link text-dark" asp-area="" asp-controller="Trade" asp-action="RealTimeTrade">Real Time Trade</a>
     </li>
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="" asp-controller="FinancialInstrument" asp-action="All">Financial Instruments</a>
     </li>
     @if (this.User?.Identity?.IsAuthenticated ?? false)
     {
-        @if ((await clientService.ExistDataCorporativeClientByUserIdAsync(Guid.Parse(User.Id()))) 
-            || (await clientService.ExistDataIndividualClientByUserIdAsync(Guid.Parse(User.Id()))))
+        @if ((await clientService.ExistDataCorporativeClientByUserIdAsync(User.Id())) 
+            || (await clientService.ExistDataIndividualClientByUserIdAsync(User.Id())))
         {
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="DetailsDataOfClient">For me</a>
             </li>
-            @if (await clientService.ExistClientByUserIdAsync(Guid.Parse(User.Id())))
+            @if (await clientService.ExistClientByUserIdAsync(User.Id()))
             {
                 <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="MineTrades">My Trades</a>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Trade" asp-action="All">My Trades</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="DetailsAcauntOfClient">My acount</a>
@@ -35,7 +35,7 @@
                 </li>
             }            
         }
-        else if (await employeeService.ExistsByUserIdAsync(Guid.Parse(User.Id())))
+        else if (await employeeService.ExistsByUserIdAsync(User.Id()))
         {
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="AllDataOfClients">All Clients` Data</a>
@@ -47,7 +47,10 @@
                 <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="All">Check Orders</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="FundedCount">Founded clientaccount</a>
+                <a class="nav-link text-dark" asp-area="" asp-controller="Trade" asp-action="All">Check Trades</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="FundedCount">Founded client account</a>
             </li>
         }
         else

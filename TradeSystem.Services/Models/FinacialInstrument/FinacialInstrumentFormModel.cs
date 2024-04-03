@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TradeSystem.Core.Contracts.ModelExtention;
 using static TradeSystem.Common.EntityValidationConstants.FinancialInstrumentonstants;
 using static TradeSystem.Common.MessageConstants;
 
 namespace TradeSystem.Core.Models.FinacialInstrument
 {
-    public class FinacialInstrumentFormModel
+    public class FinacialInstrumentFormModel : IFinancialInstrumentModel
     {
         [Required(ErrorMessage = RequiredMessage)]
         [StringLength(MaxLengthName, MinimumLength = MinLengthName

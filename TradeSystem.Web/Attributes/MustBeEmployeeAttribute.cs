@@ -20,7 +20,7 @@ namespace TradeSystem.Web.Attributes
             }
 
             if (employeeService != null
-                && employeeService.ExistsByUserIdAsync(Guid.Parse(context.HttpContext.User.Id())).Result == false)
+                && employeeService.ExistsByUserIdAsync(context.HttpContext.User.Id()).Result == false)
             {
                 context.Result = new RedirectToActionResult(nameof(EmployeeController.AddNewEmployee), "Employee", null);
             }

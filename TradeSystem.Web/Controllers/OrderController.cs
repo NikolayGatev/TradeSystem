@@ -38,8 +38,8 @@ namespace TradeSystem.Web.Controllers
         {
             var model = new OrderFormModel()
             {
-                FinancialInstruments = await financialInstrumentService.AllFinancialInstrumentsOfClientAsync(Guid.Parse(User.Id())),
-                Balance = await orderService.GetBalanceByUserIdAsync(Guid.Parse(User.Id()))
+                FinancialInstruments = await financialInstrumentService.AllFinancialInstrumentsOfClientAsync(User.Id()),
+                Balance = await orderService.GetBalanceByUserIdAsync(User.Id())
             };
             return View(model);
         }
@@ -49,28 +49,20 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> Add(OrderFormModel model)
         {
+            if (await financialInstrumentService.ExixtFinancialInstrumentAsync(model.FinancialInstrumentId) == false)
+            {
+                return BadRequest();
+            }
+
             if (ModelState.IsValid == false)
             {
-                model.FinancialInstruments = await financialInstrumentService.AllFinancialInstrumentsOfClientAsync(Guid.Parse(User.Id()));
-                model.Balance = await orderService.GetBalanceByUserIdAsync(Guid.Parse(User.Id()));
+                model.FinancialInstruments = await financialInstrumentService.AllFinancialInstrumentsOfClientAsync(User.Id());
+                model.Balance = await orderService.GetBalanceByUserIdAsync(User.Id());
 
                 return View(model);
             }
 
-            var clientId = await clientService.GetClientIdByUserIdAsync(Guid.Parse(User.Id()));
-
-            try
-            {
-                if(await orderService.NotEnoughMoneyAsync(clientId, (model.Price * model.InitialVolume)))
-                {
-
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            var clientId = await clientService.GetClientIdByUserIdAsync(User.Id());
 
             Guid id;
 
@@ -99,89 +91,100 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> Details(Guid orderId)
         {
-            var model = new OrderDetailsServiceModel();
+            if (await orderService.ExistOrderByIdAsync(orderId) == false)
+            {
+                return BadRequest();
+            }
 
-            var userId = Guid.Parse(User.Id());
+            var userId = User.Id();
 
             try
             {
-                model = await orderService.GetOrderDetailsByIdAsync(orderId, userId);
+               var model = await orderService.GetOrderDetailsByIdAsync(orderId, userId);
+                return View(model);
             }
             catch (UnauthoriseActionException ua)
             {
                 logger.LogError(ua, "OrderController/Details");
 
-                RedirectToAction(nameof(Index), "Home");
+               return  RedirectToAction(nameof(Index), "Home");
             }
             catch (Exception ms)
             {
                 logger.LogError(ms, "OrderController/Details");
 
-                RedirectToAction(nameof(Index), "Home");
+                return RedirectToAction(nameof(Index), "Home");
             }
 
-            return View(model);
         }
 
         [HttpGet]
 
         public async Task<IActionResult> Delete(Guid orderId)
         {
-            var model = new OrderDetailsServiceModel();
+            if (await orderService.ExistOrderByIdAsync(orderId) == false)
+            {
+                return BadRequest();
+            }
 
-            var userId = Guid.Parse(User.Id());
+            var userId = User.Id();
 
             try
             {
-                model = await orderService.GetOrderDetailsByIdAsync(orderId, userId);
+                var model = await orderService.GetOrderDetailsByIdAsync(orderId, userId);
+                return View(model);
             }
             catch (UnauthoriseActionException ua)
             {
                 logger.LogError(ua, "OrderController/Delete");
 
-                RedirectToAction(nameof(Index), "Home");
+                return RedirectToAction(nameof(Index), "Home");
             }
             catch (Exception ms)
             {
                 logger.LogError(ms, "OrderController/Delete");
 
-                RedirectToAction(nameof(Index), "Home");
+                return RedirectToAction(nameof(Index), "Home");
             }
 
-            return View(model);
         }
 
         [HttpPost]
 
         public async Task<IActionResult> Delete(OrderDetailsServiceModel model)
         {
-            var userId = Guid.Parse(User.Id());
+            if (await orderService.ExistOrderByIdAsync(model.Id) == false)
+            {
+                return BadRequest();
+            }
+
+            var userId = User.Id();
 
             try
             {
                 await orderService.DeleteAsync(model.Id, userId);
+                return RedirectToAction(nameof(All));
             }
             catch (UnauthoriseActionException ua)
             {
                 logger.LogError(ua, "OrderController/Delete");
 
-                RedirectToAction(nameof(Index), "Home");
+                return RedirectToAction(nameof(Index), "Home");
             }
             catch (Exception ms)
             {
                 logger.LogError(ms, "OrderController/Delete");
 
-                RedirectToAction(nameof(Index), "Home");
+                return RedirectToAction(nameof(Index), "Home");
             }
 
-            return RedirectToAction(nameof(All));
         }
 
         [HttpGet]
 
         public async Task<IActionResult> All([FromQuery] AllOrdersQueryModel query)
         {
-            var userId = Guid.Parse(User.Id());
+            var userId = User.Id();
 
             try
             {
@@ -199,16 +202,16 @@ namespace TradeSystem.Web.Controllers
                 query.TotalOrdersCount = model.TotalOrdersCount;
                 query.Orders = model.Orders;
                 query.ISINs = await financialInstrumentService.AllISINsAsync();
-                query.ClientAccountIds = await orderService.AllClintsIdAsync(userId);
+                query.ClientAccountIds = await clientService.AllClintsIdAsync(userId);
+
+                return View(query);
             }
             catch (UnauthoriseActionException ua)
             {
                 logger.LogError(ua, "OrderController/Delete");
 
-                RedirectToAction(nameof(Index), "Home");
+                return RedirectToAction(nameof(Index), "Home");
             }
-
-            return View(query);
         }
     }
 }

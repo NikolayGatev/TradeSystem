@@ -32,6 +32,7 @@ namespace TradeSystem.Core.Services
         private readonly IDeletableEntityRepository<TradeOrder> tradeOrderRepozitory;
         private readonly IClientService clientService;
         private readonly IEmployeeService employeeService;
+        private readonly IFinancialInstrumentService financialInstrumentService;
 
         public OrderService(
                    IDeletableEntityRepository<Employee> employeeRepozitory
@@ -50,7 +51,9 @@ namespace TradeSystem.Core.Services
                    , IDeletableEntityRepository<Trade> tradeRepozitory
                    , IDeletableEntityRepository<TradeOrder> tradeOrderRepozitory
                    , IClientService clientService
-                    ,IEmployeeService employeeService)
+                    ,IEmployeeService employeeService
+                    ,IFinancialInstrumentService financialInstrumentService)
+        
 
         {
             this.employeeRepozitory = employeeRepozitory;
@@ -70,11 +73,12 @@ namespace TradeSystem.Core.Services
             this.tradeOrderRepozitory = tradeOrderRepozitory;
             this.clientService = clientService;
             this.employeeService = employeeService;
+            this.financialInstrumentService = financialInstrumentService;
         }
 
         public async Task<Guid> CreateAsync(OrderFormModel model, Guid? clientId)
         {
-            if (await finInstrRepozitory.AllAsNoTracking().AnyAsync(f => f.Id == model.FinancialInstrumentId) == false)
+            if (await financialInstrumentService.ExixtFinancialInstrumentAsync(model.FinancialInstrumentId) == false)
             {
                 throw new NonFinancialInstrumentException(MessageNotFinancialInstrumentException);
             }
@@ -111,21 +115,28 @@ namespace TradeSystem.Core.Services
         {
             var opositOrders = order.IsBid
                 ? await orderRepozitory.All()
-                    .Where(o => o.IsBid == false && o.Price <= order.Price)
+                    .Where(o => o.IsBid == false 
+                        && o.FinancialInstrumentId == order.FinancialInstrumentId
+                        && o.ClientId != order.ClientId
+                        && o.Price <= order.Price)
                     .OrderBy(o => o.Price)
-                    .ThenBy(o => o.CreatedOn)
+                    .ThenByDescending(o => o.CreatedOn)
                     .ToListAsync()
                 : await orderRepozitory.All()
-                    .Where(o => o.IsBid && o.Price >= order.Price)
+                    .Where(o => o.IsBid 
+                        && o.FinancialInstrumentId == order.FinancialInstrumentId
+                        && o.ClientId != order.ClientId
+                        && o.Price >= order.Price)
                     .OrderByDescending(o => o.Price)
-                    .ThenBy(o => o.CreatedOn)
+                    .ThenByDescending(o => o.CreatedOn)
                     .ToListAsync();
 
             if(opositOrders != null)
             {
                 List<Trade> trades = new List<Trade>();
+                List<TradeOrder> tradeOrders = new List<TradeOrder>();
 
-                for(int i = opositOrders.Count() - 1; i >=0; i-- )
+                for (int i = opositOrders.Count() - 1; i >=0; i-- )
                 {
                     var value = opositOrders[i].ActiveVolume > order.ActiveVolume
                         ? order.ActiveVolume
@@ -138,25 +149,31 @@ namespace TradeSystem.Core.Services
                         FinancialInstrumentId = order.FinancialInstrumentId,
                     };
 
-                    trade.TradeOrders.Add(new TradeOrder()
-                    {
-                        Trade = trade,
-                        OrderId = order.Id
-                    });
-
-                    trade.TradeOrders.Add(new TradeOrder()
-                    {
-                        Trade = trade,
-                        OrderId = opositOrders[i].Id
-                    });
-
                     trades.Add(trade);
+
+                    var tradeOrdersOne = new TradeOrder()
+                    {
+                        Trade = trade,
+                        OrderId = order.Id,
+                        Volume = value,
+                    };
+
+                    tradeOrders.Add(tradeOrdersOne);
+
+                    var tradeOrdersSecond = new TradeOrder()
+                    {
+                        Trade = trade,
+                        OrderId = opositOrders[i].Id,
+                        Volume = value,
+                    };
+
+                    tradeOrders.Add(tradeOrdersSecond);
 
                     var bidderId = order.IsBid
                         ? order.ClientId
                         : opositOrders[i].ClientId;
 
-                    var sellerId = order.IsBid == false
+                    var sellerId = order.IsBid
                         ? order.ClientId
                         : opositOrders[i].ClientId;
 
@@ -169,9 +186,11 @@ namespace TradeSystem.Core.Services
                     {
                         break;
                     }
-                }
 
-                await tradeOrderRepozitory.SaveChangesAsync();
+                    await tradeOrderRepozitory.SaveChangesAsync();
+                    await tradeRepozitory.SaveChangesAsync();
+                    await orderRepozitory.SaveChangesAsync();
+                }
             }
         }
 
@@ -390,24 +409,8 @@ namespace TradeSystem.Core.Services
             };
         }
 
-        public async Task<IEnumerable<string>> AllClintsIdAsync(Guid userId)
-        {
-            var clientId = await clientService.GetClientIdByUserIdAsync(userId);
-
-            return clientId != null
-                ? new List<string>() { clientId.ToString() }
-                : await clientRepozitory.AllAsNoTrackingWithDeleted()
-                .Select(c => c.Id.ToString())
-                .OrderBy(c => c)
-                .ToListAsync();
-        }
-
-        public async Task<bool> NotEnoughMoneyAsync(Guid? clientId, decimal sum)
-        {
-            if(clientId == null)
-            {
-                throw new UnauthoriseActionException(MessageUnauthoriseActionException);
-            }
+        private async Task<bool> NotEnoughMoneyAsync(Guid? clientId, decimal sum)
+        {          
 
             Client client = await clientRepozitory.AllAsNoTracking().Where(c => c.Id == clientId).FirstAsync();
 
@@ -426,6 +429,11 @@ namespace TradeSystem.Core.Services
             Client client = await clientRepozitory.AllAsNoTracking().Where(c => c.Id == clientId).FirstAsync();
 
             return client.Balance;
+        }
+
+        public async Task<bool> ExistOrderByIdAsync(Guid orderId)
+        {
+            return await orderRepozitory.AllAsNoTrackingWithDeleted().AnyAsync(o => o.Id == orderId);
         }
     }
 }

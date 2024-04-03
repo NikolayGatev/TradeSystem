@@ -20,7 +20,7 @@ namespace TradeSystem.Web.Attributes
             }
 
             if(clientService != null
-                && clientService.ExistDataIndividualClientByUserIdAsync(Guid.Parse(context.HttpContext.User.Id())).Result == false)
+                && clientService.ExistDataIndividualClientByUserIdAsync(context.HttpContext.User.Id()).Result == false)
             {
                 context.Result = new RedirectToActionResult(nameof(ClientController.AddDataNewIndividualClient), "Client", null);
             }

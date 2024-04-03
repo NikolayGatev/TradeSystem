@@ -19,7 +19,7 @@ namespace TradeSystem.Web.Attributes
             }
 
             if (employeeService != null
-                && employeeService.ExistsByUserIdAsync(Guid.Parse(context.HttpContext.User.Id())).Result)
+                && employeeService.ExistsByUserIdAsync(context.HttpContext.User.Id()).Result)
             {
                 context.Result = new StatusCodeResult(StatusCodes.Status400BadRequest);
             }

@@ -704,5 +704,17 @@ namespace TradeSystem.Core.Services
 
             return result[0];
         }
+
+        public async Task<IEnumerable<string>> AllClintsIdAsync(Guid userId)
+        {
+            var clientId = await GetClientIdByUserIdAsync(userId);
+
+            return clientId != null
+                ? new List<string>() { clientId.ToString() }
+                : await clientRepozitory.AllAsNoTrackingWithDeleted()
+                .Select(c => c.Id.ToString())
+                .OrderBy(c => c)
+                .ToListAsync();
+        }
     }
 }

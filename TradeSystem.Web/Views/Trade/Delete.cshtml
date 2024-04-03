@@ -1,0 +1,39 @@
+﻿@model TradeDetailsServiceModel
+
+@{
+    ViewBag.Title = "Delete trade";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<form asp-action="Delete">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" class="form-control" disabled="disabled" />
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedOn" class="control-label"></label>
+                <input asp-for="CreatedOn" class="form-control" disabled="disabled" />
+            </div>
+            <div class="form-group">
+                <label asp-for="FinancialInstrumentName" class="control-label"></label>
+                <input asp-for="FinancialInstrumentName" class="form-control" disabled="disabled" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Volume" class="control-label"></label>
+                <input asp-for="Volume" class="form-control" disabled="disabled" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" disabled="disabled" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Delete" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</form>
+

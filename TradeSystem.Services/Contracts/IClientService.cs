@@ -63,5 +63,7 @@ namespace TradeSystem.Core.Contracts
         public Task AddMoneyAsync(Guid userId, decimal amount);
 
         public Task<ClientAddMoneyModel> GetClintDetailsAsync(Guid userId);
+
+        Task<IEnumerable<string>> AllClintsIdAsync(Guid userId);
     }
 }
