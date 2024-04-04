@@ -64,6 +64,8 @@ namespace TradeSystem.Core.Contracts
 
         public Task<ClientAddMoneyModel> GetClintDetailsAsync(Guid userId);
 
-        Task<IEnumerable<string>> AllClintsIdAsync(Guid userId);
+        public Task<IEnumerable<string>> AllClintsIdAsync(Guid userId);
+
+        public Task<Client?> GetClientByClientIdAcync(Guid userId);
     }
 }

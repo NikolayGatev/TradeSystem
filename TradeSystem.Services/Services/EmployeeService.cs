@@ -20,7 +20,6 @@ namespace TradeSystem.Core.Services
         private readonly IRepository<Country> countryRepozitory;
         private readonly IRepository<DataOfCorporateveClient> dataCorporativeClientRepozitory;
         private readonly IRepository<DataOfIndividualClient> dataIndividualClientRepozitory;
-        private readonly IDeletableEntityRepository<DepositedMoney> depositMoneyRepozitory;
         private readonly IRepository<Division> divisionRepozitory;
         private readonly IDeletableEntityRepository<FinancialInstrument> finInstrRepozitory;
         private readonly IRepository<IdentityDocument> identityDocRepozitory;
@@ -38,7 +37,6 @@ namespace TradeSystem.Core.Services
                    , IRepository<Country> countryRepozitory
                    , IRepository<DataOfCorporateveClient> dataCorporativeClientRepozitory
                    , IRepository<DataOfIndividualClient> dataIndividualClientRepozitory
-                   , IDeletableEntityRepository<DepositedMoney> depositMoneyRepozitory
                    , IRepository<Division> divisionRepozitory
                    , IDeletableEntityRepository<FinancialInstrument> finInstrRepozitory
                    , IRepository<IdentityDocument> identityDocRepozitory
@@ -56,7 +54,6 @@ namespace TradeSystem.Core.Services
             this.countryRepozitory = countryRepozitory;
             this.dataCorporativeClientRepozitory = dataCorporativeClientRepozitory;
             this.dataIndividualClientRepozitory = dataIndividualClientRepozitory;
-            this.depositMoneyRepozitory = depositMoneyRepozitory;
             this.divisionRepozitory = divisionRepozitory;
             this.finInstrRepozitory = finInstrRepozitory;
             this.identityDocRepozitory = identityDocRepozitory;

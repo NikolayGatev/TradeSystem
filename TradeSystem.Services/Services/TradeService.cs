@@ -31,7 +31,6 @@ namespace TradeSystem.Core.Services
                    , IRepository<Country> countryRepozitory
                    , IRepository<DataOfCorporateveClient> dataCorporativeClientRepozitory
                    , IRepository<DataOfIndividualClient> dataIndividualClientRepozitory
-                   , IDeletableEntityRepository<DepositedMoney> depositMoneyRepozitory
                    , IRepository<Division> divisionRepozitory
                    , IDeletableEntityRepository<FinancialInstrument> finInstrRepozitory
                    , IRepository<IdentityDocument> identityDocRepozitory

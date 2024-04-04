@@ -8,6 +8,6 @@
 
         public uint UnfulfilledVolume { get; set; }
 
-        public bool IsDelete { get; set; } = false;
+        public bool IsDelete { get; set; }
     }
 }

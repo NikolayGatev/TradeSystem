@@ -13,7 +13,6 @@ namespace TradeSystem.Data.Models
     {
         public Client()
         {
-            this.AllDepositedsMoney = new HashSet<DepositedMoney>();
             this.Orders = new HashSet<Order>();
             this.Trades = new HashSet<Trade>();
             this.FinancialInstruments = new HashSet<ClientFinancialInstrument>();
@@ -32,8 +31,6 @@ namespace TradeSystem.Data.Models
         [Precision(MaxNumberOfDigits, FloatingPointPrecision)]
 
         public decimal BlockedSum { get; set; } = 0;
-
-        public virtual ICollection<DepositedMoney> AllDepositedsMoney { get; set; } = null!;
 
         public virtual ICollection<Order> Orders { get; set; } = null!;
 

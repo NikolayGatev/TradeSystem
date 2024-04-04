@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Exeptions;
 using TradeSystem.Core.Models.Employees;
@@ -22,7 +23,6 @@ namespace TradeSystem.Core.Services
         private readonly IRepository<Country> countryRepozitory;
         private readonly IRepository<DataOfCorporateveClient> dataCorporativeClientRepozitory;
         private readonly IRepository<DataOfIndividualClient> dataIndividualClientRepozitory;
-        private readonly IDeletableEntityRepository<DepositedMoney> depositMoneyRepozitory;
         private readonly IRepository<Division> divisionRepozitory;
         private readonly IDeletableEntityRepository<FinancialInstrument> finInstrRepozitory;
         private readonly IRepository<IdentityDocument> identityDocRepozitory;
@@ -42,7 +42,6 @@ namespace TradeSystem.Core.Services
                    , IRepository<Country> countryRepozitory
                    , IRepository<DataOfCorporateveClient> dataCorporativeClientRepozitory
                    , IRepository<DataOfIndividualClient> dataIndividualClientRepozitory
-                   , IDeletableEntityRepository<DepositedMoney> depositMoneyRepozitory
                    , IRepository<Division> divisionRepozitory
                    , IDeletableEntityRepository<FinancialInstrument> finInstrRepozitory
                    , IRepository<IdentityDocument> identityDocRepozitory
@@ -63,7 +62,6 @@ namespace TradeSystem.Core.Services
             this.countryRepozitory = countryRepozitory;
             this.dataCorporativeClientRepozitory = dataCorporativeClientRepozitory;
             this.dataIndividualClientRepozitory = dataIndividualClientRepozitory;
-            this.depositMoneyRepozitory = depositMoneyRepozitory;
             this.divisionRepozitory = divisionRepozitory;
             this.finInstrRepozitory = finInstrRepozitory;
             this.identityDocRepozitory = identityDocRepozitory;
@@ -88,7 +86,7 @@ namespace TradeSystem.Core.Services
                 throw new UnauthoriseActionException(MessageUnauthoriseActionException);
             }
 
-            if (await NotEnoughMoneyAsync(clientId, (model.Price * model.InitialVolume)) == false) 
+            if (model.IsBid && await NotEnoughMoneyAsync(clientId, (model.Price * model.InitialVolume)) == false) 
             {
                 throw new Exception(DoNotEnoughMoney);
             }
@@ -102,6 +100,16 @@ namespace TradeSystem.Core.Services
                 FinancialInstrumentId = model.FinancialInstrumentId,
                 ClientId = clientId ?? new Guid(),
             };
+
+            if(model.IsBid && clientId != null)
+            {
+                var client = await clientRepozitory.All().Where(c => c.Id == clientId).FirstAsync();
+
+                client.BlockedSum = model.InitialVolume * model.Price;
+                client.Balance -= model.InitialVolume * model.Price;
+
+                await clientRepozitory.SaveChangesAsync();
+            }
 
             await orderRepozitory.AddAsync(order);
             await orderRepozitory.SaveChangesAsync();
@@ -131,12 +139,9 @@ namespace TradeSystem.Core.Services
                     .ThenByDescending(o => o.CreatedOn)
                     .ToListAsync();
 
-            if(opositOrders != null)
-            {
-                List<Trade> trades = new List<Trade>();
-                List<TradeOrder> tradeOrders = new List<TradeOrder>();
+            if(opositOrders.Any())
 
-                for (int i = opositOrders.Count() - 1; i >=0; i-- )
+                for (int i = 0; i < opositOrders.Count(); i++ )
                 {
                     var value = opositOrders[i].ActiveVolume > order.ActiveVolume
                         ? order.ActiveVolume
@@ -149,50 +154,62 @@ namespace TradeSystem.Core.Services
                         FinancialInstrumentId = order.FinancialInstrumentId,
                     };
 
-                    trades.Add(trade);
+                    await tradeRepozitory.AddAsync(trade);
+                    await tradeRepozitory.SaveChangesAsync();
 
                     var tradeOrdersOne = new TradeOrder()
                     {
-                        Trade = trade,
+                        TradeId = trade.Id,
                         OrderId = order.Id,
                         Volume = value,
                     };
 
-                    tradeOrders.Add(tradeOrdersOne);
+                    await tradeOrderRepozitory.AddAsync(tradeOrdersOne);
 
                     var tradeOrdersSecond = new TradeOrder()
                     {
-                        Trade = trade,
+                        TradeId = trade.Id,
                         OrderId = opositOrders[i].Id,
                         Volume = value,
                     };
 
-                    tradeOrders.Add(tradeOrdersSecond);
+                    await tradeOrderRepozitory.AddAsync(tradeOrdersSecond);
+
+                    await tradeOrderRepozitory.SaveChangesAsync();
 
                     var bidderId = order.IsBid
                         ? order.ClientId
                         : opositOrders[i].ClientId;
 
                     var sellerId = order.IsBid
-                        ? order.ClientId
-                        : opositOrders[i].ClientId;
+                        ? opositOrders[i].ClientId
+                        : order.ClientId;
 
                     await ExecutingSettelmentTrade(sellerId, bidderId, trade.Volume, order, trade.Price);
 
                     opositOrders[i].ActiveVolume -= value;
                     order.ActiveVolume -= value;
 
+                    if (opositOrders[i].ActiveVolume == 0)
+                    {
+                        orderRepozitory.Delete(opositOrders[i]);
+                    }
+
+                    if (order.ActiveVolume == 0)
+                    {
+                        orderRepozitory.Delete(order);
+                    }
+
+                    await orderRepozitory.SaveChangesAsync();
+
                     if (order.ActiveVolume == 0)
                     {
                         break;
                     }
-
-                    await tradeOrderRepozitory.SaveChangesAsync();
-                    await tradeRepozitory.SaveChangesAsync();
-                    await orderRepozitory.SaveChangesAsync();
                 }
             }
-        }
+        
+
 
         private async Task ExecutingSettelmentTrade(Guid sellerId, Guid bidderId, uint volume, Order order, decimal priceExecuting)
         {
@@ -200,39 +217,41 @@ namespace TradeSystem.Core.Services
                 ? await clientRepozitory.All().Where(c => c.Id == bidderId).FirstAsync()
                 : await clientRepozitory.All().Where(c => c.Id == sellerId).FirstAsync();
 
+            var client = await clientRepozitory.All().Where(c => c.Id == order.ClientId).FirstAsync();
+
             if (order.IsBid)
             {
-                order.Client.BlockedSum -= volume * order.Price;
-                order.Client.Balance = order.Price > priceExecuting
-                    ? order.Client.Balance + ((order.Price - priceExecuting) * volume)
-                    : order.Client.Balance;
+                client.BlockedSum -= volume * order.Price;
+                client.Balance = order.Price > priceExecuting
+                    ? client.Balance + ((order.Price - priceExecuting) * volume)
+                    : client.Balance;
 
-                counterparty.Balance += volume * order.Price;
+                counterparty.Balance += volume * priceExecuting;
             }
             if (order.IsBid == false)
             {
                 counterparty.BlockedSum -= volume * priceExecuting;
 
-                order.Client.Balance += volume * order.Price;
+                client.Balance += volume * priceExecuting;
             }
 
-            await FinacialInstrumentSettelment(order.Client, volume, order.IsBid, order.FinancialInstrumentId);
-            await FinacialInstrumentSettelment(counterparty, volume, order.IsBid, order.FinancialInstrumentId);
+            await clientRepozitory.SaveChangesAsync();
+
+            await FinacialInstrumentSettelment(client, volume, order.IsBid, order.FinancialInstrumentId);
+            await FinacialInstrumentSettelment(counterparty, volume, order.IsBid ? false : true, order.FinancialInstrumentId);
         }
 
         private async Task FinacialInstrumentSettelment(Client client, uint volume, bool isBid, int finInstrId)
-        {            
-             if (client.FinancialInstruments.Any(si => si.FinancialInstrumentId == finInstrId))
-             {
-                 var clientFinInsr = await clientFinancialInstrumentRepozitory.All()
+        {
+            var clientFinInsr = await clientFinancialInstrumentRepozitory.All()
                           .Where(f => f.FinancialInstrumentId == finInstrId
                               && f.ClientId == client.Id)
-                          .FirstAsync();
+                          .FirstOrDefaultAsync();
 
+            if (clientFinInsr != null)
+             {
                  clientFinInsr.Volume = isBid ? clientFinInsr.Volume + volume
-                    : clientFinInsr.Volume - volume;
-
-                 
+                    : clientFinInsr.Volume - volume;                
              }
              else
              {
@@ -288,7 +307,7 @@ namespace TradeSystem.Core.Services
         public async Task DeleteAsync(Guid orderId, Guid userId)
         {
             var entity = await GetOrderByIdAsync(orderId);
-            var clientId = await clientService.GetClientIdByUserIdAsync(userId);
+            var clientIdByUserId = await clientService.GetClientIdByUserIdAsync(userId);
 
             if (entity == null
                 || entity.IsDeleted)
@@ -296,11 +315,25 @@ namespace TradeSystem.Core.Services
                 throw new Exception(MessageNotDataException);
             }
 
-            if (clientId == null
-                || entity.ClientId != clientId
-                || await employeeService.ExistsByUserIdAsync(userId) == false)
+            var clientSubmitEntity = await clientService.GetClientByClientIdAcync(entity.ClientId);
+
+            if ((await employeeService.ExistsByUserIdAsync(userId) == false)
+                 && (clientIdByUserId == null || (entity.ClientId != clientIdByUserId)))
             {
                 throw new UnauthoriseActionException(MessageUnauthoriseActionException);
+            }
+
+            if(clientSubmitEntity == null)
+            {
+                throw new UnauthoriseActionException(MessageUnauthoriseActionException);
+            }
+
+            if(entity.IsBid)
+            {
+                clientSubmitEntity.BlockedSum -= entity.Price * entity.ActiveVolume;
+                clientSubmitEntity.Balance += entity.Price * entity.ActiveVolume;
+
+                await clientRepozitory.SaveChangesAsync();
             }
 
             orderRepozitory.Delete(entity);
@@ -394,6 +427,7 @@ namespace TradeSystem.Core.Services
                     IsBid = o.IsBid,
                     InitialVolume = o.InitialVolume,
                     Price = o.Price,
+                    IsDelete = o.IsDeleted,
                     FinancialInstrumentId = o.FinancialInstrumentId,
                 })
                 .ToListAsync();
@@ -435,5 +469,6 @@ namespace TradeSystem.Core.Services
         {
             return await orderRepozitory.AllAsNoTrackingWithDeleted().AnyAsync(o => o.Id == orderId);
         }
+
     }
 }

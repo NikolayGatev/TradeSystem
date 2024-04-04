@@ -8,6 +8,7 @@ namespace TradeSystem.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<TradeOrder> builder)
         {
+            builder.HasKey(to => new {to.OrderId, to.TradeId});
             builder
                 .Property(to => to.CreatedOn)
                 .HasDefaultValueSql("GETUTCDATE()");

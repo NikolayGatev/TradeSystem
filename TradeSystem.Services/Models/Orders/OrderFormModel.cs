@@ -25,7 +25,7 @@ namespace TradeSystem.Core.Models.Orders
         [Display(Name = "Volume for executing")]
         [Range(VolumeMin, VolumeMax)]
 
-        public uint InitialVolume { get; set; } = 0;
+        public uint InitialVolume { get; set; } = 1;
 
         [Required(ErrorMessage = RequiredMessage)]
         [Range(typeof(decimal), PriceMinLegnth, PriceMaxLegnth,
@@ -43,11 +43,11 @@ namespace TradeSystem.Core.Models.Orders
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (this.Balance == 0) 
+            if (this.IsBid == true && this.Balance == 0m) 
                     yield return new ValidationResult(ZeroBalance);
-            if (this.Balance != 0 
-                && Math.Floor(this.Balance / this.Price) < this.InitialVolume
-                && this.IsBid) 
+            if (this.Balance != 0m
+                && this.IsBid
+                && Math.Floor(this.Balance / this.Price) < this.InitialVolume) 
                     yield return new ValidationResult(DoNotEnoughMoney);
         }
     }

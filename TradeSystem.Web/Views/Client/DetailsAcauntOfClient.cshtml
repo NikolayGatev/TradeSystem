@@ -26,8 +26,7 @@
 
             @if (await clientService.ExistClientByUserIdAsync(User.Id()))
             {
-                <a class="ml-2 btn btn-danger" asp-controller="Deposit" asp-action="Add"
-                   asp-route-orderId="@User.Id()">Add Money</a>
+                <a class="ml-2 btn btn-danger" asp-controller="Client" asp-action="AddMoney">Add Money</a>
             }
         </div>
     </div>

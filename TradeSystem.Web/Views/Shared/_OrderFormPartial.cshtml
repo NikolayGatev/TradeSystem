@@ -31,7 +31,7 @@
             @if ((Model.IsBid) && (Model.Balance == 0 || (Math.Floor(Model.Balance / Model.Price) < Model.InitialVolume)))
             {
                 <div class="form-group">
-                    <label class ="small text-danger">You do not enough money!</label>
+                    <label class="small text-danger">Your blance is 0, or You do not enough money!</label>
                 </div>
             }
             @if (Model.IsBid == false 

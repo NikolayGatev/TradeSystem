@@ -27,8 +27,6 @@ namespace TradeSystem.Data
 
         public DbSet<DataOfIndividualClient> DataOfIndividualClients { get; set; } = null!;
 
-        public DbSet<DepositedMoney> DepositedMoney { get; set; } = null!;
-
         public DbSet<Division> Divisions { get; set; } = null!;
 
         public DbSet<FinancialInstrument> FinancialInstruments { get; set; } = null!;
@@ -53,7 +51,6 @@ namespace TradeSystem.Data
             builder.ApplyConfiguration(new ClientEntityConfiguration());
             builder.ApplyConfiguration(new TradeSystem.Data.Configurations.DataOfCorporativeClientEntityConfiguration());
             builder.ApplyConfiguration(new TradeSystem.Data.Configurations.DataOfIndividualClientEntityConfiguration());
-            builder.ApplyConfiguration(new DepositedMoneyEntityConfiguration());
             builder.ApplyConfiguration(new OrderEntityConfiguration());
             builder.ApplyConfiguration(new TradeEntityConfiguration());
             builder.ApplyConfiguration(new TradeOrderEntityConfiguration());
