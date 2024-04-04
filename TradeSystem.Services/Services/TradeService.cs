@@ -278,15 +278,17 @@ namespace TradeSystem.Core.Services
                     ISIN = t.FinancialInstrument.ISIN,
                     Name = t.FinancialInstrument.Name,
                     FinancialInstrumentId = t.FinancialInstrument.Id,
-                    TimeOfTrade = t.CreatedOn.ToString(DateFormat),
+                    TimeOfTrade = t.CreatedOn.ToString(DateTimeFormat),
                     Price = t.Price,
                     Volume = t.Volume,
                 })
-                .GroupBy(i => i.ISIN)
-                .Select(t => t.First())
                 .ToListAsync();
+            var result = tradesToShow
+                                .GroupBy(t => t.FinancialInstrumentId)
+                                .Select(t => t.First());
+                
 
-            return tradesToShow;
+            return result;
         }
     }    
 }

@@ -14,6 +14,8 @@
         public const int MinLengthIndividualName = 3;
 
         public const string DateFormat = "d.M.yyyy";
+        public const string DateTimeFormat = "d.M.yyyy HH:mm:ss";
+
 
         public const int MaxSizeFile = 4_000_000;
     }
