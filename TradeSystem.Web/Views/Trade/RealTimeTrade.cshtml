@@ -1,5 +1,8 @@
-﻿@model IEnumerable<RealTimeTradeServiceModel>
+﻿@using Microsoft.AspNetCore.Identity
+@using TradeSystem.Data.Models
+@model IEnumerable<RealTimeTradeServiceModel>
 @inject IClientService clientService
+@inject SignInManager<ApplicationUser> signInManager
 @{
     ViewBag.Title = "Real time trade";
 }
@@ -32,7 +35,8 @@
                     <td>@data.Price</td>
                     <td>@data.Volume</td>
                     <td>@data.TimeOfTrade</td>
-                    @if (await clientService.ExistClientByUserIdAsync(User.Id()))
+                    @if ((signInManager.IsSignedIn(User))
+                    && (await clientService.ExistClientByUserIdAsync(User.Id())))
                     {
                         <td>
                             <a asp-controller="Order" asp-action="Add" class="btn btn-success">Details</a>

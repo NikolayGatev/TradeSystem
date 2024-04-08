@@ -4,7 +4,8 @@
     {
         public static Guid Id(this ClaimsPrincipal user)
         {
-            return Guid.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier));
+            var result = Guid.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier));
+            return result;
         }
     }
 }

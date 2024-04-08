@@ -24,7 +24,7 @@ namespace TradeSystem.Data.Models
 
         public DateTime? DeletedOn { get ; set ; }
 
-        ICollection<Employee> Administrators { get; set; } = null!;
+        public virtual ICollection<Employee> Administrators { get; set; } = null!;
 
         public virtual ICollection<DataOfCorporateveClient> CorporativeClients { get; set; } = null!;
 

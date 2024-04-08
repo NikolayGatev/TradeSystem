@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using TradeSystem.Data;
 using TradeSystem.Web.ModelBinding;
 
 namespace TradeSystem.Web
