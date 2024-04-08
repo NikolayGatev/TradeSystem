@@ -1,4 +1,6 @@
-﻿namespace System.Security.Claims
+﻿using static TradeSystem.Common.RoleConstants;
+
+namespace System.Security.Claims
 {
     public static class ClaimsPrincipalExtensions
     {
@@ -8,5 +10,9 @@
             return result;
         }
 
+        public static bool IsAdmin(this ClaimsPrincipal user)
+        {
+            return user.IsInRole(AdminRole);
+        }
     }
 }
