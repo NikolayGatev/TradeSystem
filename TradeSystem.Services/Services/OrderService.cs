@@ -7,7 +7,6 @@ using TradeSystem.Core.Models.Enums;
 using TradeSystem.Core.Models.FinacialInstrument;
 using TradeSystem.Core.Models.Orders;
 using TradeSystem.Data.Common;
-using TradeSystem.Data.Migrations;
 using TradeSystem.Data.Models;
 using static TradeSystem.Common.ExceptionMessages;
 using static TradeSystem.Common.MessageConstants;
@@ -89,6 +88,11 @@ namespace TradeSystem.Core.Services
             if (model.IsBid && await NotEnoughMoneyAsync(clientId, (model.Price * model.InitialVolume)) == false) 
             {
                 throw new Exception(DoNotEnoughMoney);
+            }
+
+            if(model.IsBid == false && await EnoughFinancialInstrumentsAsync(clientId, model.InitialVolume, model.FinancialInstrumentId) == false)
+            {
+                throw new Exception(DoNotEnoughFinancialInstruments);
             }
 
             var order = new Order()
@@ -289,6 +293,7 @@ namespace TradeSystem.Core.Services
             return new OrderDetailsServiceModel()
             {
                 Id = entity.Id,
+                IsBid = entity.IsBid,
                 Price = entity.Price,
                 FinancialInstrumentId = entity.FinancialInstrumentId,
                 InitialVolume = entity.InitialVolume,
@@ -470,5 +475,16 @@ namespace TradeSystem.Core.Services
             return await orderRepozitory.AllAsNoTrackingWithDeleted().AnyAsync(o => o.Id == orderId);
         }
 
+
+        private async Task<bool> EnoughFinancialInstrumentsAsync(Guid? clientId, uint initialVolume, int finInstrId)
+        {
+            uint ownerFinIstr = (uint) await financialInstrumentService.GetCountOfOwnerFinancialInstrumentOnClientByIdAsync(clientId, finInstrId);
+
+            var AllSellOrders = (uint) await orderRepozitory.AllAsNoTracking()
+                .Where(o => o.ClientId == clientId && o.FinancialInstrumentId == finInstrId && o.IsBid == false)
+                .Select(o => (int)o.ActiveVolume).SumAsync();
+
+            return (AllSellOrders + initialVolume) <= ownerFinIstr; 
+        }
     }
 }

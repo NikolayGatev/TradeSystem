@@ -240,7 +240,7 @@ namespace TradeSystem.Data.Migrations
                         {
                             Id = "dea12856-c198-4129-b3f3-b893d8395082",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "90f0d8ad-e68b-49bb-a70a-2420c4075ef9",
+                            ConcurrencyStamp = "ee0c6d0b-3e8a-4189-a08d-37af637e124e",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@mail.com",
                             EmailConfirmed = false,
@@ -248,9 +248,9 @@ namespace TradeSystem.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "admin@mail.com",
                             NormalizedUserName = "admin@mail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDeHsLYkuCa2lsBGUmzHdxMFTXOf7Zq+U2r/EBqqc09VMkQVgkbPgNQopig63CZwUQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJ+YCCkUh0oWhm+eCd5kGMHEv9VOHD71ZScdkhCu+IjKnRYc62CWe4kYTdXtSLr1Rg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a864ced7-6ac4-4d3b-b5fc-40c7cd475ca2",
+                            SecurityStamp = "fd4cc65f-4e9d-4b0b-8907-904d87a1b431",
                             TwoFactorEnabled = false,
                             UserName = "admin@mail.com"
                         },
@@ -258,7 +258,7 @@ namespace TradeSystem.Data.Migrations
                         {
                             Id = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "28e4a941-2faf-4095-926f-06c6edf3bd06",
+                            ConcurrencyStamp = "a2300df3-59d6-4f4b-922a-19fb4941b6c5",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "client@gmail.com",
                             EmailConfirmed = false,
@@ -266,9 +266,9 @@ namespace TradeSystem.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "client@gmail.com",
                             NormalizedUserName = "client@gmail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEP2Djt5ol3FVZvk9N0oYIQfzFdb+iJp7v0GFenbwZvf6zTCGl1m4rj4ujX7C/dMZGg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEnLxBSZMEwf0SyAhdKbrG+17o7QLk9/YJNlUpMx+9sxqjLeSqHoCqdAzSL1rLNo8g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c2cb8ada-0e09-4f61-a3f1-070209fb0576",
+                            SecurityStamp = "068ac1ea-f912-4624-a400-65ac5516db2f",
                             TwoFactorEnabled = false,
                             UserName = "client@gmail.com"
                         });
@@ -373,21 +373,21 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedOn = new DateTime(2024, 4, 8, 13, 24, 40, 454, DateTimeKind.Utc).AddTicks(2827),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 968, DateTimeKind.Utc).AddTicks(7030),
                             IsDeleted = false,
                             Name = "Bulgaria"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedOn = new DateTime(2024, 4, 8, 13, 24, 40, 454, DateTimeKind.Utc).AddTicks(2836),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 968, DateTimeKind.Utc).AddTicks(7044),
                             IsDeleted = false,
                             Name = "Italy"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedOn = new DateTime(2024, 4, 8, 13, 24, 40, 454, DateTimeKind.Utc).AddTicks(2837),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 968, DateTimeKind.Utc).AddTicks(7045),
                             IsDeleted = false,
                             Name = "Germany"
                         });
@@ -591,19 +591,19 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedOn = new DateTime(2024, 4, 8, 13, 24, 40, 441, DateTimeKind.Utc).AddTicks(7857),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 956, DateTimeKind.Utc).AddTicks(2470),
                             Name = "Compliance"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedOn = new DateTime(2024, 4, 8, 13, 24, 40, 441, DateTimeKind.Utc).AddTicks(7872),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 956, DateTimeKind.Utc).AddTicks(2482),
                             Name = "Authority Traders"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedOn = new DateTime(2024, 4, 8, 13, 24, 40, 441, DateTimeKind.Utc).AddTicks(7874),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 956, DateTimeKind.Utc).AddTicks(2483),
                             Name = "Backoffice"
                         });
                 });
@@ -661,7 +661,7 @@ namespace TradeSystem.Data.Migrations
                         {
                             Id = new Guid("67524a1e-2595-440e-a6d2-103aaf179a08"),
                             ApplicationUserId = "dea12856-c198-4129-b3f3-b893d8395082",
-                            CreatedOn = new DateTime(2024, 4, 8, 13, 24, 40, 441, DateTimeKind.Utc).AddTicks(8142),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 956, DateTimeKind.Utc).AddTicks(2765),
                             DivisionId = 1,
                             FirstName = "Admin",
                             IsDeleted = false,
@@ -713,7 +713,7 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedOn = new DateTime(2024, 4, 8, 13, 24, 40, 441, DateTimeKind.Utc).AddTicks(8058),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 956, DateTimeKind.Utc).AddTicks(2688),
                             Description = "Financial and insurance activities",
                             ISIN = "BG1100016978",
                             IsDeleted = false,
@@ -722,7 +722,7 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedOn = new DateTime(2024, 4, 8, 13, 24, 40, 441, DateTimeKind.Utc).AddTicks(8065),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 956, DateTimeKind.Utc).AddTicks(2694),
                             Description = "Manufacturing",
                             ISIN = "BG11SOSOBT18",
                             IsDeleted = false,
@@ -731,7 +731,7 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedOn = new DateTime(2024, 4, 8, 13, 24, 40, 441, DateTimeKind.Utc).AddTicks(8067),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 956, DateTimeKind.Utc).AddTicks(2695),
                             Description = "Financial and insurance activities",
                             ISIN = "BG1100019980",
                             IsDeleted = false,
@@ -740,7 +740,7 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedOn = new DateTime(2024, 4, 8, 13, 24, 40, 441, DateTimeKind.Utc).AddTicks(8068),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 956, DateTimeKind.Utc).AddTicks(2697),
                             Description = "Financial and insurance activities",
                             ISIN = "BG1100003166",
                             IsDeleted = false,
@@ -866,7 +866,7 @@ namespace TradeSystem.Data.Migrations
                         {
                             Id = 1,
                             CountryId = 1,
-                            CreatedOn = new DateTime(2024, 4, 8, 13, 24, 40, 454, DateTimeKind.Utc).AddTicks(2929),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 968, DateTimeKind.Utc).AddTicks(7139),
                             IsDeleted = false,
                             Name = "Sofia"
                         });

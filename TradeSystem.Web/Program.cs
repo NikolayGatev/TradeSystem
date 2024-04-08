@@ -59,6 +59,8 @@ namespace TradeSystem.Web
 
             });
 
+            await app.CreateAdminRoleAsync();
+
             await app.RunAsync();
         }
     }

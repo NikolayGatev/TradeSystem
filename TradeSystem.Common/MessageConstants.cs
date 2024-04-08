@@ -17,5 +17,7 @@
         public static string ZeroBalance = "Your balace is 0 BGN, to submit an order you must fund your account!";
 
         public static string DoNotEnoughMoney = "You do not enough momey for this order!";
+
+        public static string DoNotEnoughFinancialInstruments = "You do not enough count from this financial instrument for all your sell oreders!";
     }
 }

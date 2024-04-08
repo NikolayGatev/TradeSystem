@@ -13,6 +13,16 @@
     <div class="row">
         <div class="card col-8 border-0">
             <p style="font-size:25px;">Finanscial instrument: <u>@Model.FinancialInstrumentName</u></p>
+            <p style="font-size:20px;">Finanscial instrument: 
+                @if(Model.IsBid)
+                {
+                    <u>Bid</u>
+                }
+                else
+                {
+                    <u>Sell</u>
+                }
+
             <p>Initial valume: <b>@Model.InitialVolume</b></p>
             <p>Current valume: <b>@Model.UnfulfilledVolume</b></p>
             <p>Prece per lot: <b>@Model.Price BGN</b></p>

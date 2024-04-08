@@ -12,8 +12,8 @@ using TradeSystem.Data;
 namespace TradeSystem.Data.Migrations
 {
     [DbContext(typeof(TradeSystemDbContext))]
-    [Migration("20240331131549_FixIdentityDocumentIdInDataOfClient")]
-    partial class FixIdentityDocumentIdInDataOfClient
+    [Migration("20240408133657_NewInitial")]
+    partial class NewInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,11 +24,10 @@ namespace TradeSystem.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -52,7 +51,7 @@ namespace TradeSystem.Data.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -66,8 +65,9 @@ namespace TradeSystem.Data.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -76,7 +76,7 @@ namespace TradeSystem.Data.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,8 +90,9 @@ namespace TradeSystem.Data.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -100,7 +101,7 @@ namespace TradeSystem.Data.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128)
@@ -113,8 +114,9 @@ namespace TradeSystem.Data.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -123,13 +125,13 @@ namespace TradeSystem.Data.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -138,10 +140,10 @@ namespace TradeSystem.Data.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128)
@@ -161,9 +163,8 @@ namespace TradeSystem.Data.Migrations
 
             modelBuilder.Entity("TradeSystem.Data.Models.ApplicationUser", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -239,9 +240,9 @@ namespace TradeSystem.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("dea12856-c198-4129-b3f3-b893d8395082"),
+                            Id = "dea12856-c198-4129-b3f3-b893d8395082",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2ee1001a-6aab-481f-b641-c31a1f04767e",
+                            ConcurrencyStamp = "ee0c6d0b-3e8a-4189-a08d-37af637e124e",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@mail.com",
                             EmailConfirmed = false,
@@ -249,16 +250,17 @@ namespace TradeSystem.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "admin@mail.com",
                             NormalizedUserName = "admin@mail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBr7SL6f7YjxE19YZ7OyDpekiB5DYlnokgiAy81m6PHqBWwG/P4nA0mdDA/QhXTHIg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJ+YCCkUh0oWhm+eCd5kGMHEv9VOHD71ZScdkhCu+IjKnRYc62CWe4kYTdXtSLr1Rg==",
                             PhoneNumberConfirmed = false,
+                            SecurityStamp = "fd4cc65f-4e9d-4b0b-8907-904d87a1b431",
                             TwoFactorEnabled = false,
                             UserName = "admin@mail.com"
                         },
                         new
                         {
-                            Id = new Guid("6d5800ce-d726-4fc8-83d9-d6b3ac1f591e"),
+                            Id = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "20dc6f7e-f39b-46da-9bfc-b38745c3d3bc",
+                            ConcurrencyStamp = "a2300df3-59d6-4f4b-922a-19fb4941b6c5",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "client@gmail.com",
                             EmailConfirmed = false,
@@ -266,8 +268,9 @@ namespace TradeSystem.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "client@gmail.com",
                             NormalizedUserName = "client@gmail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEESrzh5u7AhTye3xkEm5yeUKmZ43fWIrsRMcxxigPVLg2aAFVSiVYZy12PsXxCaJaw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEnLxBSZMEwf0SyAhdKbrG+17o7QLk9/YJNlUpMx+9sxqjLeSqHoCqdAzSL1rLNo8g==",
                             PhoneNumberConfirmed = false,
+                            SecurityStamp = "068ac1ea-f912-4624-a400-65ac5516db2f",
                             TwoFactorEnabled = false,
                             UserName = "client@gmail.com"
                         });
@@ -372,21 +375,21 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedOn = new DateTime(2024, 3, 31, 13, 15, 49, 144, DateTimeKind.Utc).AddTicks(2242),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 968, DateTimeKind.Utc).AddTicks(7030),
                             IsDeleted = false,
                             Name = "Bulgaria"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedOn = new DateTime(2024, 3, 31, 13, 15, 49, 144, DateTimeKind.Utc).AddTicks(2248),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 968, DateTimeKind.Utc).AddTicks(7044),
                             IsDeleted = false,
                             Name = "Italy"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedOn = new DateTime(2024, 3, 31, 13, 15, 49, 144, DateTimeKind.Utc).AddTicks(2251),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 968, DateTimeKind.Utc).AddTicks(7045),
                             IsDeleted = false,
                             Name = "Germany"
                         });
@@ -402,8 +405,9 @@ namespace TradeSystem.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ApplicationUserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("AuthorisedOn")
                         .HasColumnType("datetime2");
@@ -486,8 +490,9 @@ namespace TradeSystem.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ApplicationUserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("AuthorisedOn")
                         .HasColumnType("datetime2");
@@ -562,40 +567,6 @@ namespace TradeSystem.Data.Migrations
                     b.ToTable("DataOfIndividualClients");
                 });
 
-            modelBuilder.Entity("TradeSystem.Data.Models.DepositedMoney", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("ClientId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.ToTable("DepositedMoney");
-                });
-
             modelBuilder.Entity("TradeSystem.Data.Models.Division", b =>
                 {
                     b.Property<int>("Id")
@@ -622,19 +593,19 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedOn = new DateTime(2024, 3, 31, 13, 15, 49, 131, DateTimeKind.Utc).AddTicks(9507),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 956, DateTimeKind.Utc).AddTicks(2470),
                             Name = "Compliance"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedOn = new DateTime(2024, 3, 31, 13, 15, 49, 131, DateTimeKind.Utc).AddTicks(9521),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 956, DateTimeKind.Utc).AddTicks(2482),
                             Name = "Authority Traders"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedOn = new DateTime(2024, 3, 31, 13, 15, 49, 131, DateTimeKind.Utc).AddTicks(9522),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 956, DateTimeKind.Utc).AddTicks(2483),
                             Name = "Backoffice"
                         });
                 });
@@ -645,8 +616,9 @@ namespace TradeSystem.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ApplicationUserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -690,8 +662,8 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = new Guid("67524a1e-2595-440e-a6d2-103aaf179a08"),
-                            ApplicationUserId = new Guid("dea12856-c198-4129-b3f3-b893d8395082"),
-                            CreatedOn = new DateTime(2024, 3, 31, 13, 15, 49, 131, DateTimeKind.Utc).AddTicks(9869),
+                            ApplicationUserId = "dea12856-c198-4129-b3f3-b893d8395082",
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 956, DateTimeKind.Utc).AddTicks(2765),
                             DivisionId = 1,
                             FirstName = "Admin",
                             IsDeleted = false,
@@ -743,7 +715,7 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedOn = new DateTime(2024, 3, 31, 13, 15, 49, 131, DateTimeKind.Utc).AddTicks(9755),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 956, DateTimeKind.Utc).AddTicks(2688),
                             Description = "Financial and insurance activities",
                             ISIN = "BG1100016978",
                             IsDeleted = false,
@@ -752,7 +724,7 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedOn = new DateTime(2024, 3, 31, 13, 15, 49, 131, DateTimeKind.Utc).AddTicks(9762),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 956, DateTimeKind.Utc).AddTicks(2694),
                             Description = "Manufacturing",
                             ISIN = "BG11SOSOBT18",
                             IsDeleted = false,
@@ -761,7 +733,7 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedOn = new DateTime(2024, 3, 31, 13, 15, 49, 131, DateTimeKind.Utc).AddTicks(9764),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 956, DateTimeKind.Utc).AddTicks(2695),
                             Description = "Financial and insurance activities",
                             ISIN = "BG1100019980",
                             IsDeleted = false,
@@ -770,7 +742,7 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedOn = new DateTime(2024, 3, 31, 13, 15, 49, 131, DateTimeKind.Utc).AddTicks(9765),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 956, DateTimeKind.Utc).AddTicks(2697),
                             Description = "Financial and insurance activities",
                             ISIN = "BG1100003166",
                             IsDeleted = false,
@@ -798,8 +770,9 @@ namespace TradeSystem.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -895,7 +868,7 @@ namespace TradeSystem.Data.Migrations
                         {
                             Id = 1,
                             CountryId = 1,
-                            CreatedOn = new DateTime(2024, 3, 31, 13, 15, 49, 144, DateTimeKind.Utc).AddTicks(2385),
+                            CreatedOn = new DateTime(2024, 4, 8, 13, 36, 56, 968, DateTimeKind.Utc).AddTicks(7139),
                             IsDeleted = false,
                             Name = "Sofia"
                         });
@@ -945,11 +918,11 @@ namespace TradeSystem.Data.Migrations
 
             modelBuilder.Entity("TradeSystem.Data.Models.TradeOrder", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<Guid>("TradeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
@@ -965,34 +938,26 @@ namespace TradeSystem.Data.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TradeId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<long>("Volume")
                         .HasColumnType("bigint");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
+                    b.HasKey("OrderId", "TradeId");
 
                     b.HasIndex("TradeId");
 
                     b.ToTable("TradeOrders");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.HasOne("TradeSystem.Data.Models.ApplicationUser", null)
                         .WithMany()
@@ -1001,7 +966,7 @@ namespace TradeSystem.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.HasOne("TradeSystem.Data.Models.ApplicationUser", null)
                         .WithMany()
@@ -1010,9 +975,9 @@ namespace TradeSystem.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1025,7 +990,7 @@ namespace TradeSystem.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.HasOne("TradeSystem.Data.Models.ApplicationUser", null)
                         .WithMany()
@@ -1143,21 +1108,10 @@ namespace TradeSystem.Data.Migrations
                     b.Navigation("Town");
                 });
 
-            modelBuilder.Entity("TradeSystem.Data.Models.DepositedMoney", b =>
-                {
-                    b.HasOne("TradeSystem.Data.Models.Client", "Client")
-                        .WithMany("AllDepositedsMoney")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Client");
-                });
-
             modelBuilder.Entity("TradeSystem.Data.Models.Employee", b =>
                 {
                     b.HasOne("TradeSystem.Data.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
+                        .WithMany("Administrators")
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1250,6 +1204,8 @@ namespace TradeSystem.Data.Migrations
 
             modelBuilder.Entity("TradeSystem.Data.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("Administrators");
+
                     b.Navigation("CorporativeClients");
 
                     b.Navigation("IndividualClients");
@@ -1257,8 +1213,6 @@ namespace TradeSystem.Data.Migrations
 
             modelBuilder.Entity("TradeSystem.Data.Models.Client", b =>
                 {
-                    b.Navigation("AllDepositedsMoney");
-
                     b.Navigation("FinancialInstruments");
 
                     b.Navigation("Orders");

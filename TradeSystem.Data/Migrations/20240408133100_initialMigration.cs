@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace TradeSystem.Data.Migrations
 {
-    public partial class InitialDb : Migration
+    public partial class initialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +13,7 @@ namespace TradeSystem.Data.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -26,7 +27,11 @@ namespace TradeSystem.Data.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -48,12 +53,34 @@ namespace TradeSystem.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Clients",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsIndividual = table.Column<bool>(type: "bit", nullable: false),
+                    Balance = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    BlockedSum = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clients", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Countries",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -66,7 +93,9 @@ namespace TradeSystem.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -81,7 +110,11 @@ namespace TradeSystem.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    ISIN = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: false)
+                    ISIN = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -94,7 +127,7 @@ namespace TradeSystem.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -115,7 +148,7 @@ namespace TradeSystem.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -137,7 +170,7 @@ namespace TradeSystem.Data.Migrations
                     LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -154,8 +187,8 @@ namespace TradeSystem.Data.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -178,7 +211,7 @@ namespace TradeSystem.Data.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -195,13 +228,39 @@ namespace TradeSystem.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "IdentityDocuments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Extension = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RemoteImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IdentityDocuments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_IdentityDocuments_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Towns",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    CountryId = table.Column<int>(type: "int", nullable: false)
+                    CountryId = table.Column<int>(type: "int", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -214,27 +273,31 @@ namespace TradeSystem.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Adminstrators",
+                name: "Employees",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ApplicationUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(18)", maxLength: 18, nullable: false),
-                    DivisionId = table.Column<int>(type: "int", nullable: false)
+                    DivisionId = table.Column<int>(type: "int", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Adminstrators", x => x.Id);
+                    table.PrimaryKey("PK_Employees", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Adminstrators_AspNetUsers_ApplicationUserId",
+                        name: "FK_Employees_AspNetUsers_ApplicationUserId",
                         column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Adminstrators_Divisions_DivisionId",
+                        name: "FK_Employees_Divisions_DivisionId",
                         column: x => x.DivisionId,
                         principalTable: "Divisions",
                         principalColumn: "Id",
@@ -242,95 +305,30 @@ namespace TradeSystem.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Addresses",
+                name: "ClientFinancialInstruments",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CountryId = table.Column<int>(type: "int", nullable: false),
-                    PostCode = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    TownId = table.Column<int>(type: "int", nullable: false),
-                    district = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
-                    Street = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Number = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Floor = table.Column<byte>(type: "tinyint", nullable: false),
-                    Flat = table.Column<byte>(type: "tinyint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Addresses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Addresses_Countries_CountryId",
-                        column: x => x.CountryId,
-                        principalTable: "Countries",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Addresses_Towns_TownId",
-                        column: x => x.TownId,
-                        principalTable: "Towns",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Clients",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
-                    ApplicationUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsIndividual = table.Column<bool>(type: "bit", nullable: false),
-                    DataOfIndividualClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    DataOfCorporateClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Balance = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Clients", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Clients_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DepositedMoney",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
-                    ClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DepositedMoney", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DepositedMoney_Clients_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Clients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "IdentityDocuments",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Extension = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RemoteImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FinancialInstrumentId = table.Column<int>(type: "int", nullable: false),
+                    Volume = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_IdentityDocuments", x => x.Id);
+                    table.PrimaryKey("PK_ClientFinancialInstruments", x => new { x.FinancialInstrumentId, x.ClientId });
                     table.ForeignKey(
-                        name: "FK_IdentityDocuments_Clients_ClientId",
+                        name: "FK_ClientFinancialInstruments_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ClientFinancialInstruments_FinancialInstruments_FinancialInstrumentId",
+                        column: x => x.FinancialInstrumentId,
+                        principalTable: "FinancialInstruments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -340,13 +338,16 @@ namespace TradeSystem.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     IsBid = table.Column<bool>(type: "bit", nullable: false),
                     InitialVolume = table.Column<long>(type: "bigint", nullable: false),
                     ActiveVolume = table.Column<long>(type: "bigint", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,5)", precision: 18, scale: 5, nullable: false),
                     FinancialInstrumentId = table.Column<int>(type: "int", nullable: false),
-                    ClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -370,11 +371,14 @@ namespace TradeSystem.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     Volume = table.Column<long>(type: "bigint", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,5)", precision: 18, scale: 5, nullable: false),
                     FinancialInstrumentId = table.Column<int>(type: "int", nullable: false),
-                    ClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    ClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -401,22 +405,26 @@ namespace TradeSystem.Data.Migrations
                     NationalIdentityNumber = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     LegalForm = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     NameOfRepresentative = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    IsCreatedAcount = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DataChecking = table.Column<int>(type: "int", nullable: false),
                     NationalityId = table.Column<int>(type: "int", nullable: false),
-                    AddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TownId = table.Column<int>(type: "int", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(18)", maxLength: 18, nullable: false),
                     IdentityDocumentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
-                    AuthorisedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    AuthorisedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DataOfCorporateClients", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DataOfCorporateClients_Addresses_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Addresses",
+                        name: "FK_DataOfCorporateClients_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -431,11 +439,20 @@ namespace TradeSystem.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_DataOfCorporateClients_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_DataOfCorporateClients_IdentityDocuments_IdentityDocumentId",
                         column: x => x.IdentityDocumentId,
                         principalTable: "IdentityDocuments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_DataOfCorporateClients_Towns_TownId",
+                        column: x => x.TownId,
+                        principalTable: "Towns",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -448,22 +465,26 @@ namespace TradeSystem.Data.Migrations
                     Surname = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     NationalIdentityNumber = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    IsCreatedAcount = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DataChecking = table.Column<int>(type: "int", nullable: false),
                     NationalityId = table.Column<int>(type: "int", nullable: false),
-                    AddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TownId = table.Column<int>(type: "int", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(18)", maxLength: 18, nullable: false),
                     IdentityDocumentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
-                    AuthorisedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    AuthorisedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DataOfIndividualClients", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DataOfIndividualClients_Addresses_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Addresses",
+                        name: "FK_DataOfIndividualClients_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -478,27 +499,37 @@ namespace TradeSystem.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_DataOfIndividualClients_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_DataOfIndividualClients_IdentityDocuments_IdentityDocumentId",
                         column: x => x.IdentityDocumentId,
                         principalTable: "IdentityDocuments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_DataOfIndividualClients_Towns_TownId",
+                        column: x => x.TownId,
+                        principalTable: "Towns",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "TradeOrders",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TradeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Volume = table.Column<long>(type: "bigint", nullable: false)
+                    Volume = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TradeOrders", x => x.Id);
+                    table.PrimaryKey("PK_TradeOrders", x => new { x.OrderId, x.TradeId });
                     table.ForeignKey(
                         name: "FK_TradeOrders_Orders_OrderId",
                         column: x => x.OrderId,
@@ -514,45 +545,54 @@ namespace TradeSystem.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Divisions",
-                columns: new[] { "Id", "Name" },
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedOn", "DeletedOn", "Email", "EmailConfirmed", "IsDeleted", "LockoutEnabled", "LockoutEnd", "ModifiedOn", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, "Compliance" },
-                    { 2, "Authority Traders" },
-                    { 3, "Backoffice" }
+                    { "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e", 0, "e977cc9b-1d55-4fb5-aaf1-6946dc064edf", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "client@gmail.com", false, false, false, null, null, "client@gmail.com", "client@gmail.com", "AQAAAAEAACcQAAAAELjltyG2UO85Z+4zb3NjPu5HvVZag1QO3c1qUgHNMKakIiaFYHDYft/W08VP/SnNwA==", null, false, "88c7ad56-9bf5-4035-b883-01b0e28e4985", false, "client@gmail.com" },
+                    { "dea12856-c198-4129-b3f3-b893d8395082", 0, "6ae48d0c-c7bb-43a8-8b88-6e2d22290c7a", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "admin@mail.com", false, false, false, null, null, "admin@mail.com", "admin@mail.com", "AQAAAAEAACcQAAAAELxamPZWCgMSQgij/nonS5GEL1zY7ZEfnFR0LULNv/wOvVrvK08gvLDS4GMithr0pg==", null, false, "f392e3e5-a39d-4585-a532-5241cc38c755", false, "admin@mail.com" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Countries",
+                columns: new[] { "Id", "CreatedOn", "DeletedOn", "IsDeleted", "ModifiedOn", "Name" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 4, 8, 13, 31, 0, 677, DateTimeKind.Utc).AddTicks(236), null, false, null, "Bulgaria" },
+                    { 2, new DateTime(2024, 4, 8, 13, 31, 0, 677, DateTimeKind.Utc).AddTicks(245), null, false, null, "Italy" },
+                    { 3, new DateTime(2024, 4, 8, 13, 31, 0, 677, DateTimeKind.Utc).AddTicks(246), null, false, null, "Germany" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Divisions",
+                columns: new[] { "Id", "CreatedOn", "ModifiedOn", "Name" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 4, 8, 13, 31, 0, 664, DateTimeKind.Utc).AddTicks(7927), null, "Compliance" },
+                    { 2, new DateTime(2024, 4, 8, 13, 31, 0, 664, DateTimeKind.Utc).AddTicks(7940), null, "Authority Traders" },
+                    { 3, new DateTime(2024, 4, 8, 13, 31, 0, 664, DateTimeKind.Utc).AddTicks(7942), null, "Backoffice" }
                 });
 
             migrationBuilder.InsertData(
                 table: "FinancialInstruments",
-                columns: new[] { "Id", "Description", "ISIN", "Name" },
+                columns: new[] { "Id", "CreatedOn", "DeletedOn", "Description", "ISIN", "IsDeleted", "ModifiedOn", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Financial and insurance activities", "BG1100016978", "BULGARIAN STOCK EXCHANGE" },
-                    { 2, "Manufacturing", "BG11SOSOBT18", "SOPHARMA" },
-                    { 3, "Financial and insurance activities", "BG1100019980", "INDUSTRIAL HOLDING BULGARIA" },
-                    { 4, "Financial and insurance activities", "BG1100003166", "SHELLY GROUP" }
+                    { 1, new DateTime(2024, 4, 8, 13, 31, 0, 664, DateTimeKind.Utc).AddTicks(8141), null, "Financial and insurance activities", "BG1100016978", false, null, "BULGARIAN STOCK EXCHANGE" },
+                    { 2, new DateTime(2024, 4, 8, 13, 31, 0, 664, DateTimeKind.Utc).AddTicks(8147), null, "Manufacturing", "BG11SOSOBT18", false, null, "SOPHARMA" },
+                    { 3, new DateTime(2024, 4, 8, 13, 31, 0, 664, DateTimeKind.Utc).AddTicks(8149), null, "Financial and insurance activities", "BG1100019980", false, null, "INDUSTRIAL HOLDING BULGARIA" },
+                    { 4, new DateTime(2024, 4, 8, 13, 31, 0, 664, DateTimeKind.Utc).AddTicks(8150), null, "Financial and insurance activities", "BG1100003166", false, null, "SHELLY GROUP" }
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Addresses_CountryId",
-                table: "Addresses",
-                column: "CountryId");
+            migrationBuilder.InsertData(
+                table: "Employees",
+                columns: new[] { "Id", "ApplicationUserId", "CreatedOn", "DeletedOn", "DivisionId", "FirstName", "IsDeleted", "LastName", "ModifiedOn", "PhoneNumber" },
+                values: new object[] { new Guid("67524a1e-2595-440e-a6d2-103aaf179a08"), "dea12856-c198-4129-b3f3-b893d8395082", new DateTime(2024, 4, 8, 13, 31, 0, 664, DateTimeKind.Utc).AddTicks(8241), null, 1, "Admin", false, "Compaince", null, "1234567890" });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Addresses_TownId",
-                table: "Addresses",
-                column: "TownId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Adminstrators_ApplicationUserId",
-                table: "Adminstrators",
-                column: "ApplicationUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Adminstrators_DivisionId",
-                table: "Adminstrators",
-                column: "DivisionId");
+            migrationBuilder.InsertData(
+                table: "Towns",
+                columns: new[] { "Id", "CountryId", "CreatedOn", "DeletedOn", "IsDeleted", "ModifiedOn", "Name" },
+                values: new object[] { 1, 1, new DateTime(2024, 4, 8, 13, 31, 0, 677, DateTimeKind.Utc).AddTicks(327), null, false, null, "Sofia" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -594,29 +634,24 @@ namespace TradeSystem.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Clients_ApplicationUserId",
-                table: "Clients",
-                column: "ApplicationUserId");
+                name: "IX_ClientFinancialInstruments_ClientId",
+                table: "ClientFinancialInstruments",
+                column: "ClientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Clients_DataOfCorporateClientId",
-                table: "Clients",
-                column: "DataOfCorporateClientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Clients_DataOfIndividualClientId",
-                table: "Clients",
-                column: "DataOfIndividualClientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DataOfCorporateClients_AddressId",
+                name: "IX_DataOfCorporateClients_ApplicationUserId",
                 table: "DataOfCorporateClients",
-                column: "AddressId");
+                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DataOfCorporateClients_ClientId",
                 table: "DataOfCorporateClients",
                 column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DataOfCorporateClients_EmployeeId",
+                table: "DataOfCorporateClients",
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DataOfCorporateClients_IdentityDocumentId",
@@ -629,14 +664,24 @@ namespace TradeSystem.Data.Migrations
                 column: "NationalityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DataOfIndividualClients_AddressId",
+                name: "IX_DataOfCorporateClients_TownId",
+                table: "DataOfCorporateClients",
+                column: "TownId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DataOfIndividualClients_ApplicationUserId",
                 table: "DataOfIndividualClients",
-                column: "AddressId");
+                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DataOfIndividualClients_ClientId",
                 table: "DataOfIndividualClients",
                 column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DataOfIndividualClients_EmployeeId",
+                table: "DataOfIndividualClients",
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DataOfIndividualClients_IdentityDocumentId",
@@ -649,14 +694,24 @@ namespace TradeSystem.Data.Migrations
                 column: "NationalityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DepositedMoney_ClientId",
-                table: "DepositedMoney",
-                column: "ClientId");
+                name: "IX_DataOfIndividualClients_TownId",
+                table: "DataOfIndividualClients",
+                column: "TownId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IdentityDocuments_ClientId",
+                name: "IX_Employees_ApplicationUserId",
+                table: "Employees",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_DivisionId",
+                table: "Employees",
+                column: "DivisionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IdentityDocuments_UserId",
                 table: "IdentityDocuments",
-                column: "ClientId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_ClientId",
@@ -674,11 +729,6 @@ namespace TradeSystem.Data.Migrations
                 column: "CountryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TradeOrders_OrderId",
-                table: "TradeOrders",
-                column: "OrderId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TradeOrders_TradeId",
                 table: "TradeOrders",
                 column: "TradeId");
@@ -692,59 +742,10 @@ namespace TradeSystem.Data.Migrations
                 name: "IX_Trades_FinancialInstrumentId",
                 table: "Trades",
                 column: "FinancialInstrumentId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Clients_DataOfCorporateClients_DataOfCorporateClientId",
-                table: "Clients",
-                column: "DataOfCorporateClientId",
-                principalTable: "DataOfCorporateClients",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Clients_DataOfIndividualClients_DataOfIndividualClientId",
-                table: "Clients",
-                column: "DataOfIndividualClientId",
-                principalTable: "DataOfIndividualClients",
-                principalColumn: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Addresses_Countries_CountryId",
-                table: "Addresses");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_DataOfCorporateClients_Countries_NationalityId",
-                table: "DataOfCorporateClients");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_DataOfIndividualClients_Countries_NationalityId",
-                table: "DataOfIndividualClients");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Towns_Countries_CountryId",
-                table: "Towns");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Addresses_Towns_TownId",
-                table: "Addresses");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Clients_AspNetUsers_ApplicationUserId",
-                table: "Clients");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Clients_DataOfCorporateClients_DataOfCorporateClientId",
-                table: "Clients");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Clients_DataOfIndividualClients_DataOfIndividualClientId",
-                table: "Clients");
-
-            migrationBuilder.DropTable(
-                name: "Adminstrators");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -761,34 +762,7 @@ namespace TradeSystem.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "DepositedMoney");
-
-            migrationBuilder.DropTable(
-                name: "TradeOrders");
-
-            migrationBuilder.DropTable(
-                name: "Divisions");
-
-            migrationBuilder.DropTable(
-                name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "Orders");
-
-            migrationBuilder.DropTable(
-                name: "Trades");
-
-            migrationBuilder.DropTable(
-                name: "FinancialInstruments");
-
-            migrationBuilder.DropTable(
-                name: "Countries");
-
-            migrationBuilder.DropTable(
-                name: "Towns");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "ClientFinancialInstruments");
 
             migrationBuilder.DropTable(
                 name: "DataOfCorporateClients");
@@ -797,13 +771,40 @@ namespace TradeSystem.Data.Migrations
                 name: "DataOfIndividualClients");
 
             migrationBuilder.DropTable(
-                name: "Addresses");
+                name: "TradeOrders");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Employees");
 
             migrationBuilder.DropTable(
                 name: "IdentityDocuments");
 
             migrationBuilder.DropTable(
+                name: "Towns");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "Trades");
+
+            migrationBuilder.DropTable(
+                name: "Divisions");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Countries");
+
+            migrationBuilder.DropTable(
                 name: "Clients");
+
+            migrationBuilder.DropTable(
+                name: "FinancialInstruments");
         }
     }
 }

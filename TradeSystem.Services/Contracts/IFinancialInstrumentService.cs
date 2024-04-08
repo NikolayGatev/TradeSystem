@@ -34,5 +34,6 @@ namespace TradeSystem.Core.Contracts
         public Task FundedAccountWithFinancialInstruments(Guid clientId, int financialInstrumentId, uint count);
 
         public Task<IEnumerable<FinInstrumentServiceModel>> AllFinancialInstrumentsAsync();
+        Task<int> GetCountOfOwnerFinancialInstrumentOnClientByIdAsync(Guid? clientId, int finInstrId);
     }
 }

@@ -310,5 +310,12 @@ namespace TradeSystem.Core.Services
                 .OrderBy(f => f.Name)
                 .ToListAsync();
         }
+
+        public async Task<int> GetCountOfOwnerFinancialInstrumentOnClientByIdAsync(Guid? clientId, int finInstrId)
+        {
+            return await clientFinancialInstrumentRepozitory.AllAsNoTracking()
+                .Where(cfi => cfi.FinancialInstrumentId == finInstrId && cfi.ClientId == clientId)
+                .Select(cfi => (int)cfi.Volume).SumAsync();
+        }
     }
 }

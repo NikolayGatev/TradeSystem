@@ -82,6 +82,12 @@ namespace TradeSystem.Web.Controllers
 
                 return Unauthorized();
             }
+            catch (Exception nmfi)
+            {
+                logger.LogError(nmfi, "OrderController/Add");
+
+                return View(model);
+            }
 
 
             return RedirectToAction(nameof(Details), new { orderId = id });
