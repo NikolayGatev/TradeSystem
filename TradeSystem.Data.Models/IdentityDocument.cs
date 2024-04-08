@@ -12,7 +12,9 @@ namespace TradeSystem.Data.Models
         [Key]
         public Guid Id { get; set; }
 
-        public Guid UserId { get; set; }
+        [Required]
+
+        public string UserId { get; set; } = null!;
 
         [Required]
         [ForeignKey(nameof(UserId))]

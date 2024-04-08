@@ -8,7 +8,7 @@ namespace TradeSystem.Core.Models.Employees
 
         [Required]
 
-        public Guid UserId { get; set; }
+        public string UserId { get; set; } = null!;
 
         [Required]
 

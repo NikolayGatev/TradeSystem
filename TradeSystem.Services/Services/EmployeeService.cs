@@ -75,7 +75,7 @@ namespace TradeSystem.Core.Services
                 .ToListAsync();
         }
 
-        public async Task<Guid> CreateEmployeeAsync(EmployeeFormModel model, Guid userId)
+        public async Task<Guid> CreateEmployeeAsync(EmployeeFormModel model, string userId)
         {
             Employee employee = new Employee()
             {
@@ -121,7 +121,7 @@ namespace TradeSystem.Core.Services
             return model;
         }
 
-        public async Task<bool> ExistsByUserIdAsync(Guid userId)
+        public async Task<bool> ExistsByUserIdAsync(string userId)
         {
             return await employeeRepozitory.AllAsNoTracking()
                 .AnyAsync(e => e.ApplicationUserId == userId);
@@ -133,7 +133,7 @@ namespace TradeSystem.Core.Services
                 .AnyAsync(e => e.Id == employeeId);
         }
 
-        public async Task<Guid?> GetIdOfEmployeeByUserIdAsync(Guid userId)
+        public async Task<Guid?> GetIdOfEmployeeByUserIdAsync(string userId)
         {
             return (await employeeRepozitory.AllAsNoTracking()
                 .FirstOrDefaultAsync(e => e.ApplicationUserId == userId))?.Id;
@@ -152,7 +152,7 @@ namespace TradeSystem.Core.Services
             return Enum.GetNames(typeof(ResultFromChecking)).ToList();
         }
 
-        public async Task<DataOfClientServiceModel> RejectDataDetailsAsync(Guid userId)
+        public async Task<DataOfClientServiceModel> RejectDataDetailsAsync(string userId)
         {
             if (await clientService.ExistDataCorporativeClientByUserIdAsync(userId) == false
                 && await clientService.ExistDataIndividualClientByUserIdAsync(userId) == false)
@@ -163,7 +163,7 @@ namespace TradeSystem.Core.Services
             return await clientService.DetailsOfDataOnClientAsync(userId);
         }
 
-        public async Task RejectClientDataAsync(Guid userEmployeeId, Guid userClientId)
+        public async Task RejectClientDataAsync(string userEmployeeId, string userClientId)
         {
             if (await clientService.ExistDataCorporativeClientByUserIdAsync(userClientId) == false
                 && await clientService.ExistDataIndividualClientByUserIdAsync(userClientId) == false)
@@ -197,7 +197,7 @@ namespace TradeSystem.Core.Services
             }          
         }
 
-        public async Task AcceptClientDataAsync(Guid userEmployeeId, Guid userClientId)
+        public async Task AcceptClientDataAsync(string userEmployeeId, string userClientId)
         {
             if (await clientService.ExistDataCorporativeClientByUserIdAsync(userClientId) == false
                && await clientService.ExistDataIndividualClientByUserIdAsync(userClientId) == false)

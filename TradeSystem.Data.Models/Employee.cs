@@ -26,7 +26,9 @@ namespace TradeSystem.Data.Models
 
         public virtual ApplicationUser ApplicationUser { get; set; } = null!;
 
-        public Guid ApplicationUserId { get; set; }
+        [Required]
+
+        public string ApplicationUserId { get; set; } = null!;
 
         [Required]
         [MaxLength(MaxLengthIndividualName)]

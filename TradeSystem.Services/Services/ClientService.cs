@@ -108,7 +108,7 @@ namespace TradeSystem.Core.Services
                 .AnyAsync(c => c.Id == countryId);
         }
 
-        public async Task<Guid> CreateDataOfCorporativeClientAsync(CorporativeDataClentFormModel model, Guid userId)
+        public async Task<Guid> CreateDataOfCorporativeClientAsync(CorporativeDataClentFormModel model, string userId)
         {
             DataOfCorporateveClient client = new DataOfCorporateveClient()
             {
@@ -153,7 +153,7 @@ namespace TradeSystem.Core.Services
             return client.Id;
         }
 
-        public async Task<Guid> CreateDataOfIndividualClientAsync(IndividualDataClentFormModel model, Guid userId)
+        public async Task<Guid> CreateDataOfIndividualClientAsync(IndividualDataClentFormModel model, string userId)
         {            
             DataOfIndividualClient client = new DataOfIndividualClient()
             {                
@@ -179,7 +179,7 @@ namespace TradeSystem.Core.Services
                 var identityDoc = new IdentityDocument();
                 identityDoc.Extension = file.FileName.Substring(file.FileName.LastIndexOf('.') + 1);
 
-                string filename = Path.Combine(path, $"{userId.ToString()}.{identityDoc.Extension}");
+                string filename = Path.Combine(path, $"{userId}.{identityDoc.Extension}");
 
                 using (var filestream = new FileStream(filename, FileMode.Create))
                 {
@@ -248,7 +248,7 @@ namespace TradeSystem.Core.Services
             }
         }
 
-        public async Task<ClientAcountServiceModel> DetailsOfAcountOnClientAsync(Guid userId)
+        public async Task<ClientAcountServiceModel> DetailsOfAcountOnClientAsync(string userId)
         {
             var clientId = await GetClientIdByUserIdAsync(userId);
 
@@ -269,7 +269,7 @@ namespace TradeSystem.Core.Services
             return model;
         }
 
-        public async Task<DataOfClientServiceModel>  DetailsOfDataOnClientAsync(Guid userId)
+        public async Task<DataOfClientServiceModel>  DetailsOfDataOnClientAsync(string userId)
         {
             var IdDataIndividualClient = await GetIdOfDataOfIndividualClientByUserIdAsync(userId);
             var IdDataCorporativeClient = await GetIdOfDataOfCorporativelClientByUserIdAsync(userId);
@@ -386,7 +386,7 @@ namespace TradeSystem.Core.Services
             return await clientRepozitory.AllAsNoTrackingWithDeleted().AnyAsync(c => c.Id == clientId);
         }
 
-        public async Task<bool> ExistClientByUserIdAsync(Guid userId)
+        public async Task<bool> ExistClientByUserIdAsync(string userId)
         {
             var result = false;
 
@@ -406,13 +406,13 @@ namespace TradeSystem.Core.Services
             return result;
         }
 
-        public async Task<bool> ExistDataCorporativeClientByUserIdAsync(Guid userId)
+        public async Task<bool> ExistDataCorporativeClientByUserIdAsync(string userId)
         {
             return await dataCorporativeClientRepozitory.AllAsNoTracking()
                 .AnyAsync(d => d.ApplicationUserId == userId);
         }
 
-        public async Task<bool> ExistDataIndividualClientByUserIdAsync(Guid userId)
+        public async Task<bool> ExistDataIndividualClientByUserIdAsync(string userId)
         {
             return await dataIndividualClientRepozitory.AllAsNoTracking()
                 .AnyAsync(d => d.ApplicationUserId == userId);
@@ -430,7 +430,7 @@ namespace TradeSystem.Core.Services
                 .AnyAsync(d => d.Id == dataOfIndividualId);
         }
 
-        public async Task<Guid?> GetClientIdByUserIdAsync(Guid userId)
+        public async Task<Guid?> GetClientIdByUserIdAsync(string userId)
         {
             Guid? result = new Guid();
 
@@ -509,13 +509,13 @@ namespace TradeSystem.Core.Services
             return model;
         }
 
-        public async Task<Guid?> GetIdOfDataOfCorporativelClientByUserIdAsync(Guid userId)
+        public async Task<Guid?> GetIdOfDataOfCorporativelClientByUserIdAsync(string userId)
         {
             return (await dataCorporativeClientRepozitory.AllAsNoTracking()
                 .FirstOrDefaultAsync(c => c.ApplicationUserId == userId))?.Id;
         }
 
-        public async Task<Guid?> GetIdOfDataOfIndividualClientByUserIdAsync(Guid userId)
+        public async Task<Guid?> GetIdOfDataOfIndividualClientByUserIdAsync(string userId)
         {
             return (await dataIndividualClientRepozitory.AllAsNoTracking().Where(c => c.ApplicationUserId == userId)
                 .FirstOrDefaultAsync())?.Id;
@@ -658,7 +658,7 @@ namespace TradeSystem.Core.Services
             return Enum.GetNames(typeof(TypeOfDataClients)).ToList();
         }
 
-        public async Task AddMoneyAsync(Guid userId, decimal amount)
+        public async Task AddMoneyAsync(string userId, decimal amount)
         {
             var clientId = await GetClientIdByUserIdAsync(userId);
 
@@ -679,7 +679,7 @@ namespace TradeSystem.Core.Services
             await clientRepozitory.SaveChangesAsync();
         }
 
-        public async Task<ClientAddMoneyModel> GetClintDetailsAsync(Guid userId)
+        public async Task<ClientAddMoneyModel> GetClintDetailsAsync(string userId)
         {
             var clientId = await GetClientIdByUserIdAsync(userId);
 
@@ -701,7 +701,7 @@ namespace TradeSystem.Core.Services
             return result[0];
         }
 
-        public async Task<IEnumerable<string>> AllClintsIdAsync(Guid userId)
+        public async Task<IEnumerable<string>> AllClintsIdAsync(string userId)
         {
             var clientId = await GetClientIdByUserIdAsync(userId);
 
@@ -713,10 +713,10 @@ namespace TradeSystem.Core.Services
                 .ToListAsync();
         }
 
-        public async Task<Client?> GetClientByClientIdAcync(Guid userId)
+        public async Task<Client?> GetClientByClientIdAcync(Guid clientId)
         {
             return await clientRepozitory.All()
-                .Where(c => c.Id == userId)
+                .Where(c => c.Id == clientId)
                 .FirstOrDefaultAsync();
         }
     }

@@ -10,8 +10,8 @@
     </li>
     @if (this.User?.Identity?.IsAuthenticated ?? false)
     {
-        @if ((await clientService.ExistDataCorporativeClientByUserIdAsync(User.Id())) 
-            || (await clientService.ExistDataIndividualClientByUserIdAsync(User.Id())))
+        @if ((await clientService.ExistDataCorporativeClientByUserIdAsync(User.Id()))
+       || (await clientService.ExistDataIndividualClientByUserIdAsync(User.Id())))
         {
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="DetailsDataOfClient">For me</a>

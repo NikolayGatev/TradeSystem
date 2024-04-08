@@ -51,7 +51,7 @@ namespace TradeSystem.Core.Services
         }
 
         public async Task<TradeQueryServiceModel> AllAsyn(
-            Guid userId
+            string userId
             , string? ClientAccountId = null
             , bool? IsBid = null
             , string? ISIN = null
@@ -149,7 +149,7 @@ namespace TradeSystem.Core.Services
                 };
         }
 
-        public async Task DeleteAsync(Guid tradeId, Guid userId)
+        public async Task DeleteAsync(Guid tradeId, string userId)
         {
             var clientId = await clientService.GetClientIdByUserIdAsync(userId);
             var isCounterparty = await UsarIdIsCounterpartyByTrade(clientId ?? new Guid(), tradeId);
@@ -199,7 +199,7 @@ namespace TradeSystem.Core.Services
             return result;
         }
 
-        public async Task<TradeDetailsServiceModel> GetTradeDetailsByIdAsync(Guid tradeId, Guid userId)
+        public async Task<TradeDetailsServiceModel> GetTradeDetailsByIdAsync(Guid tradeId, string userId)
         {
             var clientId = await clientService.GetClientIdByUserIdAsync(userId);            
             var isCounterparty = await UsarIdIsCounterpartyByTrade(clientId ?? new Guid(), tradeId);

@@ -21,7 +21,7 @@ namespace TradeSystem.Data.Configurations.Seed
             {
                 Id = Guid.Parse("21bbf6eb-0d93-460c-ab6f-c1530b16e97d"),
                 NationalityId = 1,
-                ApplicationUserId = Guid.Parse("6d5800ce-d726-4fc8-83d9-d6b3ac1f591e"),
+                ApplicationUserId = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
                 Address = "130a7006-f51d-4a2c-8796-92b0438a1293",
                 PhoneNumber = "1234456",
                 TownId = 1,

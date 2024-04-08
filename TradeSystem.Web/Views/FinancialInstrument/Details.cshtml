@@ -18,7 +18,7 @@
             
                 @if (this.User.Identity.IsAuthenticated)
                 {
-                    if (await employeeService.ExistsByUserIdAsync(User.Id()))
+                if (await employeeService.ExistsByUserIdAsync(User.Id()))
                     {
                     <a class="btn btn-warning" asp-controller="FinancialInstrument" asp-action="Edit"
                            asp-route-id="@Model.Id">Edit</a>

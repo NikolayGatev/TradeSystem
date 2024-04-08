@@ -10,15 +10,15 @@ namespace TradeSystem.Core.Contracts
     {
         Task<Guid> CreateAsync(OrderFormModel model, Guid? clientId);
 
-        Task<OrderDetailsServiceModel> GetOrderDetailsByIdAsync(Guid orderId, Guid userId);
+        Task<OrderDetailsServiceModel> GetOrderDetailsByIdAsync(Guid orderId, string userId);
 
         Task<bool> ExistOrderByIdAsync(Guid orderId);
 
         Task<Order?> GetOrderByIdAsync(Guid orderId);
 
-        Task DeleteAsync(Guid orderId, Guid userId);
+        Task DeleteAsync(Guid orderId, string userId);
 
-        Task<OrderQueryServiceModel> AllAsyn(Guid userId
+        Task<OrderQueryServiceModel> AllAsyn(string userId
             ,string? ClientAccountId = null
             , bool? IsBid = null
             , bool?  IsNotActive = null
@@ -28,6 +28,6 @@ namespace TradeSystem.Core.Contracts
             , int currentPage = 1
             , int ordersPerPage = 1);
 
-        Task<decimal> GetBalanceByUserIdAsync(Guid userId);
+        Task<decimal> GetBalanceByUserIdAsync(string userId);
     }
 }

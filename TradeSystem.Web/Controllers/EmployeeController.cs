@@ -48,7 +48,7 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> AddNewEmployee(EmployeeFormModel model)
         {
-            Guid userId = User.Id();
+            var userId = User.Id();
 
             if(await employeeService.DivisionExistsAsync(model.DivisionId) == false)
             {
@@ -111,7 +111,7 @@ namespace TradeSystem.Web.Controllers
         
         [MustBeEmployee]
 
-        public async Task<IActionResult> Reject (Guid userId)
+        public async Task<IActionResult> Reject (string userId)
         {
             try
             {
@@ -128,7 +128,7 @@ namespace TradeSystem.Web.Controllers
 
         [MustBeEmployee]
 
-        public async Task<IActionResult> Accept(Guid userId)
+        public async Task<IActionResult> Accept(string userId)
         {
             try
             {

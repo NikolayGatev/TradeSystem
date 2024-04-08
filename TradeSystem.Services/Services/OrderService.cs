@@ -268,7 +268,7 @@ namespace TradeSystem.Core.Services
             await clientFinancialInstrumentRepozitory.SaveChangesAsync();
         }
 
-        public async Task<OrderDetailsServiceModel> GetOrderDetailsByIdAsync(Guid orderId, Guid userId)
+        public async Task<OrderDetailsServiceModel> GetOrderDetailsByIdAsync(Guid orderId, string userId)
         {
             var entity = await GetOrderByIdAsync(orderId);
 
@@ -304,7 +304,7 @@ namespace TradeSystem.Core.Services
                 .FirstOrDefaultAsync();
         }
 
-        public async Task DeleteAsync(Guid orderId, Guid userId)
+        public async Task DeleteAsync(Guid orderId, string userId)
         {
             var entity = await GetOrderByIdAsync(orderId);
             var clientIdByUserId = await clientService.GetClientIdByUserIdAsync(userId);
@@ -342,7 +342,7 @@ namespace TradeSystem.Core.Services
         
 
         public async Task<OrderQueryServiceModel> AllAsyn(
-            Guid userId
+            string userId
             , string? ClientAccountId = null
             , bool? IsBid = null
             , bool? IsNotActive = null
@@ -451,7 +451,7 @@ namespace TradeSystem.Core.Services
             return client.Balance >= sum;
         }
 
-        public async Task<decimal> GetBalanceByUserIdAsync(Guid userId)
+        public async Task<decimal> GetBalanceByUserIdAsync(string userId)
         {
             var clientId = await clientService.GetClientIdByUserIdAsync(userId);
 

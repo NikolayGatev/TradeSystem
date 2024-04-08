@@ -22,7 +22,7 @@ namespace TradeSystem.Data.Configurations.Seed
 
             user = new ApplicationUser()
             {
-                Id = Guid.Parse("dea12856-c198-4129-b3f3-b893d8395082"),
+                Id = "dea12856-c198-4129-b3f3-b893d8395082",
                 UserName = "admin@mail.com",
                 NormalizedUserName = "admin@mail.com",
                 Email = "admin@mail.com",
@@ -34,7 +34,7 @@ namespace TradeSystem.Data.Configurations.Seed
 
             user = new ApplicationUser()
             {
-                Id = Guid.Parse("6d5800ce-d726-4fc8-83d9-d6b3ac1f591e"),
+                Id = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
                 UserName = "client@gmail.com",
                 NormalizedUserName = "client@gmail.com",
                 Email = "client@gmail.com",

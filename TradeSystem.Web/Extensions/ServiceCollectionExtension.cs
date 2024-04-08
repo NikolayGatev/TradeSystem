@@ -5,6 +5,7 @@ using TradeSystem.Data.Common;
 using TradeSystem.Data.Repositories;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Services;
+using Microsoft.AspNetCore.Identity;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -54,6 +55,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.Password.RequireDigit =
                     config.GetValue<bool>("Identity:Password:RequireDigit");
             })
+               .AddRoles<IdentityRole>()
                .AddEntityFrameworkStores<TradeSystemDbContext>();
             return services; 
         }

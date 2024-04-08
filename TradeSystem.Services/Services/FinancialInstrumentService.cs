@@ -62,11 +62,11 @@ namespace TradeSystem.Core.Services
             this.tradeOrderRepozitory = tradeOrderRepozitory;
             this.clientService = clientService;
         }
-        public async Task<IEnumerable<FinInstrumentServiceModel>> AllFinancialInstrumentsOfClientAsync(Guid? userId)
+        public async Task<IEnumerable<FinInstrumentServiceModel>> AllFinancialInstrumentsOfClientAsync(string? userId)
         {
             if (userId != null)
             {
-                Guid clientId = await clientService.GetClientIdByUserIdAsync(userId ?? new Guid()) ?? new Guid();
+                Guid clientId = await clientService.GetClientIdByUserIdAsync(userId ?? string.Empty) ?? new Guid();
 
                 var ordersSum = await orderRepozitory.AllAsNoTracking().Where(o => o.ClientId == clientId && o.IsBid == false)
                     .ToListAsync();

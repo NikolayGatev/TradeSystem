@@ -7,7 +7,7 @@ using TradeSystem.Data.Models;
 
 namespace TradeSystem.Data
 {
-    public class TradeSystemDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+    public class TradeSystemDbContext : IdentityDbContext<ApplicationUser>
     {
         private readonly bool seedDb;
 

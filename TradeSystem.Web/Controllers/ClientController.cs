@@ -45,7 +45,7 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> AddDataNewIndividualClient(IndividualDataClentFormModel model)
         {
-            Guid userId = User.Id();
+            var userId = User.Id();
 
             if (await clientService.GetIdOfDataOfIndividualClientByUserIdAsync(userId) != null)
             {
@@ -86,7 +86,7 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> AddDataNewCorporativeClient(CorporativeDataClentFormModel model)
         {
-            Guid userId = User.Id();
+            var userId = User.Id();
 
             if (await clientService.GetIdOfDataOfCorporativelClientByUserIdAsync(userId) != null)
             {
@@ -112,7 +112,7 @@ namespace TradeSystem.Web.Controllers
 
         [HttpGet]
 
-        public async Task<IActionResult> DetailsDataOfClient(Guid? userId)
+        public async Task<IActionResult> DetailsDataOfClient(string? userId)
         {    
             try
             {
@@ -132,7 +132,7 @@ namespace TradeSystem.Web.Controllers
             bool isGuid = Guid.TryParse(filename.Substring(0, filename.LastIndexOf('.') - 1), out Guid userId);
 
             if(!isGuid 
-                || (userId != User.Id()) 
+                || (userId != Guid.Parse(User.Id())) 
                     || (await employeeService.ExistsByUserIdAsync(User.Id()) == false))
             {
                 BadRequest();
@@ -318,7 +318,7 @@ namespace TradeSystem.Web.Controllers
 
         [HttpGet]
 
-        public async Task<IActionResult> DetailsAcauntOfClient(Guid? userId)
+        public async Task<IActionResult> DetailsAcauntOfClient(string? userId)
         {
             try
             {

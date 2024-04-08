@@ -20,7 +20,7 @@ namespace TradeSystem.Data.Configurations.Seed
             employee = new Employee()
             {
                 Id = Guid.Parse("67524a1e-2595-440e-a6d2-103aaf179a08"),
-                ApplicationUserId = Guid.Parse("dea12856-c198-4129-b3f3-b893d8395082"),
+                ApplicationUserId = "dea12856-c198-4129-b3f3-b893d8395082",
                 FirstName = "Admin",
                 LastName = "Compaince",
                 PhoneNumber = "1234567890",

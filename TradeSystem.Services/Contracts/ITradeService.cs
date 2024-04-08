@@ -11,15 +11,15 @@ namespace TradeSystem.Core.Contracts
 
         Task<IEnumerable<OrdersOfTradeServiceModel>> GetOrdersOfTradeByIdAsync(Guid tradeId);
 
-        Task<TradeDetailsServiceModel> GetTradeDetailsByIdAsync(Guid tradeId, Guid userId);
+        Task<TradeDetailsServiceModel> GetTradeDetailsByIdAsync(Guid tradeId, string userId);
 
         Task<Trade?> GetTradeByIdAsync(Guid tradeId);
 
         Task<bool> ExistTradeByIdAsync(Guid tradeId);
 
-        Task DeleteAsync(Guid tradeId, Guid userId);
+        Task DeleteAsync(Guid tradeId, string userId);
 
-        Task<TradeQueryServiceModel> AllAsyn(Guid userId
+        Task<TradeQueryServiceModel> AllAsyn(string userId
             , string? ClientAccountId = null
             , bool? IsBid = null
             , string? ISIN = null

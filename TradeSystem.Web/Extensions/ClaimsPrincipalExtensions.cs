@@ -2,10 +2,11 @@
 {
     public static class ClaimsPrincipalExtensions
     {
-        public static Guid Id(this ClaimsPrincipal user)
+        public static string Id(this ClaimsPrincipal user)
         {
-            var result = Guid.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier));
+            var result = (user.FindFirstValue(ClaimTypes.NameIdentifier));
             return result;
         }
+
     }
 }
