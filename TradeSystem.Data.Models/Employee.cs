@@ -21,6 +21,8 @@ namespace TradeSystem.Data.Models
 
         public Guid Id { get; set; }
 
+        public bool IsApproved { get; set; }
+
         [Required]
         [ForeignKey(nameof(ApplicationUserId))]
 

@@ -9,13 +9,6 @@ namespace TradeSystem.Data.Models
     /// </summary>
     public class ApplicationUser : IdentityUser, IAuditInfo, IDeletableEntity
     {
-        public ApplicationUser() 
-        {
-            this.Administrators = new HashSet<Employee>();
-            this.IndividualClients = new HashSet<DataOfIndividualClient>();
-            this.CorporativeClients = new HashSet<DataOfCorporateveClient>();
-        }
-
         public DateTime CreatedOn { get ; set ; }
 
         public DateTime? ModifiedOn { get ; set ; }
@@ -23,11 +16,5 @@ namespace TradeSystem.Data.Models
         public bool IsDeleted { get ; set ; }
 
         public DateTime? DeletedOn { get ; set ; }
-
-        public virtual ICollection<Employee> Administrators { get; set; } = null!;
-
-        public virtual ICollection<DataOfCorporateveClient> CorporativeClients { get; set; } = null!;
-
-        public virtual ICollection<DataOfIndividualClient> IndividualClients { get; set; } = null!;
     }
 }

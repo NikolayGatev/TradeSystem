@@ -23,10 +23,22 @@ namespace TradeSystem.Data.Configurations.Seed
             user = new ApplicationUser()
             {
                 Id = "dea12856-c198-4129-b3f3-b893d8395082",
-                UserName = "admin@mail.com",
-                NormalizedUserName = "admin@mail.com",
-                Email = "admin@mail.com",
-                NormalizedEmail = "admin@mail.com"
+                UserName = "admin@gmail.com",
+                NormalizedUserName = "admin@gmail.comm",
+                Email = "admin@gmail.com",
+                NormalizedEmail = "admin@gmail.com"
+            };
+            user.PasswordHash =
+                hasher.HashPassword(user, "111111");
+            users.Add(user);
+
+            user = new ApplicationUser()
+            {
+                Id = "4a6e690e-7d13-4c7e-88e9-8d7f10f456bb",
+                UserName = "employee@gmail.com",
+                NormalizedUserName = "employee@gmail.com",
+                Email = "employee@gmail.com",
+                NormalizedEmail = "employee@gmail.com"
             };
             user.PasswordHash =
                 hasher.HashPassword(user, "111111");
@@ -35,10 +47,22 @@ namespace TradeSystem.Data.Configurations.Seed
             user = new ApplicationUser()
             {
                 Id = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
-                UserName = "client@gmail.com",
-                NormalizedUserName = "client@gmail.com",
-                Email = "client@gmail.com",
-                NormalizedEmail = "client@gmail.com"
+                UserName = "individual@gmail.com",
+                NormalizedUserName = "individual@gmail.com",
+                Email = "individual@gmail.com",
+                NormalizedEmail = "individual@gmail.com"
+            };
+            user.PasswordHash =
+                hasher.HashPassword(user, "111111");
+            users.Add(user);
+
+            user = new ApplicationUser()
+            {
+                Id = "7586d7f6-e626-4e06-999e-7c977382c6de",
+                UserName = "corporative@gmail.com",
+                NormalizedUserName = "corporative@gmail.com",
+                Email = "corporative@gmail.com",
+                NormalizedEmail = "corporative@gmail.com"
             };
             user.PasswordHash =
                 hasher.HashPassword(user, "111111");
