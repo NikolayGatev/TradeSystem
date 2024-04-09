@@ -1,5 +1,8 @@
-﻿using TradeSystem.Core.Models.Clients;
+﻿using TradeSystem.Core.Models.Administrator;
+using TradeSystem.Core.Models.Clients;
 using TradeSystem.Core.Models.Employees;
+using TradeSystem.Core.Models.Enums;
+using TradeSystem.Core.Models.Orders;
 using TradeSystem.Data.Models;
 
 namespace TradeSystem.Core.Contracts
@@ -35,5 +38,11 @@ namespace TradeSystem.Core.Contracts
         public Task EditAsync(Guid employeeId, EmployeeFormModel model);
 
         public Task SoftDeleteAsync(Guid employeeId);
+
+        public Task<EmployeeQueryServiceModel> AllAsyn(string userId
+            , string? EmployeeId = null
+            , bool? IsApproved = null
+            , int currentPage = 1
+            , int employeesPerPage = 1);
     }
 }

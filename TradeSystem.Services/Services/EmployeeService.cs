@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Exeptions;
+using TradeSystem.Core.Models.Administrator;
 using TradeSystem.Core.Models.Clients;
 using TradeSystem.Core.Models.Employees;
 using TradeSystem.Core.Models.Enums;
+using TradeSystem.Core.Models.Orders;
 using TradeSystem.Data.Common;
 using TradeSystem.Data.Models;
 using TradeSystem.Data.Models.Enumerations;
@@ -84,6 +87,7 @@ namespace TradeSystem.Core.Services
                 LastName = model.LastName,
                 PhoneNumber = model.PhoneNumber,
                 DivisionId = model.DivisionId,
+                IsApproved = false,
             };
 
             await employeeRepozitory.AddAsync(employee);
@@ -111,6 +115,7 @@ namespace TradeSystem.Core.Services
                     PhoneNumber = e.PhoneNumber,
                     DivisionId=e.DivisionId,
                     DivisionName = e.Division.Name,
+                    IsApproved = e.IsApproved,
                 })
                 .FirstAsync();
 
@@ -124,6 +129,7 @@ namespace TradeSystem.Core.Services
         public async Task<bool> ExistsByUserIdAsync(string userId)
         {
             return await employeeRepozitory.AllAsNoTracking()
+                .Where(e => e.IsApproved)
                 .AnyAsync(e => e.ApplicationUserId == userId);
         }
 
@@ -308,6 +314,67 @@ namespace TradeSystem.Core.Services
             employeeRepozitory.Delete(entity);
 
             await employeeRepozitory.SaveChangesAsync();
+        }
+                
+        public async Task<EmployeeQueryServiceModel> AllAsyn(
+            string userId
+            , string? employeeId = null
+            , bool? isApproved = null
+            , int currentPage = 1
+            , int employeesPerPage = 1)
+        {
+            if (await ExistsByUserIdAsync(userId) == false)
+            {
+                throw new UnauthoriseActionException(MessageUnauthoriseActionException);
+            }
+
+            var employeeToShow = employeeRepozitory.AllAsNoTracking();
+
+            if (isApproved != null)
+            {
+                employeeToShow = employeeToShow
+                    .Where(e => e.IsApproved == isApproved);
+            }
+
+            if (employeeId != null
+                && Guid.TryParse(employeeId, out Guid id)
+                && (await employeeRepozitory.AllAsNoTracking().Where(e => e.Id == id).AnyAsync()))
+            {
+                employeeToShow = employeeToShow
+                    .Where(e => e.Id == id);
+            }
+
+            if (isApproved != null)
+            {
+                employeeToShow = employeeToShow
+                    .Where(e => e.IsApproved == isApproved);
+            }
+
+            var employees = await employeeToShow
+                .Skip((currentPage - 1) * employeesPerPage)
+                .Take(employeesPerPage)
+                .Select(e => new EmployeeDetailsServiceModel()
+                {
+                    Id = e.Id,
+                    ApplicationName = e.ApplicationUser.UserName,
+                    DivisionName = e.Division.Name,
+                    IsApproved = e.IsApproved,
+                    FirstName = e.FirstName,
+                    LastName = e.LastName,
+                    PhoneNumber = e.PhoneNumber,
+                    DivisionId = e.DivisionId,
+                })
+                .ToListAsync();
+
+            int totalEmployees = employeeId != null
+                ? await employeeToShow.Where(e => e.Id == Guid.Parse(employeeId)).CountAsync()
+                : await employeeToShow.CountAsync();
+
+            return new EmployeeQueryServiceModel()
+            {
+                Employees = employees,
+                TotalEmployeeCount = totalEmployees,
+            };
         }
     }
 }

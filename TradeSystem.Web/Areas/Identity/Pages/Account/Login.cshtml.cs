@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using TradeSystem.Data.Models;
-using static TradeSystem.Common.RoleConstants;
+using static TradeSystem.Common.AdministratorConstants;
 
 namespace TradeSystem.Web.Areas.Identity.Pages.Account
 {

@@ -9,5 +9,7 @@
         public uint UnfulfilledVolume { get; set; }
 
         public bool IsDelete { get; set; }
+
+        public Guid? ClientId { get; set; }
     }
 }

@@ -434,12 +434,14 @@ namespace TradeSystem.Core.Services
                     Price = o.Price,
                     IsDelete = o.IsDeleted,
                     FinancialInstrumentId = o.FinancialInstrumentId,
+                    ClientId = o.ClientId,
+                    
                 })
                 .ToListAsync();
 
             int totalOrders = clientId != null
-                ? await orderRepozitory.AllAsNoTrackingWithDeleted().Where(o => o.ClientId == clientId).CountAsync()
-                : await orderRepozitory.AllAsNoTrackingWithDeleted().CountAsync();
+                ? await ordersToShow.Where(o => o.ClientId == clientId).CountAsync()
+                : await ordersToShow.CountAsync();
 
             return new OrderQueryServiceModel()
             {

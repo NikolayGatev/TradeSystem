@@ -1,4 +1,4 @@
-﻿using static TradeSystem.Common.RoleConstants;
+﻿using static TradeSystem.Common.AdministratorConstants;
 
 namespace System.Security.Claims
 {

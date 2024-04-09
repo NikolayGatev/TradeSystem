@@ -14,7 +14,7 @@ namespace TradeSystem.Web.Attributes
 
             IEmployeeService? employeeService = context.HttpContext.RequestServices.GetService<IEmployeeService>();
 
-            if (employeeService == null)
+            if (employeeService == null )
             {
                 context.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }

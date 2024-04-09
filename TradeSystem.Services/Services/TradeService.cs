@@ -139,8 +139,8 @@ namespace TradeSystem.Core.Services
                     .ToListAsync();
 
                 int totalTrades = clientId != null
-                ? await tradeRepozitory.AllAsNoTracking().Where(o => o.TradeOrders.Any(to => to.Order.ClientId == clientId)).CountAsync()
-                : await tradeRepozitory.AllAsNoTracking().CountAsync();
+                ? await tradesToShow.Where(o => o.TradeOrders.Any(to => to.Order.ClientId == clientId)).CountAsync()
+                : await tradesToShow.CountAsync();
 
                 return new TradeQueryServiceModel()
                 {

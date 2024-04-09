@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using TradeSystem.Data.Models;
-using static TradeSystem.Common.RoleConstants;
+using static TradeSystem.Common.AdministratorConstants;
 
 namespace Microsoft.AspNetCore.Builder
 {

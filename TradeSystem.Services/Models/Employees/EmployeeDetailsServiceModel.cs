@@ -14,5 +14,7 @@ namespace TradeSystem.Core.Models.Employees
         [Display(Name = "Name of Division")]
 
         public string DivisionName { get; set; } = null!;
+
+        public bool IsApproved { get; set; }
     }
 }
