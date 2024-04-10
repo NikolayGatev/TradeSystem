@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Exeptions;
-using TradeSystem.Core.Models.FinacialInstrument;
 using TradeSystem.Core.Models.Orders;
-using TradeSystem.Core.Services;
-using TradeSystem.Data.Models;
 using TradeSystem.Web.Attributes;
 
 namespace TradeSystem.Web.Controllers

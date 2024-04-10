@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using TradeSystem.Data.Models;
+﻿using System.ComponentModel.DataAnnotations;
 using static TradeSystem.Common.GeneralApplicationConstants;
 using static TradeSystem.Common.MessageConstants;
 

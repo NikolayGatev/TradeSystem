@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Security.Claims;
 using TradeSystem.Core.Contracts;
-using TradeSystem.Web.Controllers;
 
 namespace TradeSystem.Web.Attributes
 {

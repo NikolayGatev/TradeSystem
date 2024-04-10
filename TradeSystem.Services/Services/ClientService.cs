@@ -17,50 +17,29 @@ namespace TradeSystem.Core.Services
     public class ClientService : IClientService
     {
         private readonly IDeletableEntityRepository<Employee> employeeRepozitory;
-        private readonly IDeletableEntityRepository<ApplicationUser> aplicationUserRepozitory;
         private readonly IDeletableEntityRepository<Client> clientRepozitory;
-        private readonly IDeletableEntityRepository<ClientFinancialInstrument> clientFinancialInstrumentRepozitory;
         private readonly IRepository<Country> countryRepozitory;
         private readonly IRepository<DataOfCorporateveClient> dataCorporativeClientRepozitory;
         private readonly IRepository<DataOfIndividualClient> dataIndividualClientRepozitory;
-        private readonly IRepository<Division> divisionRepozitory;
-        private readonly IDeletableEntityRepository<FinancialInstrument> finInstrRepozitory;
-        private readonly IRepository<IdentityDocument> identityDocRepozitory;
         private readonly IDeletableEntityRepository<Order> orderRepozitory;
         private readonly IDeletableEntityRepository<Town> townRepozitory;
-        private readonly IDeletableEntityRepository<Trade> tradeRepozitory;
-        private readonly IDeletableEntityRepository<TradeOrder> tradeOrderRepozitory;
 
         public ClientService(
            IDeletableEntityRepository<Employee> employeeRepozitory
-           , IDeletableEntityRepository<ApplicationUser> aplicationUserRepozitory
            ,IDeletableEntityRepository<Client> clientRepozitory
-           ,IDeletableEntityRepository<ClientFinancialInstrument> clientFinancialInstrumentRepozitory
            ,IRepository<Country> countryRepozitory
            ,IRepository<DataOfCorporateveClient> dataCorporativeClientRepozitory
            ,IRepository<DataOfIndividualClient> dataIndividualClientRepozitory
-           ,IRepository<Division> divisionRepozitory
-           ,IDeletableEntityRepository<FinancialInstrument> finInstrRepozitory
-           ,IRepository<IdentityDocument> identityDocRepozitory
            ,IDeletableEntityRepository<Order> orderRepozitory
-           ,IDeletableEntityRepository<Town> townRepozitory
-           ,IDeletableEntityRepository<Trade> tradeRepozitory
-           ,IDeletableEntityRepository<TradeOrder> tradeOrderRepozitory)
+           ,IDeletableEntityRepository<Town> townRepozitory)
         {
             this.employeeRepozitory = employeeRepozitory;
-            this.aplicationUserRepozitory = aplicationUserRepozitory;
             this.clientRepozitory = clientRepozitory;
-            this.clientFinancialInstrumentRepozitory = clientFinancialInstrumentRepozitory;
             this.countryRepozitory = countryRepozitory;
             this.dataCorporativeClientRepozitory = dataCorporativeClientRepozitory;
             this.dataIndividualClientRepozitory = dataIndividualClientRepozitory;
-            this.divisionRepozitory = divisionRepozitory;
-            this.finInstrRepozitory = finInstrRepozitory;
-            this.identityDocRepozitory = identityDocRepozitory;
             this.orderRepozitory = orderRepozitory;
             this.townRepozitory = townRepozitory;
-            this.tradeRepozitory = tradeRepozitory;
-            this.tradeOrderRepozitory = tradeOrderRepozitory;
             this.dataIndividualClientRepozitory = dataIndividualClientRepozitory;
         }
 

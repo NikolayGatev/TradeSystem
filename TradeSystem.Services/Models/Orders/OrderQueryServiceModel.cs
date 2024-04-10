@@ -1,6 +1,4 @@
-﻿using TradeSystem.Core.Models.FinacialInstrument;
-
-namespace TradeSystem.Core.Models.Orders
+﻿namespace TradeSystem.Core.Models.Orders
 {
     public class OrderQueryServiceModel
     {

@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TradeSystem.Core.Models.Enums;
-using TradeSystem.Core.Models.Orders;
 
 namespace TradeSystem.Core.Models.Trades
 {

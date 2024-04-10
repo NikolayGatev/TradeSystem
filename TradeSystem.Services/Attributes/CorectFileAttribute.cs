@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
-using static TradeSystem.Common.GeneralApplicationConstants;
 
 namespace TradeSystem.Core.Attributes
 {

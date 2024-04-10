@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using static TradeSystem.Common.EntityValidationConstants.OrderAndTradesConstants;
 using static TradeSystem.Common.MessageConstants;
 

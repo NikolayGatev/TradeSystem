@@ -1,13 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Exeptions;
-using TradeSystem.Core.Models.Orders;
 using TradeSystem.Core.Models.Trades;
-using TradeSystem.Core.Services;
-using TradeSystem.Data.Models;
 
 namespace TradeSystem.Web.Controllers
 {

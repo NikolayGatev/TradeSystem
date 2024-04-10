@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TradeSystem.Data.Common.Base;
+﻿using TradeSystem.Data.Common.Base;
 
 namespace TradeSystem.Data.Common
 {

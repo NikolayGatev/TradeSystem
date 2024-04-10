@@ -1,10 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Exeptions;
-using TradeSystem.Core.Models.Employees;
 using TradeSystem.Core.Models.Enums;
-using TradeSystem.Core.Models.FinacialInstrument;
 using TradeSystem.Core.Models.Orders;
 using TradeSystem.Data.Common;
 using TradeSystem.Data.Models;
@@ -15,37 +12,20 @@ namespace TradeSystem.Core.Services
 {
     public class OrderService : IOrderService
     {
-        private readonly IDeletableEntityRepository<Employee> employeeRepozitory;
-        private readonly IDeletableEntityRepository<ApplicationUser> aplicationUserRepozitory;
         private readonly IDeletableEntityRepository<Client> clientRepozitory;
         private readonly IDeletableEntityRepository<ClientFinancialInstrument> clientFinancialInstrumentRepozitory;
-        private readonly IRepository<Country> countryRepozitory;
-        private readonly IRepository<DataOfCorporateveClient> dataCorporativeClientRepozitory;
-        private readonly IRepository<DataOfIndividualClient> dataIndividualClientRepozitory;
-        private readonly IRepository<Division> divisionRepozitory;
         private readonly IDeletableEntityRepository<FinancialInstrument> finInstrRepozitory;
-        private readonly IRepository<IdentityDocument> identityDocRepozitory;
         private readonly IDeletableEntityRepository<Order> orderRepozitory;
-        private readonly IDeletableEntityRepository<Town> townRepozitory;
         private readonly IDeletableEntityRepository<Trade> tradeRepozitory;
         private readonly IDeletableEntityRepository<TradeOrder> tradeOrderRepozitory;
         private readonly IClientService clientService;
         private readonly IEmployeeService employeeService;
         private readonly IFinancialInstrumentService financialInstrumentService;
 
-        public OrderService(
-                   IDeletableEntityRepository<Employee> employeeRepozitory
-                   , IDeletableEntityRepository<ApplicationUser> aplicationUserRepozitory
-                   , IDeletableEntityRepository<Client> clientRepozitory
+        public OrderService( IDeletableEntityRepository<Client> clientRepozitory
                    , IDeletableEntityRepository<ClientFinancialInstrument> clientFinancialInstrumentRepozitory
-                   , IRepository<Country> countryRepozitory
-                   , IRepository<DataOfCorporateveClient> dataCorporativeClientRepozitory
-                   , IRepository<DataOfIndividualClient> dataIndividualClientRepozitory
-                   , IRepository<Division> divisionRepozitory
                    , IDeletableEntityRepository<FinancialInstrument> finInstrRepozitory
-                   , IRepository<IdentityDocument> identityDocRepozitory
                    , IDeletableEntityRepository<Order> orderRepozitory
-                   , IDeletableEntityRepository<Town> townRepozitory
                    , IDeletableEntityRepository<Trade> tradeRepozitory
                    , IDeletableEntityRepository<TradeOrder> tradeOrderRepozitory
                    , IClientService clientService
@@ -54,18 +34,10 @@ namespace TradeSystem.Core.Services
         
 
         {
-            this.employeeRepozitory = employeeRepozitory;
-            this.aplicationUserRepozitory = aplicationUserRepozitory;
             this.clientRepozitory = clientRepozitory;
             this.clientFinancialInstrumentRepozitory = clientFinancialInstrumentRepozitory;
-            this.countryRepozitory = countryRepozitory;
-            this.dataCorporativeClientRepozitory = dataCorporativeClientRepozitory;
-            this.dataIndividualClientRepozitory = dataIndividualClientRepozitory;
-            this.divisionRepozitory = divisionRepozitory;
             this.finInstrRepozitory = finInstrRepozitory;
-            this.identityDocRepozitory = identityDocRepozitory;
             this.orderRepozitory = orderRepozitory;
-            this.townRepozitory = townRepozitory;
             this.tradeRepozitory = tradeRepozitory;
             this.tradeOrderRepozitory = tradeOrderRepozitory;
             this.clientService = clientService;

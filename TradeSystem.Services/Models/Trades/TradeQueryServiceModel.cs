@@ -1,6 +1,4 @@
-﻿using TradeSystem.Core.Models.Orders;
-
-namespace TradeSystem.Core.Models.Trades
+﻿namespace TradeSystem.Core.Models.Trades
 {
     public class TradeQueryServiceModel
     {

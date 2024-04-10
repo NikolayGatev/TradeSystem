@@ -4,7 +4,6 @@ using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Exeptions;
 using TradeSystem.Core.Models.Clients;
 using TradeSystem.Core.Models.Employees;
-using TradeSystem.Core.Services;
 using TradeSystem.Web.Attributes;
 using static TradeSystem.Common.ErrorConstants;
 

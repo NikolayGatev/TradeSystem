@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using TradeSystem.Web.ViewModels;
-using TradeSystem.Web.ViewModels.Home;
 
 namespace TradeSystem.Web.Controllers
 {

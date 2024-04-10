@@ -1,9 +1,6 @@
 ﻿using TradeSystem.Core.Models.Administrator;
 using TradeSystem.Core.Models.Clients;
 using TradeSystem.Core.Models.Employees;
-using TradeSystem.Core.Models.Enums;
-using TradeSystem.Core.Models.Orders;
-using TradeSystem.Data.Models;
 
 namespace TradeSystem.Core.Contracts
 {

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using TradeSystem.Core.Contracts.ModelExtention;
-using TradeSystem.Core.Models.Enums;
+﻿using TradeSystem.Core.Contracts.ModelExtention;
 
 namespace TradeSystem.Core.Models.Trades
 {

@@ -1,10 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Immutable;
-using System.Runtime.CompilerServices;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Exeptions;
 using TradeSystem.Core.Models.Enums;
-using TradeSystem.Core.Models.FinacialInstrument;
 using TradeSystem.Core.Models.Orders;
 using TradeSystem.Core.Models.Trades;
 using TradeSystem.Data.Common;
@@ -16,36 +13,18 @@ namespace TradeSystem.Core.Services
 {
     public class TradeService : ITradeService
     {
-        private readonly IDeletableEntityRepository<Order> orderRepozitory;
         private readonly IDeletableEntityRepository<Trade> tradeRepozitory;
         private readonly IDeletableEntityRepository<TradeOrder> tradeOrderRepozitory;
-        private readonly IOrderService orderService;
         private readonly IClientService clientService;
         private readonly IEmployeeService employeeService;
 
-        public TradeService(
-                   IDeletableEntityRepository<Employee> employeeRepozitory
-                   , IDeletableEntityRepository<ApplicationUser> aplicationUserRepozitory
-                   , IDeletableEntityRepository<Client> clientRepozitory
-                   , IDeletableEntityRepository<ClientFinancialInstrument> clientFinancialInstrumentRepozitory
-                   , IRepository<Country> countryRepozitory
-                   , IRepository<DataOfCorporateveClient> dataCorporativeClientRepozitory
-                   , IRepository<DataOfIndividualClient> dataIndividualClientRepozitory
-                   , IRepository<Division> divisionRepozitory
-                   , IDeletableEntityRepository<FinancialInstrument> finInstrRepozitory
-                   , IRepository<IdentityDocument> identityDocRepozitory
-                   , IDeletableEntityRepository<Order> orderRepozitory
-                   , IDeletableEntityRepository<Town> townRepozitory
-                   , IDeletableEntityRepository<Trade> tradeRepozitory
+        public TradeService( IDeletableEntityRepository<Trade> tradeRepozitory
                    , IDeletableEntityRepository<TradeOrder> tradeOrderRepozitory
-                   , IOrderService orderService
                    , IClientService clientService
                     , IEmployeeService employeeService)
         {
-            this.orderRepozitory = orderRepozitory;
             this.tradeRepozitory = tradeRepozitory;
             this.tradeOrderRepozitory = tradeOrderRepozitory;
-            this.orderService = orderService;
             this.clientService = clientService;
             this.employeeService = employeeService;
         }

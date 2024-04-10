@@ -1,8 +1,6 @@
 ﻿using TradeSystem.Core.Models.Enums;
-using TradeSystem.Core.Models.FinacialInstrument;
 using TradeSystem.Core.Models.Orders;
 using TradeSystem.Data.Models;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TradeSystem.Core.Contracts
 {

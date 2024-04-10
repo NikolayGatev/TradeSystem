@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TradeSystem.Data.Models;
-using TradeSystem.Data;
-using TradeSystem.Data.Common;
-using TradeSystem.Data.Repositories;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Services;
-using Microsoft.AspNetCore.Identity;
+using TradeSystem.Data;
+using TradeSystem.Data.Common;
+using TradeSystem.Data.Models;
+using TradeSystem.Data.Repositories;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

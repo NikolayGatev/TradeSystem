@@ -1,6 +1,4 @@
-﻿using System.Security.Principal;
-
-namespace TradeSystem.Core.Models.Orders
+﻿namespace TradeSystem.Core.Models.Orders
 {
     public class OrdersOfTradeServiceModel
     {

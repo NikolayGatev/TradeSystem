@@ -1,6 +1,4 @@
-﻿using TradeSystem.Core.Models.Clients;
-
-namespace TradeSystem.Core.Models.Employees
+﻿namespace TradeSystem.Core.Models.Employees
 {
     public class ClientsDataQueryServiceModel
     {

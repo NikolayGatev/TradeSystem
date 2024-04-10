@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TradeSystem.Data.Configurations;
 using TradeSystem.Data.Configurations.Seed;
 using TradeSystem.Data.Models;
 
