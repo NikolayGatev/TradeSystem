@@ -259,17 +259,18 @@ namespace TradeSystem.Core.Services
             }
         }
 
-        public async Task<EmployeeFormModel> GetEmployeeFormByIdAsync(Guid employeeId)
+        public async Task<EmployeeDetailsServiceModel> GetEmployeeFormByIdAsync(Guid employeeId)
         {
             var employee = await employeeRepozitory.AllAsNoTracking()
 
                 .Where(e => e.Id == employeeId)
-                .Select(e => new EmployeeFormModel()
+                .Select(e => new EmployeeDetailsServiceModel()
                 {
                     FirstName = e.FirstName,
                     LastName = e.LastName,
                     PhoneNumber = e.PhoneNumber,
                     DivisionId = e.DivisionId,
+                    IsApproved = e.IsApproved,
                 })
                 .FirstOrDefaultAsync();
 
@@ -283,7 +284,7 @@ namespace TradeSystem.Core.Services
             return employee;
         }
 
-        public async Task EditAsync(Guid employeeId, EmployeeFormModel model)
+        public async Task EditAsync(Guid employeeId, EmployeeDetailsServiceModel model)
         {
             var employee = await employeeRepozitory.All()
                 .Where(e => e.Id == employeeId)
@@ -298,6 +299,7 @@ namespace TradeSystem.Core.Services
             employee.LastName = model.LastName;
             employee.PhoneNumber = model.PhoneNumber;
             employee.DivisionId = model.DivisionId;
+            employee.IsApproved = model.IsApproved;
 
             await employeeRepozitory.SaveChangesAsync();
         }

@@ -6,14 +6,13 @@ namespace TradeSystem.Core.Models.Employees
     {
         public Guid Id { get; set; }
 
-        [Required]
         [Display(Name = "Email")]
-        public string ApplicationName { get; set; } = null!;
 
-        [Required]
+        public string? ApplicationName { get; set; } = null;
+                
         [Display(Name = "Name of Division")]
 
-        public string DivisionName { get; set; } = null!;
+        public string? DivisionName { get; set; } = null;
 
         public bool IsApproved { get; set; }
     }

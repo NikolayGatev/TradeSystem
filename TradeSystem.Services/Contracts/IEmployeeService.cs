@@ -33,9 +33,9 @@ namespace TradeSystem.Core.Contracts
 
         public Task AcceptClientDataAsync(string userEmployeeId, string userClientId);
 
-        public Task<EmployeeFormModel> GetEmployeeFormByIdAsync(Guid employeeId);
+        public Task<EmployeeDetailsServiceModel> GetEmployeeFormByIdAsync(Guid employeeId);
 
-        public Task EditAsync(Guid employeeId, EmployeeFormModel model);
+        public Task EditAsync(Guid employeeId, EmployeeDetailsServiceModel model);
 
         public Task SoftDeleteAsync(Guid employeeId);
 

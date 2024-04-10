@@ -163,7 +163,7 @@ namespace TradeSystem.Web.Controllers
         [MustBeEmployee]
         [HttpPost]
 
-        public async Task<IActionResult> Edit(Guid employeeId, EmployeeFormModel model)
+        public async Task<IActionResult> Edit(Guid employeeId, EmployeeDetailsServiceModel model)
         {
             if(await employeeService.DivisionExistsAsync(model.DivisionId) == false)
             {
@@ -180,6 +180,11 @@ namespace TradeSystem.Web.Controllers
             try
             {
                 await employeeService.EditAsync(employeeId, model);
+
+                if(User.IsAdmin())
+                {
+                    return RedirectToAction("AllEmployees", "Employee", new { area = "Administrator" });
+                }
 
                 return RedirectToAction(nameof(EmployeeDetails), new { employeeId });
             }

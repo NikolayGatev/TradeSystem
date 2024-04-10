@@ -1,4 +1,4 @@
-﻿@model EmployeeFormModel
+﻿@model EmployeeDetailsServiceModel
 
 <div class="row">
     <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
@@ -28,6 +28,22 @@
                 <input asp-for="PhoneNumber" class="form-control" placeholder="+359888888888">
                 <span asp-validation-for="PhoneNumber" class="small text-danger"></span>
             </div>
+            @if(User.IsAdmin())
+            {
+                <label asp-for="IsApproved">Status</label>
+                <div class="form-check form-check-inline">
+                    <input asp-for="IsApproved" class="form-check-input" type="radio" value="true" checked>
+                    <label class="form-check-label" asp-for="IsApproved">
+                        Approved
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input asp-for="IsApproved" class="form-check-input" type="radio" value="false">
+                    <label class="form-check-label" asp-for="IsApproved">
+                        Not Approved
+                    </label>
+                </div>
+            }
             <div class="text-center">
                 <input class="btn btn-primary mt-3" type="submit" value="Save" />
             </div>
