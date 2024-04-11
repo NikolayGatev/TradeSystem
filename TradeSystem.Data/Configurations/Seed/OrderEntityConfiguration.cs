@@ -66,8 +66,8 @@ namespace TradeSystem.Data.Configurations.Seed
                 ClientId = Guid.Parse("37d8ee74-9ead-4307-bd5c-6ad5f824edca"),
             };
             orders.Add(order);
-            //
-            order = new Order() // sell on Id 98807339-c1a5-4c2e-81f2-7c15e493bec8
+            
+            order = new Order() 
             {
                 Id = Guid.Parse("55a73acc-6a01-43bc-b8d1-f81cd707f335"),
                 IsBid = false,
@@ -80,7 +80,7 @@ namespace TradeSystem.Data.Configurations.Seed
             };
             orders.Add(order);
 
-            order = new Order() // sell on Id 4a2715ef-7648-4369-ba0e-2f9bdd3d79b3
+            order = new Order() 
             {
                 Id = Guid.Parse("417d6699-1b1d-45c9-9ebb-27fbef1dae84"),
                 IsBid = true,

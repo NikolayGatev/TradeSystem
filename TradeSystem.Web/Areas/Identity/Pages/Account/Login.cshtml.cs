@@ -126,7 +126,7 @@ namespace TradeSystem.Web.Areas.Identity.Pages.Account
 
                     if(await userManager.IsInRoleAsync(user, AdminRole))
                     {
-                        return RedirectToAction("DashBoard", "Home", new { area = "Administrator" });
+                        return RedirectToAction("Index", "Home", new { area = "Administrator" });
                     }
 
                     return LocalRedirect(returnUrl);

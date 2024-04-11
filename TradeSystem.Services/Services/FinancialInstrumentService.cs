@@ -16,7 +16,7 @@ namespace TradeSystem.Core.Services
         private readonly IDeletableEntityRepository<ClientFinancialInstrument> clientFinancialInstrumentRepozitory;
         private readonly IDeletableEntityRepository<FinancialInstrument> finInstrRepozitory;
         private readonly IClientService clientService;
-
+       
         public FinancialInstrumentService(
                    IDeletableEntityRepository<Client> clientRepozitory
                    , IDeletableEntityRepository<Order> orderRepozitory
@@ -35,7 +35,7 @@ namespace TradeSystem.Core.Services
         {
             if (userId != null)
             {
-                Guid clientId = await clientService.GetClientIdByUserIdAsync(userId ?? string.Empty) ?? new Guid();
+                var clientId = await clientService.GetClientIdByUserIdAsync(userId ?? string.Empty) ?? new Guid();
 
                 var ordersSum = await orderRepozitory.AllAsNoTracking().Where(o => o.ClientId == clientId && o.IsBid == false)
                     .ToListAsync();
