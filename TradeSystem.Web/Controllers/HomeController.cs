@@ -39,6 +39,16 @@ namespace TradeSystem.Web.Controllers
                 return View("Error403");
             }
 
+            if (statusCode == 404)
+            {
+                return View("Error404");
+            }
+
+            if (statusCode == 500)
+            {
+                return View("Error500");
+            }
+
             return View();
         }
     }
