@@ -83,7 +83,7 @@ namespace TradeSystem.Data.Configurations.Seed
             order = new Order() 
             {
                 Id = Guid.Parse("417d6699-1b1d-45c9-9ebb-27fbef1dae84"),
-                IsBid = true,
+                IsBid = false,
                 InitialVolume = 200,
                 ActiveVolume = 0,
                 Price = 10,

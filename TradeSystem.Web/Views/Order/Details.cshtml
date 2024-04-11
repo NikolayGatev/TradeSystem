@@ -3,10 +3,10 @@
 @inject IClientService clientService
 
 @{
-    ViewBag.Title = "Order Details";
+    ViewData["Title"] = "Order Details";
 }
 
-<h2 class="text-center">@ViewBag.Title</h2>
+<h2 class="text-center">@ViewData["Title"]</h2>
 <hr />
 
 <div class="container" style="display:inline">

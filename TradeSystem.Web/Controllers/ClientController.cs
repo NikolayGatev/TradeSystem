@@ -128,7 +128,7 @@ namespace TradeSystem.Web.Controllers
         {
             bool isGuid = Guid.TryParse(filename.Substring(0, filename.LastIndexOf('.') - 1), out Guid userId);
 
-            if(!isGuid 
+            if(isGuid == false
                 || (userId != Guid.Parse(User.Id())) 
                     || (await employeeService.ExistsByUserIdAsync(User.Id()) == false))
             {

@@ -34,6 +34,7 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> AddNewEmployee()
         {
+
             var model = new EmployeeFormModel()
             {
                 Divisions = await employeeService.AllDivisionsAsync(),
@@ -63,7 +64,7 @@ namespace TradeSystem.Web.Controllers
             
             var newEmployeeId = await employeeService.CreateEmployeeAsync(model, userId);
 
-            return RedirectToAction(nameof(EmployeeDetails), new {employeeId = newEmployeeId});
+            return RedirectToAction(nameof(Index), "Home");
         }
 
         [HttpGet]

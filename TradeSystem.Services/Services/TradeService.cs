@@ -161,7 +161,7 @@ namespace TradeSystem.Core.Services
         public async Task<IEnumerable<OrdersOfTradeServiceModel>> GetOrdersOfTradeByIdAsync(Guid tradeId)
         {
             var result = await tradeOrderRepozitory.AllAsNoTrackingWithDeleted()
-                .Where(o => o.OrderId == tradeId)
+                .Where(o => o.TradeId == tradeId)
                 .Select(o => new OrdersOfTradeServiceModel()
                 {
                     OrderId = o.Order.Id,

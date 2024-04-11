@@ -33,6 +33,7 @@ namespace TradeSystem.Core.Services
         {
             this.employeeRepozitory = employeeRepozitory;
             this.clientRepozitory = clientRepozitory;
+            this.countryRepozitory = countryRepozitory;
             this.dataCorporativeClientRepozitory = dataCorporativeClientRepozitory;
             this.dataIndividualClientRepozitory = dataIndividualClientRepozitory;
             this.divisionRepozitory = divisionRepozitory;

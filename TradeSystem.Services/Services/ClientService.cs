@@ -411,7 +411,7 @@ namespace TradeSystem.Core.Services
 
         public async Task<Guid?> GetClientIdByUserIdAsync(string userId)
         {
-            Guid? result = new Guid();
+            Guid? result = null;
 
             if (await ExistDataCorporativeClientByUserIdAsync(userId))
             {
