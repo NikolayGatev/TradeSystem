@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TradeSystem.Data.Configurations;
 using TradeSystem.Data.Configurations.Seed;
 using TradeSystem.Data.Models;
 
 namespace TradeSystem.Data
 {
-    public class TradeSystemDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+    public class TradeSystemDbContext : IdentityDbContext<ApplicationUser>
     {
         private readonly bool seedDb;
 
@@ -17,9 +15,7 @@ namespace TradeSystem.Data
             this.seedDb = seedDb;
         }
 
-        public DbSet<Address> Addresses { get; set; } = null!;
-
-        public DbSet<Administrator> Adminstrators { get; set; } = null!;
+        public DbSet<Employee> Employees { get; set; } = null!;
 
         public DbSet<Client> Clients { get; set; } = null!;
 
@@ -28,8 +24,6 @@ namespace TradeSystem.Data
         public DbSet<DataOfCorporateveClient> DataOfCorporateClients { get; set; } = null!;
 
         public DbSet<DataOfIndividualClient> DataOfIndividualClients { get; set; } = null!;
-
-        public DbSet<DepositedMoney> DepositedMoney { get; set; } = null!;
 
         public DbSet<Division> Divisions { get; set; } = null!;
 
@@ -52,25 +46,29 @@ namespace TradeSystem.Data
             builder.Entity<ClientFinancialInstrument>()
                 .HasKey(cfi => new {cfi.FinancialInstrumentId, cfi.ClientId});
 
-            builder.ApplyConfiguration(new ClientEntityConfiguration());
-            builder.ApplyConfiguration(new TradeSystem.Data.Configurations.DataOfCorporativeClientEntityConfiguration());
-            builder.ApplyConfiguration(new TradeSystem.Data.Configurations.DataOfIndividualClientEntityConfiguration());
-            builder.ApplyConfiguration(new DepositedMoneyEntityConfiguration());
-            builder.ApplyConfiguration(new OrderEntityConfiguration());
-            builder.ApplyConfiguration(new TradeEntityConfiguration());
-            builder.ApplyConfiguration(new TradeOrderEntityConfiguration());
-            builder.ApplyConfiguration(new TradeSystem.Data.Configurations.TownEntityConfiguration());
+            builder.ApplyConfiguration(new Configurations.ClientEntityConfiguration());
+            builder.ApplyConfiguration(new Configurations.DataOfCorporativeClientEntityConfiguration());
+            builder.ApplyConfiguration(new Configurations.DataOfIndividualClientEntityConfiguration());
+            builder.ApplyConfiguration(new Configurations.OrderEntityConfiguration());
+            builder.ApplyConfiguration(new Configurations.TradeEntityConfiguration());
+            builder.ApplyConfiguration(new Configurations.TradeOrderEntityConfiguration());
+            builder.ApplyConfiguration(new Configurations.TownEntityConfiguration());
 
             if (this.seedDb)
             {
                 builder.ApplyConfiguration(new DivisionEntityConfiguration());
                 builder.ApplyConfiguration(new FinancialInstrumentEntityConfiguration());
-                builder.ApplyConfiguration(new AddressEntityConfiguration());
-                builder.ApplyConfiguration(new AdministratorEntityConfiguration());
+                builder.ApplyConfiguration(new EmployeeEntityConfiguration());
                 builder.ApplyConfiguration(new ApplicationUserEntityConfiguration());
                 builder.ApplyConfiguration(new CountryEntityConfiguration());
-                builder.ApplyConfiguration(new TradeSystem.Data.Configurations.Seed.DataOfIndividualClientEntityConfiguration());
-                builder.ApplyConfiguration(new TradeSystem.Data.Configurations.Seed.TownEntityConfiguration());
+                builder.ApplyConfiguration(new Configurations.Seed.TownEntityConfiguration());
+                builder.ApplyConfiguration(new Configurations.Seed.ClientEntityConfiguration());
+                builder.ApplyConfiguration(new ClientFinacialInstrumentEntityConfiguration());
+                builder.ApplyConfiguration(new Configurations.Seed.DataOfCorporativeClientEntityConfiguration());
+                builder.ApplyConfiguration(new Configurations.Seed.DataOfIndividualClientEntityConfiguration());
+                builder.ApplyConfiguration(new Configurations.Seed.OrderEntityConfiguration());
+                builder.ApplyConfiguration(new Configurations.Seed.TradeEntityConfiguration());
+                builder.ApplyConfiguration(new Configurations.Seed.TradeOrderEntityConfiguration());
             }
 
             base.OnModelCreating(builder);

@@ -22,11 +22,10 @@ namespace TradeSystem.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -50,7 +49,7 @@ namespace TradeSystem.Data.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,8 +63,9 @@ namespace TradeSystem.Data.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -74,7 +74,7 @@ namespace TradeSystem.Data.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -88,8 +88,9 @@ namespace TradeSystem.Data.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -98,7 +99,7 @@ namespace TradeSystem.Data.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128)
@@ -111,8 +112,9 @@ namespace TradeSystem.Data.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -121,13 +123,13 @@ namespace TradeSystem.Data.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -136,10 +138,10 @@ namespace TradeSystem.Data.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128)
@@ -157,140 +159,10 @@ namespace TradeSystem.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TradeSystem.Data.Models.Address", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("CountryId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<byte?>("Flat")
-                        .HasColumnType("tinyint");
-
-                    b.Property<byte?>("Floor")
-                        .HasColumnType("tinyint");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<string>("PostCode")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<string>("Street")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TownId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("district")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CountryId");
-
-                    b.HasIndex("TownId");
-
-                    b.ToTable("Addresses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("130a7006-f51d-4a2c-8796-92b0438a1293"),
-                            CountryId = 1,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            Number = "43",
-                            PostCode = "5300",
-                            TownId = 1
-                        });
-                });
-
-            modelBuilder.Entity("TradeSystem.Data.Models.Administrator", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ApplicationUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DivisionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(18)
-                        .HasColumnType("nvarchar(18)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("DivisionId");
-
-                    b.ToTable("Adminstrators");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("67524a1e-2595-440e-a6d2-103aaf179a08"),
-                            ApplicationUserId = new Guid("dea12856-c198-4129-b3f3-b893d8395082"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DivisionId = 1,
-                            FirstName = "Admin",
-                            IsDeleted = false,
-                            LastName = "Compaince",
-                            PhoneNumber = "1234567890"
-                        });
-                });
-
             modelBuilder.Entity("TradeSystem.Data.Models.ApplicationUser", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -366,37 +238,75 @@ namespace TradeSystem.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("dea12856-c198-4129-b3f3-b893d8395082"),
+                            Id = "dea12856-c198-4129-b3f3-b893d8395082",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "491d5585-980f-4997-ab71-f4c7150d99ce",
+                            ConcurrencyStamp = "3e392ce5-8c3a-40bc-9c08-bb96111d51fb",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "admin@mail.com",
+                            Email = "admin@gmail.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
                             LockoutEnabled = false,
-                            NormalizedEmail = "admin@mail.com",
-                            NormalizedUserName = "admin@mail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDz0mJQC9C1boqrAMwCWpmpoB/C24gkQ3d2vxVWaHSszanLJtav1z0tTwm/MgJcAuQ==",
+                            NormalizedEmail = "admin@gmail.com",
+                            NormalizedUserName = "admin@gmail.comm",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJ6CuJE6Zr7K7U91/EGfzF4HkBP9YSOAnyFw6KAej7/h5S4UVcqZqgoUL0ydNo5h2w==",
                             PhoneNumberConfirmed = false,
+                            SecurityStamp = "59f3fc5e-95cb-4b96-a1c3-787158170deb",
                             TwoFactorEnabled = false,
-                            UserName = "admin@mail.com"
+                            UserName = "admin@gmail.com"
                         },
                         new
                         {
-                            Id = new Guid("6d5800ce-d726-4fc8-83d9-d6b3ac1f591e"),
+                            Id = "4a6e690e-7d13-4c7e-88e9-8d7f10f456bb",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "745ca12f-7156-4799-ba60-88a8b71698a0",
+                            ConcurrencyStamp = "42e9b49d-57be-43eb-ba65-41c9d92425ae",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "client.com",
+                            Email = "employee@gmail.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
                             LockoutEnabled = false,
-                            NormalizedEmail = "client.com",
-                            NormalizedUserName = "client.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPZEz4916ZPzUUA4ZC06yRKyK0/ufnXpODvaK+82brKOdFuZWmatzHgvzUYeDiLH0g==",
+                            NormalizedEmail = "employee@gmail.com",
+                            NormalizedUserName = "employee@gmail.com",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBKlcK8OCDU776t/GgBLD5vvwomh40nqGXbh6MD3XWMJQ2YQ6rVqhi+PElzzAEK2AQ==",
                             PhoneNumberConfirmed = false,
+                            SecurityStamp = "865c5e67-2a3c-47f5-8b7c-0020706f9f3f",
                             TwoFactorEnabled = false,
-                            UserName = "client.com"
+                            UserName = "employee@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "d568a4b9-1e86-4055-b358-aac17c063419",
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "individual@gmail.com",
+                            EmailConfirmed = false,
+                            IsDeleted = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "individual@gmail.com",
+                            NormalizedUserName = "individual@gmail.com",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJU3qetB9luKwT+BsV5mIVOF9Kl4X5hbP1PzZjoJYf4hqb3mxk2llXg1DViAwpB8Aw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "896bc5a0-9ba5-4d63-aaa0-e42ae46af489",
+                            TwoFactorEnabled = false,
+                            UserName = "individual@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "7586d7f6-e626-4e06-999e-7c977382c6de",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "3b7dd7a4-5a5b-4058-abed-846c23c0726e",
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "corporative@gmail.com",
+                            EmailConfirmed = false,
+                            IsDeleted = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "corporative@gmail.com",
+                            NormalizedUserName = "corporative@gmail.com",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJUvKNlE0OMCdWYc2BcUMyzaoLZGpRiVET1BiEN0pXRFx4NHgQFLcaNJYA77Ow8GRQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "bd5b44a8-eef7-4072-8236-5ce5cd2cd004",
+                            TwoFactorEnabled = false,
+                            UserName = "corporative@gmail.com"
                         });
                 });
 
@@ -407,6 +317,10 @@ namespace TradeSystem.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Balance")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("BlockedSum")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
@@ -430,6 +344,26 @@ namespace TradeSystem.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Clients");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("37d8ee74-9ead-4307-bd5c-6ad5f824edca"),
+                            Balance = 50000m,
+                            BlockedSum = 0m,
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9048),
+                            IsDeleted = false,
+                            IsIndividual = true
+                        },
+                        new
+                        {
+                            Id = new Guid("660cb0ec-82b4-462c-8a0f-fdb6bf232f18"),
+                            Balance = 70000m,
+                            BlockedSum = 0m,
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9059),
+                            IsDeleted = false,
+                            IsIndividual = false
+                        });
                 });
 
             modelBuilder.Entity("TradeSystem.Data.Models.ClientFinancialInstrument", b =>
@@ -460,6 +394,40 @@ namespace TradeSystem.Data.Migrations
                     b.HasIndex("ClientId");
 
                     b.ToTable("ClientFinancialInstruments");
+
+                    b.HasData(
+                        new
+                        {
+                            FinancialInstrumentId = 1,
+                            ClientId = new Guid("37d8ee74-9ead-4307-bd5c-6ad5f824edca"),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9138),
+                            IsDeleted = false,
+                            Volume = 5000L
+                        },
+                        new
+                        {
+                            FinancialInstrumentId = 2,
+                            ClientId = new Guid("37d8ee74-9ead-4307-bd5c-6ad5f824edca"),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9146),
+                            IsDeleted = false,
+                            Volume = 6000L
+                        },
+                        new
+                        {
+                            FinancialInstrumentId = 3,
+                            ClientId = new Guid("660cb0ec-82b4-462c-8a0f-fdb6bf232f18"),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9148),
+                            IsDeleted = false,
+                            Volume = 3000L
+                        },
+                        new
+                        {
+                            FinancialInstrumentId = 4,
+                            ClientId = new Guid("660cb0ec-82b4-462c-8a0f-fdb6bf232f18"),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9149),
+                            IsDeleted = false,
+                            Volume = 7000L
+                        });
                 });
 
             modelBuilder.Entity("TradeSystem.Data.Models.Country", b =>
@@ -495,9 +463,23 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(8847),
                             IsDeleted = false,
                             Name = "Bulgaria"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(8897),
+                            IsDeleted = false,
+                            Name = "Italy"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(8898),
+                            IsDeleted = false,
+                            Name = "Germany"
                         });
                 });
 
@@ -507,14 +489,13 @@ namespace TradeSystem.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AddressId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("AdministratorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ApplicationUserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("AuthorisedOn")
                         .HasColumnType("datetime2");
@@ -529,6 +510,9 @@ namespace TradeSystem.Data.Migrations
 
                     b.Property<int>("DataChecking")
                         .HasColumnType("int");
+
+                    b.Property<Guid?>("EmployeeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("IdentityDocumentId")
                         .HasColumnType("uniqueidentifier");
@@ -564,21 +548,44 @@ namespace TradeSystem.Data.Migrations
                         .HasMaxLength(18)
                         .HasColumnType("nvarchar(18)");
 
+                    b.Property<int>("TownId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
-
-                    b.HasIndex("AddressId");
-
-                    b.HasIndex("AdministratorId");
 
                     b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("ClientId");
 
+                    b.HasIndex("EmployeeId");
+
                     b.HasIndex("IdentityDocumentId");
 
                     b.HasIndex("NationalityId");
 
+                    b.HasIndex("TownId");
+
                     b.ToTable("DataOfCorporateClients");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("3c2a6e70-1466-482c-8908-21f1ea3b5eb4"),
+                            Address = "Krasna Polqna 58",
+                            ApplicationUserId = "7586d7f6-e626-4e06-999e-7c977382c6de",
+                            AuthorisedOn = new DateTime(2024, 4, 11, 21, 29, 5, 838, DateTimeKind.Local).AddTicks(9255),
+                            ClientId = new Guid("660cb0ec-82b4-462c-8a0f-fdb6bf232f18"),
+                            CreatedOn = new DateTime(2024, 4, 11, 21, 29, 5, 838, DateTimeKind.Local).AddTicks(9223),
+                            DataChecking = 1,
+                            EmployeeId = new Guid("4bcfd374-c252-4193-8bfe-5e84379984cf"),
+                            LegalForm = "EOOD",
+                            Name = "Corporation",
+                            NameOfRepresentative = "Petar petrov",
+                            NationalIdentityNumber = "6789945435677",
+                            NationalityId = 1,
+                            PhoneNumber = "3234456",
+                            TownId = 1
+                        });
                 });
 
             modelBuilder.Entity("TradeSystem.Data.Models.DataOfIndividualClient", b =>
@@ -587,14 +594,13 @@ namespace TradeSystem.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AddressId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("AdministratorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ApplicationUserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("AuthorisedOn")
                         .HasColumnType("datetime2");
@@ -612,6 +618,9 @@ namespace TradeSystem.Data.Migrations
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("EmployeeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -646,71 +655,44 @@ namespace TradeSystem.Data.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<int>("TownId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
-
-                    b.HasIndex("AddressId");
-
-                    b.HasIndex("AdministratorId");
 
                     b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("ClientId");
 
+                    b.HasIndex("EmployeeId");
+
                     b.HasIndex("IdentityDocumentId");
 
                     b.HasIndex("NationalityId");
+
+                    b.HasIndex("TownId");
 
                     b.ToTable("DataOfIndividualClients");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("21bbf6eb-0d93-460c-ab6f-c1530b16e97d"),
-                            AddressId = new Guid("130a7006-f51d-4a2c-8796-92b0438a1293"),
-                            ApplicationUserId = new Guid("6d5800ce-d726-4fc8-83d9-d6b3ac1f591e"),
-                            CreatedOn = new DateTime(2024, 3, 17, 14, 18, 34, 586, DateTimeKind.Local).AddTicks(9401),
-                            DataChecking = 0,
+                            Id = new Guid("f316a20f-0bfa-4412-81a1-50bcb6562bc0"),
+                            Address = "Ovcha Kupel 58",
+                            ApplicationUserId = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
+                            AuthorisedOn = new DateTime(2024, 4, 11, 21, 29, 5, 838, DateTimeKind.Local).AddTicks(9339),
+                            ClientId = new Guid("37d8ee74-9ead-4307-bd5c-6ad5f824edca"),
+                            CreatedOn = new DateTime(2024, 4, 11, 21, 29, 5, 838, DateTimeKind.Local).AddTicks(9336),
+                            DataChecking = 1,
                             DateOfBirth = new DateTime(2000, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstName = "Petko",
-                            NationalIdentityNumber = "",
+                            EmployeeId = new Guid("67524a1e-2595-440e-a6d2-103aaf179a08"),
+                            FirstName = "Individual",
+                            NationalIdentityNumber = "BC1245643566",
                             NationalityId = 1,
                             PhoneNumber = "1234456",
-                            Surname = "Client"
+                            Surname = "Invidualov",
+                            TownId = 1
                         });
-                });
-
-            modelBuilder.Entity("TradeSystem.Data.Models.DepositedMoney", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("ClientId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.ToTable("DepositedMoney");
                 });
 
             modelBuilder.Entity("TradeSystem.Data.Models.Division", b =>
@@ -739,20 +721,98 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 814, DateTimeKind.Utc).AddTicks(6769),
                             Name = "Compliance"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 814, DateTimeKind.Utc).AddTicks(6785),
                             Name = "Authority Traders"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 814, DateTimeKind.Utc).AddTicks(6787),
                             Name = "Backoffice"
+                        });
+                });
+
+            modelBuilder.Entity("TradeSystem.Data.Models.Employee", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DivisionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(18)
+                        .HasColumnType("nvarchar(18)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("DivisionId");
+
+                    b.ToTable("Employees");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("67524a1e-2595-440e-a6d2-103aaf179a08"),
+                            ApplicationUserId = "dea12856-c198-4129-b3f3-b893d8395082",
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 814, DateTimeKind.Utc).AddTicks(7860),
+                            DivisionId = 1,
+                            FirstName = "Admin",
+                            IsApproved = true,
+                            IsDeleted = false,
+                            LastName = "Administrator",
+                            PhoneNumber = "1234567890"
+                        },
+                        new
+                        {
+                            Id = new Guid("4bcfd374-c252-4193-8bfe-5e84379984cf"),
+                            ApplicationUserId = "4a6e690e-7d13-4c7e-88e9-8d7f10f456bb",
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 814, DateTimeKind.Utc).AddTicks(7881),
+                            DivisionId = 1,
+                            FirstName = "Employee",
+                            IsApproved = true,
+                            IsDeleted = false,
+                            LastName = "Employeev",
+                            PhoneNumber = "2234567890"
                         });
                 });
 
@@ -799,7 +859,7 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 814, DateTimeKind.Utc).AddTicks(6997),
                             Description = "Financial and insurance activities",
                             ISIN = "BG1100016978",
                             IsDeleted = false,
@@ -808,7 +868,7 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 814, DateTimeKind.Utc).AddTicks(7003),
                             Description = "Manufacturing",
                             ISIN = "BG11SOSOBT18",
                             IsDeleted = false,
@@ -817,7 +877,7 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 814, DateTimeKind.Utc).AddTicks(7004),
                             Description = "Financial and insurance activities",
                             ISIN = "BG1100019980",
                             IsDeleted = false,
@@ -826,7 +886,7 @@ namespace TradeSystem.Data.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 814, DateTimeKind.Utc).AddTicks(7006),
                             Description = "Financial and insurance activities",
                             ISIN = "BG1100003166",
                             IsDeleted = false,
@@ -838,9 +898,6 @@ namespace TradeSystem.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedOn")
@@ -857,9 +914,13 @@ namespace TradeSystem.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("IdentityDocuments");
                 });
@@ -910,6 +971,104 @@ namespace TradeSystem.Data.Migrations
                     b.HasIndex("FinancialInstrumentId");
 
                     b.ToTable("Orders");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("98807339-c1a5-4c2e-81f2-7c15e493bec8"),
+                            ActiveVolume = 0L,
+                            ClientId = new Guid("37d8ee74-9ead-4307-bd5c-6ad5f824edca"),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9417),
+                            FinancialInstrumentId = 1,
+                            InitialVolume = 100L,
+                            IsBid = true,
+                            IsDeleted = true,
+                            Price = 10m
+                        },
+                        new
+                        {
+                            Id = new Guid("4a2715ef-7648-4369-ba0e-2f9bdd3d79b3"),
+                            ActiveVolume = 0L,
+                            ClientId = new Guid("37d8ee74-9ead-4307-bd5c-6ad5f824edca"),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9425),
+                            FinancialInstrumentId = 2,
+                            InitialVolume = 200L,
+                            IsBid = true,
+                            IsDeleted = true,
+                            Price = 10m
+                        },
+                        new
+                        {
+                            Id = new Guid("9edba98d-8ee3-4e2e-8c38-dd18477f5a81"),
+                            ActiveVolume = 100L,
+                            ClientId = new Guid("37d8ee74-9ead-4307-bd5c-6ad5f824edca"),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9430),
+                            FinancialInstrumentId = 1,
+                            InitialVolume = 100L,
+                            IsBid = false,
+                            IsDeleted = false,
+                            Price = 10m
+                        },
+                        new
+                        {
+                            Id = new Guid("f74db81b-3dc9-4841-8bd0-6029600200aa"),
+                            ActiveVolume = 200L,
+                            ClientId = new Guid("37d8ee74-9ead-4307-bd5c-6ad5f824edca"),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9432),
+                            FinancialInstrumentId = 2,
+                            InitialVolume = 200L,
+                            IsBid = false,
+                            IsDeleted = false,
+                            Price = 5m
+                        },
+                        new
+                        {
+                            Id = new Guid("55a73acc-6a01-43bc-b8d1-f81cd707f335"),
+                            ActiveVolume = 0L,
+                            ClientId = new Guid("660cb0ec-82b4-462c-8a0f-fdb6bf232f18"),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9436),
+                            FinancialInstrumentId = 1,
+                            InitialVolume = 100L,
+                            IsBid = false,
+                            IsDeleted = true,
+                            Price = 10m
+                        },
+                        new
+                        {
+                            Id = new Guid("417d6699-1b1d-45c9-9ebb-27fbef1dae84"),
+                            ActiveVolume = 0L,
+                            ClientId = new Guid("660cb0ec-82b4-462c-8a0f-fdb6bf232f18"),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9439),
+                            FinancialInstrumentId = 2,
+                            InitialVolume = 200L,
+                            IsBid = false,
+                            IsDeleted = true,
+                            Price = 10m
+                        },
+                        new
+                        {
+                            Id = new Guid("c0cfddfe-946d-40b5-9911-e87f4c3598be"),
+                            ActiveVolume = 100L,
+                            ClientId = new Guid("660cb0ec-82b4-462c-8a0f-fdb6bf232f18"),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9441),
+                            FinancialInstrumentId = 3,
+                            InitialVolume = 100L,
+                            IsBid = false,
+                            IsDeleted = false,
+                            Price = 10m
+                        },
+                        new
+                        {
+                            Id = new Guid("b5cf01f7-2fae-402e-b8f5-20b0ffcf4fac"),
+                            ActiveVolume = 200L,
+                            ClientId = new Guid("660cb0ec-82b4-462c-8a0f-fdb6bf232f18"),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9443),
+                            FinancialInstrumentId = 4,
+                            InitialVolume = 200L,
+                            IsBid = false,
+                            IsDeleted = false,
+                            Price = 5m
+                        });
                 });
 
             modelBuilder.Entity("TradeSystem.Data.Models.Town", b =>
@@ -951,7 +1110,7 @@ namespace TradeSystem.Data.Migrations
                         {
                             Id = 1,
                             CountryId = 1,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(8972),
                             IsDeleted = false,
                             Name = "Sofia"
                         });
@@ -997,15 +1156,35 @@ namespace TradeSystem.Data.Migrations
                     b.HasIndex("FinancialInstrumentId");
 
                     b.ToTable("Trades");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("c4824a81-6996-41a6-bf31-95dc69266175"),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9549),
+                            FinancialInstrumentId = 1,
+                            IsDeleted = false,
+                            Price = 10m,
+                            Volume = 100L
+                        },
+                        new
+                        {
+                            Id = new Guid("7dcb44f7-26af-4ee0-96f3-fe9ea161823f"),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9559),
+                            FinancialInstrumentId = 2,
+                            IsDeleted = false,
+                            Price = 10m,
+                            Volume = 200L
+                        });
                 });
 
             modelBuilder.Entity("TradeSystem.Data.Models.TradeOrder", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<Guid>("TradeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
@@ -1021,34 +1200,60 @@ namespace TradeSystem.Data.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TradeId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<long>("Volume")
                         .HasColumnType("bigint");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
+                    b.HasKey("OrderId", "TradeId");
 
                     b.HasIndex("TradeId");
 
                     b.ToTable("TradeOrders");
+
+                    b.HasData(
+                        new
+                        {
+                            OrderId = new Guid("55a73acc-6a01-43bc-b8d1-f81cd707f335"),
+                            TradeId = new Guid("c4824a81-6996-41a6-bf31-95dc69266175"),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9634),
+                            IsDeleted = false,
+                            Volume = 100L
+                        },
+                        new
+                        {
+                            OrderId = new Guid("98807339-c1a5-4c2e-81f2-7c15e493bec8"),
+                            TradeId = new Guid("c4824a81-6996-41a6-bf31-95dc69266175"),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9641),
+                            IsDeleted = false,
+                            Volume = 100L
+                        },
+                        new
+                        {
+                            OrderId = new Guid("4a2715ef-7648-4369-ba0e-2f9bdd3d79b3"),
+                            TradeId = new Guid("7dcb44f7-26af-4ee0-96f3-fe9ea161823f"),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9644),
+                            IsDeleted = false,
+                            Volume = 100L
+                        },
+                        new
+                        {
+                            OrderId = new Guid("417d6699-1b1d-45c9-9ebb-27fbef1dae84"),
+                            TradeId = new Guid("7dcb44f7-26af-4ee0-96f3-fe9ea161823f"),
+                            CreatedOn = new DateTime(2024, 4, 11, 18, 29, 5, 838, DateTimeKind.Utc).AddTicks(9646),
+                            IsDeleted = false,
+                            Volume = 100L
+                        });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.HasOne("TradeSystem.Data.Models.ApplicationUser", null)
                         .WithMany()
@@ -1057,7 +1262,7 @@ namespace TradeSystem.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.HasOne("TradeSystem.Data.Models.ApplicationUser", null)
                         .WithMany()
@@ -1066,9 +1271,9 @@ namespace TradeSystem.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1081,51 +1286,13 @@ namespace TradeSystem.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.HasOne("TradeSystem.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("TradeSystem.Data.Models.Address", b =>
-                {
-                    b.HasOne("TradeSystem.Data.Models.Country", "Country")
-                        .WithMany()
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TradeSystem.Data.Models.Town", "Town")
-                        .WithMany()
-                        .HasForeignKey("TownId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Country");
-
-                    b.Navigation("Town");
-                });
-
-            modelBuilder.Entity("TradeSystem.Data.Models.Administrator", b =>
-                {
-                    b.HasOne("TradeSystem.Data.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TradeSystem.Data.Models.Division", "Division")
-                        .WithMany()
-                        .HasForeignKey("DivisionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-
-                    b.Navigation("Division");
                 });
 
             modelBuilder.Entity("TradeSystem.Data.Models.ClientFinancialInstrument", b =>
@@ -1149,18 +1316,8 @@ namespace TradeSystem.Data.Migrations
 
             modelBuilder.Entity("TradeSystem.Data.Models.DataOfCorporateveClient", b =>
                 {
-                    b.HasOne("TradeSystem.Data.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TradeSystem.Data.Models.Administrator", "Adminstrator")
-                        .WithMany("CorporativeClients")
-                        .HasForeignKey("AdministratorId");
-
                     b.HasOne("TradeSystem.Data.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("CorporativeClients")
+                        .WithMany()
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1168,6 +1325,10 @@ namespace TradeSystem.Data.Migrations
                     b.HasOne("TradeSystem.Data.Models.Client", "Client")
                         .WithMany()
                         .HasForeignKey("ClientId");
+
+                    b.HasOne("TradeSystem.Data.Models.Employee", "Employee")
+                        .WithMany("CorporativeClients")
+                        .HasForeignKey("EmployeeId");
 
                     b.HasOne("TradeSystem.Data.Models.IdentityDocument", "IdentityDocument")
                         .WithMany()
@@ -1179,33 +1340,29 @@ namespace TradeSystem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Address");
-
-                    b.Navigation("Adminstrator");
+                    b.HasOne("TradeSystem.Data.Models.Town", "Town")
+                        .WithMany("CorporativeClients")
+                        .HasForeignKey("TownId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Client");
 
+                    b.Navigation("Employee");
+
                     b.Navigation("IdentityDocument");
 
                     b.Navigation("Nationality");
+
+                    b.Navigation("Town");
                 });
 
             modelBuilder.Entity("TradeSystem.Data.Models.DataOfIndividualClient", b =>
                 {
-                    b.HasOne("TradeSystem.Data.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TradeSystem.Data.Models.Administrator", "Adminstrator")
-                        .WithMany("IndividualClients")
-                        .HasForeignKey("AdministratorId");
-
                     b.HasOne("TradeSystem.Data.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("IndividualClients")
+                        .WithMany()
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1213,6 +1370,10 @@ namespace TradeSystem.Data.Migrations
                     b.HasOne("TradeSystem.Data.Models.Client", "Client")
                         .WithMany()
                         .HasForeignKey("ClientId");
+
+                    b.HasOne("TradeSystem.Data.Models.Employee", "Employee")
+                        .WithMany("IndividualClients")
+                        .HasForeignKey("EmployeeId");
 
                     b.HasOne("TradeSystem.Data.Models.IdentityDocument", "IdentityDocument")
                         .WithMany()
@@ -1224,39 +1385,53 @@ namespace TradeSystem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Address");
-
-                    b.Navigation("Adminstrator");
+                    b.HasOne("TradeSystem.Data.Models.Town", "Town")
+                        .WithMany("InvidualClients")
+                        .HasForeignKey("TownId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Client");
 
+                    b.Navigation("Employee");
+
                     b.Navigation("IdentityDocument");
 
                     b.Navigation("Nationality");
+
+                    b.Navigation("Town");
                 });
 
-            modelBuilder.Entity("TradeSystem.Data.Models.DepositedMoney", b =>
+            modelBuilder.Entity("TradeSystem.Data.Models.Employee", b =>
                 {
-                    b.HasOne("TradeSystem.Data.Models.Client", "Client")
-                        .WithMany("AllDepositedsMoney")
-                        .HasForeignKey("ClientId")
+                    b.HasOne("TradeSystem.Data.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Client");
+                    b.HasOne("TradeSystem.Data.Models.Division", "Division")
+                        .WithMany()
+                        .HasForeignKey("DivisionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Division");
                 });
 
             modelBuilder.Entity("TradeSystem.Data.Models.IdentityDocument", b =>
                 {
-                    b.HasOne("TradeSystem.Data.Models.Client", "Client")
+                    b.HasOne("TradeSystem.Data.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("ClientId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Client");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TradeSystem.Data.Models.Order", b =>
@@ -1323,24 +1498,8 @@ namespace TradeSystem.Data.Migrations
                     b.Navigation("Trade");
                 });
 
-            modelBuilder.Entity("TradeSystem.Data.Models.Administrator", b =>
-                {
-                    b.Navigation("CorporativeClients");
-
-                    b.Navigation("IndividualClients");
-                });
-
-            modelBuilder.Entity("TradeSystem.Data.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("CorporativeClients");
-
-                    b.Navigation("IndividualClients");
-                });
-
             modelBuilder.Entity("TradeSystem.Data.Models.Client", b =>
                 {
-                    b.Navigation("AllDepositedsMoney");
-
                     b.Navigation("FinancialInstruments");
 
                     b.Navigation("Orders");
@@ -1357,6 +1516,13 @@ namespace TradeSystem.Data.Migrations
                     b.Navigation("Towns");
                 });
 
+            modelBuilder.Entity("TradeSystem.Data.Models.Employee", b =>
+                {
+                    b.Navigation("CorporativeClients");
+
+                    b.Navigation("IndividualClients");
+                });
+
             modelBuilder.Entity("TradeSystem.Data.Models.FinancialInstrument", b =>
                 {
                     b.Navigation("OwnersOfThisInstruments");
@@ -1365,6 +1531,13 @@ namespace TradeSystem.Data.Migrations
             modelBuilder.Entity("TradeSystem.Data.Models.Order", b =>
                 {
                     b.Navigation("TradeOrders");
+                });
+
+            modelBuilder.Entity("TradeSystem.Data.Models.Town", b =>
+                {
+                    b.Navigation("CorporativeClients");
+
+                    b.Navigation("InvidualClients");
                 });
 
             modelBuilder.Entity("TradeSystem.Data.Models.Trade", b =>

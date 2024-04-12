@@ -1,0 +1,86 @@
+﻿@model DataOfClientServiceModel
+@inject IClientService clientService
+@inject IEmployeeService employeeService
+
+@{
+    ViewBag.Title = "Individual Client Details on: ";
+}
+
+@if (Model.DataChecking.ToString() == "Rejected")
+{
+    <h1 class="text-center text-warning">@Model.FirstName @Model.Surname Can not be our client</h1>
+}
+else if (Model.DataChecking.ToString() == "Accepted")
+{
+    <h1 class="text-center text-success">@Model.FirstName @Model.Surname are our client</h1>
+}
+
+<h2 class="text-center">@ViewBag.Title@Model.FirstName @Model.Surname</h2>
+<hr />
+
+<div class="container" style="display:inline">
+    <div class="row">
+        <div class="col-4">
+            <h4>Download Identity Document</h4>
+            <a class="btn btn-warning" asp-controller="Client" asp-action="Download"
+               asp-route-filename="@Model.UserId.@Model.ExtentionIdCardFile">Download</a>
+        </div>
+        <div class="card col-8 border-0">
+           @if(await clientService.ExistDataIndividualClientByUserIdAsync(Model.UserId))
+            {
+                <p style="font-size:25px;"><u>@Model.Surname</u>, @Model.FirstName @Model.SecondName</p>
+                <p>Nationality: <b>@Model.Nationality</b></p>
+                <p>Town: <b>@Model.Town</b></p>
+                <p>Address: <b>@Model.Address</b></p>
+                <p>Email: <b>@Model.ApplicationName</b></p>
+                <p>Phone number: <b>@Model.PhoneNumber</b></p>
+                <p>Date of birth: <b>@Model.DateOfBirth</b></p>
+                <p>National Identity Number: <b>@Model.NationalIdentityNumberIndividual</b></p>
+                <p>DataChecking: <b>@Model.DataChecking</b></p>
+            }
+            else if (await clientService.ExistDataCorporativeClientByUserIdAsync(Model.UserId))
+            {
+                <p style="font-size:25px;"><u>@Model.Name</u>, Name Of Representative @Model.NameOfRepresentative</p>
+                <p>Nationality: <b>@Model.Nationality</b></p>
+                <p>Town: <b>@Model.Town</b></p>
+                <p>Address: <b>@Model.Address</b></p>
+                <p>Email: <b>@Model.ApplicationName</b></p>
+                <p>Phone number: <b>@Model.PhoneNumber</b></p>
+                <p>LegalForm: <b>@Model.LegalForm</b></p>
+                <p>National Identity Number: <b>@Model.NationalIdentityNumber</b></p>
+                <p>DataChecking: <b>@Model.DataChecking</b></p>
+            }
+
+            <div class="form-inline">
+                @if (this.User?.Identity?.Name != null && this.User.Identity.Name == Model.ApplicationName)
+                {
+                    @if (await clientService.ExistDataIndividualClientByUserIdAsync(User.Id()))
+                    {
+                        <a class="btn btn-warning" asp-controller="Client" asp-action="EditIndividual"
+                           asp-route-dataId="@Model.Id">Edit</a>
+                        <a class="ml-2 btn btn-danger" asp-controller="Client" asp-action="Delete"
+                           asp-route-dataId="@Model.Id">Delete</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-warning" asp-controller="Client" asp-action="EditCorporative"
+                           asp-route-dataId="@Model.Id">Edit</a>
+                        <a class="ml-2 btn btn-danger" asp-controller="Client" asp-action="Delete"
+                           asp-route-dataId="@Model.Id">Delete</a>
+                    }
+
+                }
+                else if (this.User?.Identity?.Name != null && await employeeService.ExistsByUserIdAsync(User.Id()))
+                {
+                    @if (Model.DataChecking.ToString() == "NotChecking")
+                    {
+                        <a class="btn btn-success" asp-controller="Employee" asp-action="Accept"
+                           asp-route-userId="@Model.UserId">Accept</a>
+                        <a class="ml-2 btn btn-danger" asp-controller="Employee" asp-action="Reject"
+                           asp-route-userId="@Model.UserId">Reject</a>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

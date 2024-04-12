@@ -10,10 +10,6 @@ namespace TradeSystem.Data.Models
     /// </summary>
     public class TradeOrder : BaseDeletableModel
     {
-        [Key]
-
-        public int Id { get; set; }
-
         public Guid OrderId { get; set; }
 
         [Required]

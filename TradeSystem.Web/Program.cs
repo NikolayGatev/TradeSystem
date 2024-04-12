@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using TradeSystem.Data;
 using TradeSystem.Web.ModelBinding;
 
 namespace TradeSystem.Web
@@ -14,6 +17,7 @@ namespace TradeSystem.Web
             builder.Services.AddControllersWithViews(options =>
             {
                 options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
+                options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
             });
 
             builder.Services.AddApplicationServices();
@@ -23,11 +27,13 @@ namespace TradeSystem.Web
             if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
+                //app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Home/Error/500");
+                app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
                 app.UseHsts();
             }
 
@@ -39,10 +45,26 @@ namespace TradeSystem.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-            app.MapRazorPages();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name:"FinancialInstrument Details",
+                    pattern: "/FinancialInstrument/Details/{id}",
+                    defaults: new { Controller = "FinancialInstrument", Action = "Details"}
+                    );
+                endpoints.MapControllerRoute(
+                    name: "areas",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                    );
+                endpoints.MapControllerRoute(
+                     name: "default",
+                     pattern: "{controller=Home}/{action=Index}/{id?}"
+                     );
+                endpoints.MapRazorPages();
+
+            });
+
+            await app.CreateAdminRoleAsync();
 
             await app.RunAsync();
         }

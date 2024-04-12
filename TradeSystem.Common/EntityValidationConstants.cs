@@ -45,7 +45,11 @@
             public const int MaxNumberOfDigits = 18;
             public const int FloatingPointPrecision = 5;
             public const string PriceMaxLegnth = "2000.00";
-            public const string PriceMinLegnth = "0.00";
+            public const string PriceMinLegnth = "0.01";
+            public const string DepozitMax = "200000.00";
+
+            public const int VolumeMax = 500;
+            public const int VolumeMin = 1;
         }
 
         public static class CountryAndTownConstants
@@ -62,7 +66,11 @@
             public const int MaxLengthDescription = 250;
             public const int MinLengthDescription = 50;
 
+            public const int VolumeMax = 50000;
+            public const int VolumeMin = 1;
+
             public const int ISINLength = 12;
+
         }
     }
 }

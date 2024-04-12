@@ -1,20 +1,69 @@
-﻿<ul class="navbar-nav flex-grow-1">
+﻿@inject IClientService clientService
+@inject IEmployeeService employeeService
+
+<ul class="navbar-nav flex-grow-1">
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="" asp-controller="Trade" asp-action="RealTimeTrades">Real Time Trades</a>
+        <a class="nav-link text-dark" asp-area="" asp-controller="Trade" asp-action="RealTimeTrade">Real Time Trade</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="" asp-controller="FinancialInstrument" asp-action="FinancialInstruments">Financial Instruments</a>
+        <a class="nav-link text-dark" asp-area="" asp-controller="FinancialInstrument" asp-action="All">Financial Instruments</a>
     </li>
     @if (this.User?.Identity?.IsAuthenticated ?? false)
     {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="MineTrades">My Trades</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="MineOrders">My Orders</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="MineData">My Data</a>
-        </li>
+        @if ((await clientService.ExistDataCorporativeClientByUserIdAsync(User.Id()))
+       || (await clientService.ExistDataIndividualClientByUserIdAsync(User.Id())))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="DetailsDataOfClient">For me</a>
+            </li>
+            @if (await clientService.ExistClientByUserIdAsync(User.Id()))
+            {
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Trade" asp-action="All">My Trades</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="DetailsAcauntOfClient">My acount</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="AddMoney">Deposit money</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="All">My Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Add">New Order</a>
+                </li>
+            }            
+        }
+        else if (await employeeService.ExistsByUserIdAsync(User.Id()))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="AllDataOfClients">All Clients` Data</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="EmployeeDetails">For me</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="All">Check Orders</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Trade" asp-action="All">Check Trades</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="FundedCount">Founded client account</a>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="AddDataNewIndividualClient">New Individual Client</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="AddDataNewCorporativeClient">New Corporative Client</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="AddNewEmployee">New Employee</a>
+            </li>
+        }      
     }
 </ul>

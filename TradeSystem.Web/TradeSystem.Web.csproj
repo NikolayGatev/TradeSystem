@@ -16,6 +16,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,9 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Client\" />
-    <Folder Include="Views\FinancialInstrument\" />
-    <Folder Include="Views\Trade\" />
+    <Folder Include="Areas\Administrator\Data\" />
+    <Folder Include="Areas\Administrator\Models\" />
+    <Folder Include="FilesWhitIdDicuments\" />
   </ItemGroup>
 
 </Project>

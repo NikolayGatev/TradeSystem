@@ -13,6 +13,7 @@ namespace TradeSystem.Data.Configurations
                 .WithMany(c => c.Towns)
                 .HasForeignKey(t => t.CountryId)
                 .OnDelete(DeleteBehavior.NoAction);
+            
         }
     }
 }

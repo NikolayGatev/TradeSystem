@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TradeSystem.Data.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using TradeSystem.Core.Contracts;
+using TradeSystem.Core.Services;
 using TradeSystem.Data;
 using TradeSystem.Data.Common;
+using TradeSystem.Data.Models;
 using TradeSystem.Data.Repositories;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -10,6 +13,12 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            services.AddScoped<IClientService, ClientService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IFinancialInstrumentService, FinancialInstrumentService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<ITradeService, TradeService>();
+
             return services;
         }
 
@@ -46,6 +55,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.Password.RequireDigit =
                     config.GetValue<bool>("Identity:Password:RequireDigit");
             })
+               .AddRoles<IdentityRole>()
                .AddEntityFrameworkStores<TradeSystemDbContext>();
             return services; 
         }

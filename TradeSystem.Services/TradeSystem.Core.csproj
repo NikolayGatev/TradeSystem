@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TradeSystem.Common\TradeSystem.Common.csproj" />
+    <ProjectReference Include="..\TradeSystem.Data\TradeSystem.Data.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,136 @@
+﻿@model AllEmployeesQueryModel
+
+@{
+    ViewBag.Title = "All employees";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<form method="get">
+    <div class="row">
+        <div class="form-group col-md-3 d-flex justify-content-between">
+            <div class="form-group">
+                <label asp-for="EmployeeId"></label>
+                <select asp-for="EmployeeId" class="form-control">
+                    <option value="">All</option>
+                    @foreach (var employee in Model.Employees)
+                    {
+                        <option value="@employee.Id.ToString()">@employee.Id.ToString()</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group col-md-3 d-flex justify-content-between">
+            <div class="form-group">
+                <label asp-for="IsApproved"></label>
+                <select asp-for="IsApproved" class="form-control">
+                    <option value="">All</option>
+                    @foreach (var type in Model.TypeApproved)
+                    {
+                        @if (type == "NotApproved")
+                        {
+                            <option value="false">@type</option>
+                        }
+                        else if (type == "Approved")
+                        {
+                            <option value="true">@type</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="form-group mt-4 p-2">
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@{
+    var previousPage = Model.CurrentPage - 1;
+    if (previousPage < 1)
+    {
+        previousPage = 1;
+    }
+
+    var maxPage = Math.Ceiling((double)Model.TotalEmployeesCount /
+        Model.EmployeesPerPage);
+}
+
+<div class="row mb-5">
+    <div class="col-md-6 d-grid gap-2 d-md-flex justify-content-md-start">
+        <a class="btn btn-primary @(Model.CurrentPage == 1 ? "disabled" : string.Empty)"
+           asp-area="Administrator"
+           asp-controller="Employee"
+           asp-action="AllEmployees"
+           asp-route-currentPage="@previousPage"
+           asp-route-EmployeeId="@Model.EmployeeId"
+           asp-route-IsApproved="@Model.IsApproved"><<</a>
+    </div>
+
+    @{
+        var shouldButtonBeDisabled = Model.CurrentPage == maxPage ||
+        !Model.Employees.Any();
+    }
+
+    <div class="col-md-6 d-grid gap-2 d-md-flex justify-content-md-end">
+        <a class="btn btn-primary
+           @(shouldButtonBeDisabled ? "disabled" : string.Empty)"
+           asp-area="Administrator"
+           asp-controller="Employee"
+           asp-action="AllEmployees"
+           asp-route-currentPage="@(Model.CurrentPage + 1)"
+           asp-route-EmployeeId="@Model.EmployeeId"
+           asp-route-IsApproved="@Model.IsApproved">>></a>
+    </div>
+</div>
+
+@if (!Model.Employees.Any())
+{
+    <h2 class="text-center">No financial instrument found by the given criteria!</h2>
+}
+
+<div class="row">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Division</th>
+                <th scope="col">Id</th>
+                <th scope="col">Approved</th>
+                <th scope="col">Go on edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in Model.Employees)
+            {
+                <tr>
+                    <th>@employee.FirstName</th>
+                    <td>@employee.LastName</td>
+                    <td>@employee.DivisionName</td>
+                    <td>@employee.Id</td>
+                    <td>
+                        @if (@employee.IsApproved)
+                        {
+                            <p>Approved</p>
+                        }
+                        else
+                        {
+                            <p>Not Approved</p>
+                        }
+                    </td>
+                    <td>
+                        <a asp-area="" asp-controller="Employee" asp-action="Edit" asp-route-employeeId="@employee.Id"
+                           class="btn btn-success">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

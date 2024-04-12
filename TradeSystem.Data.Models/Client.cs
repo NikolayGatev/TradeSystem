@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using TradeSystem.Data.Common.Base;
 using static TradeSystem.Common.EntityValidationConstants.ClientsConstants;
 
@@ -13,7 +12,6 @@ namespace TradeSystem.Data.Models
     {
         public Client()
         {
-            this.AllDepositedsMoney = new HashSet<DepositedMoney>();
             this.Orders = new HashSet<Order>();
             this.Trades = new HashSet<Trade>();
             this.FinancialInstruments = new HashSet<ClientFinancialInstrument>();
@@ -25,11 +23,13 @@ namespace TradeSystem.Data.Models
 
         public bool IsIndividual { get; set; }
 
-        [Precision(MaxNumberOfDigits,FloatingPointPrecision)]
+        [Precision(MaxNumberOfDigits, FloatingPointPrecision)]
 
-        public decimal Balance { get; set; }
+        public decimal Balance { get; set; } = 0;
 
-        public virtual ICollection<DepositedMoney> AllDepositedsMoney { get; set; } = null!;
+        [Precision(MaxNumberOfDigits, FloatingPointPrecision)]
+
+        public decimal BlockedSum { get; set; } = 0;
 
         public virtual ICollection<Order> Orders { get; set; } = null!;
 

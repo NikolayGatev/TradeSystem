@@ -1,0 +1,64 @@
+﻿@model OrderFormModel
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <form enctype="multipart/form-data" method="post">
+            <div class="form-group">
+                <div class="form-group">
+                    <label asp-for="Balance"></label>
+                    <input asp-for="Balance" class="form-control" value="@Model.Balance" readonly>
+                    <span asp-validation-for="Balance" class="small text-danger"></span>
+                </div>
+                <label asp-for="IsBid"></label>
+                <div class="form-check form-check-inline">
+                    <input asp-for="IsBid" class="form-check-input" type="radio" value="true" checked>
+                    <label class="form-check-label" asp-for="IsBid" >
+                        Buy
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input asp-for="IsBid" class="form-check-input" type="radio" value="false" >
+                    <label class="form-check-label" asp-for="IsBid">
+                        Sell
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="InitialVolume"></label>
+                <input asp-for="InitialVolume" class="form-control" placeholder="InitialVolume...">
+                <span asp-validation-for="InitialVolume" class="small text-danger"></span>
+            </div>
+            @if ((Model.IsBid) && (Model.Balance == 0 || (Math.Floor(Model.Balance / Model.Price) < Model.InitialVolume)))
+            {
+                <div class="form-group">
+                    <label class="small text-danger">Your blance is 0, or You do not enough money!</label>
+                </div>
+            }
+            @if (Model.IsBid == false 
+                && (Model.FinancialInstruments.First(x => x.Id == Model.FinancialInstrumentId).SumOfAllOrdersSell + Model.InitialVolume > Model.FinancialInstruments.First(x => x.Id == Model.FinancialInstrumentId).SharesHeld))
+            {
+                <div class="form-group">
+                    <label class="small text-danger">You do not enough from this shares for all yous orders sell!</label>
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="Price"></label>
+                <input asp-for="Price" class="form-control" placeholder="SecondName...">
+                <span asp-validation-for="Price" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FinancialInstrumentId"></label>
+                <select asp-for="FinancialInstrumentId" class="form-control" readonly>
+                    @foreach (var instrument in Model.FinancialInstruments)
+                    {
+                        <option value="@instrument.Id" readonly>@instrument.Name  @instrument.SharesHeld count</option>
+                    }
+                </select>
+                <span asp-validation-for="FinancialInstrumentId" class="small text-danger"></span>
+            </div>
+            <div class="text-center">
+                <input class="btn btn-primary mt-3" type="submit" value="Save" />
+            </div>
+        </form>
+    </div>
+</div>

@@ -25,23 +25,27 @@ namespace TradeSystem.Data.Models
         [Required]
         [ForeignKey(nameof(NationalityId))]
 
-        public Country Nationality { get; set; } = null!;
+        public Country Nationality { get; set; } = null!;             
 
         [Required]
-        [ForeignKey(nameof(AddressId))]
 
-        public virtual Address Address { get; set; } = null!;
+        public string Address { get; set; } = null!;
 
-        public Guid AddressId { get; set; }
+        public int TownId { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(TownId))]
+
+        public Town Town { get; set; } = null!;
 
         [Required]
         [MaxLength(MaxLengthPhoneNumber)]
 
         public string PhoneNumber { get; set; } = null!;
-
+        
         [ForeignKey(nameof(IdentityDocumentId))]
 
-        public virtual IdentityDocument? IdentityDocument { get; set; } = null!;
+        public virtual IdentityDocument? IdentityDocument { get; set; } 
 
         public Guid? IdentityDocumentId { get; set; }
 

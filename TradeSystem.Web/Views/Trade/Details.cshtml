@@ -1,0 +1,39 @@
+﻿@model TradeDetailsServiceModel
+@inject IEmployeeService employeeService
+@inject IClientService clientService
+
+@{
+    ViewBag.Title = "Trade Details";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<div class="container" style="display:inline">
+    <div class="row">
+        <div class="card col-8 border-0">
+            <p style="font-size:25px;">Id: <u>@Model.Id</u></p>
+            <p style="font-size:25px;">Finanscial instrument: <u>@Model.FinancialInstrumentName</u></p>
+            <p style="font-size:25px;">Date of created: <u>@Model.CreatedOn</u></p>
+            <p>volume: <b>@Model.Volume</b></p>
+            <p>Prece per lot: <b>@Model.Price BGN</b></p>
+            <p>Turnover: <b>@Model.Turnover BGN</b></p>
+            @if (await clientService.ExistClientByUserIdAsync(User.Id()))
+            {
+            <p>Type: <b>@Model.BidAsk</b></p>
+            }
+            @if(Model.Orders != null)
+            {
+                <div class="form-group">
+                    <label asp-for="Orders"></label>
+                    <select asp-for="Orders" class="form-control">
+                        @foreach (var order in Model.Orders)
+                        {
+                            <option value="@order">ClientId:@order.ClientId; Executed Value:OrderId:@order.CurrentExecuted; Type: @order.IsBid</option>
+                        }
+                    </select>
+                </div>
+            }
+        </div>
+    </div>
+</div>

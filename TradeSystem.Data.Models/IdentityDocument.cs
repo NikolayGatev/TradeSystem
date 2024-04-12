@@ -12,12 +12,14 @@ namespace TradeSystem.Data.Models
         [Key]
         public Guid Id { get; set; }
 
-        public Guid ClientId { get; set; }
+        [Required]
+
+        public string UserId { get; set; } = null!;
 
         [Required]
-        [ForeignKey(nameof(ClientId))]
+        [ForeignKey(nameof(UserId))]
 
-        public virtual Client Client { get; set; } = null!;
+        public virtual ApplicationUser User { get; set; } = null!;
 
         [Required]
 

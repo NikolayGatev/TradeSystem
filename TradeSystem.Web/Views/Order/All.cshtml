@@ -1,0 +1,173 @@
+﻿@model AllOrdersQueryModel
+
+@{
+    ViewBag.Title = "All oreders";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<form method="get">
+    <div class="row">
+        <div class="form-group col-md-3 d-flex justify-content-between">
+            <div class="form-group">
+                <label asp-for="ISIN"></label>
+                <select asp-for="ISIN" class="form-control">
+                    <option value="">All</option>
+                    @foreach (var isin in Model.ISINs)
+                    {
+                        <option value="@isin">@isin</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group col-md-3 d-flex justify-content-between">
+            <div class="form-group">
+                <label asp-for="ClientAccountId"></label>
+                <select asp-for="ClientAccountId" class="form-control">
+                    <option value="">All</option>
+                    @foreach (var id in Model.ClientAccountIds)
+                    {
+                        <option value="@id">@id</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group col-md-3 d-flex justify-content-between">
+            <div class="form-group">
+                <label asp-for="IsNotActive"></label>
+                <select asp-for="IsNotActive" class="form-control">
+                    <option value="">All</option>
+                    @foreach (var type in Model.IsDelete)
+                    {
+                        @if(type == "Active")
+                        {
+                            <option value="false">@type</option>
+                        }
+                        else
+                        {
+                            <option value="true">@type</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group col-md-3 d-flex justify-content-between">
+            <div class="form-group">
+                <label asp-for="IsBid"></label>
+                <select asp-for="IsBid" class="form-control">
+                    <option value="">All</option>
+                    @foreach (var type in Model.BidAsk)
+                    {
+                        @if (type == "sell")
+                        {
+                            <option value="false">@type</option>
+                        }
+                        else if(type == "buy")
+                        {
+                            <option value="true">@type</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group col-md-3">
+            <label asp-for="SearchTerm"></label>
+            <input asp-for="SearchTerm" class="form-control" placeholder="...">
+        </div>
+
+        <div class="form-group col-md-3">
+            <div class="form-group">
+                <label asp-for="Sorting"></label>
+                <select asp-for="Sorting" class="form-control">
+                    <option value="0">Newest</option>
+                    <option value="1">Alhabetical ordr by name of financial instrument</option>
+                    <option value="2">Alhabetical ordr by id of client account</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="form-group mt-4 p-2">
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@{
+    var previousPage = Model.CurrentPage - 1;
+    if (previousPage < 1)
+    {
+        previousPage = 1;
+    }
+
+    var maxPage = Math.Ceiling((double)Model.TotalOrdersCount /
+        Model.OrdersPerPage);
+}
+
+<div class="row mb-5">
+    <div class="col-md-6 d-grid gap-2 d-md-flex justify-content-md-start">
+        <a class="btn btn-primary @(Model.CurrentPage == 1 ? "disabled" : string.Empty)"
+           asp-controller="Order"
+           asp-action="All"
+           asp-route-currentPage="@previousPage"
+           asp-route-ISIN="@Model.ISIN"
+           asp-route-IsNotActive="@Model.IsNotActive"
+           asp-route-IsBid="@Model.IsBid"
+           asp-route-ClientAccountId="@Model.ClientAccountId"
+           asp-route-searchTerm="@Model.SearchTerm"
+           asp-route-sorting="@((int)Model.Sorting)"><<</a>
+    </div>
+
+    @{
+        var shouldButtonBeDisabled = Model.CurrentPage == maxPage ||
+        !Model.Orders.Any();
+    }
+
+    <div class="col-md-6 d-grid gap-2 d-md-flex justify-content-md-end">
+        <a class="btn btn-primary
+           @(shouldButtonBeDisabled ? "disabled" : string.Empty)"
+           asp-controller="Order"
+           asp-action="All"
+           asp-route-currentPage="@(Model.CurrentPage + 1)"
+           asp-route-ISIN="@Model.ISIN"
+           asp-route-IsNotActive="@Model.IsNotActive"
+           asp-route-IsBid="@Model.IsBid"
+           asp-route-ClientAccountIdN="@Model.ClientAccountId"
+           asp-route-searchTerm="@Model.SearchTerm"
+           asp-route-sorting="@((int)Model.Sorting)">>></a>
+    </div>
+</div>
+
+@if (!Model.Orders.Any())
+{
+    <h2 class="text-center">No order found by the given criteria!</h2>
+}
+
+<div class="row">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Finacial instrument name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Initial volume</th>
+                <th scope="col">Unfulfilled volume</th>
+                <th scope="col">Type</th>
+                <th scope="col">Active</th>
+                <th scope="col">Go on details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var data in Model.Orders)
+            {
+                <partial name="_OrderPartial" model="@data" />
+            }
+        </tbody>
+    </table>
+</div>

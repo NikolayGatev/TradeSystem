@@ -1,0 +1,12 @@
+﻿@model FinacialInstrumentFormModel
+@{
+    ViewData["Title"] = "New finacial instrument";
+}
+<h2 class="text-center">@ViewData["Title"]</h2>
+<hr />
+
+<partial name="_FinInstrumentFormPartial" model="@Model" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,15 @@
+﻿@model TradeDetailsServiceModel
+
+<tr>
+    <th>@Model.FinancialInstrumentName</th>
+    <th>@Model.Id</th>
+    <td>@Model.Price</td>
+    <td>@Model.Volume</td>
+    <td>@Model.Turnover</td>
+    <td>@Model.BidAsk</td>
+    <td>@Model.CreatedOn</td>
+    <td>
+        <a asp-controller="Trade" asp-action="Details" asp-route-tradeId="@Model.Id"
+           class="btn btn-success">Details</a>
+    </td>
+</tr>

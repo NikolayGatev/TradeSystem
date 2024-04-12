@@ -1,0 +1,11 @@
+﻿@model FinInstrumentDetailsServiceModel
+
+<tr>
+    <th>@Model.Name</th>
+    <td>@Model.ISIN</td>    
+    <td>@Model.Description</td>
+    <td>
+        <a asp-controller="FinancialInstrument" asp-action="Details" asp-route-Id="@Model.Id" asp-route-financialInstrument="@Model.GetNameAndIsin()"
+           class="btn btn-success">Details</a>
+    </td>
+</tr>

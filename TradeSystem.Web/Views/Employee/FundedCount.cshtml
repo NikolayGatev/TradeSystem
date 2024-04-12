@@ -1,0 +1,45 @@
+﻿@model ClientFinancialInstrumentFormModel
+@{
+    ViewData["Title"] = "Funded client account whit financial instruments";
+}
+<h2 class="text-center">@ViewData["Title"]</h2>
+<hr />
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <form enctype="multipart/form-data" method="post">
+            <div class="form-group">
+                <label asp-for="FinancialInstrumentId"></label>
+                <select asp-for="FinancialInstrumentId" class="form-control">
+                    @foreach (var instrument in Model.FinancialInstruments)
+                    {
+                        <option value="@instrument.Id">@instrument.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="FinancialInstrumentId" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClientId"></label>
+                <select asp-for="ClientId" class="form-control">
+                    @foreach (var client in Model.Clients)
+                    {
+                        <option value="@client.ClientId">@client.ClientName  @client.ClientId</option>
+                    }
+                </select>
+                <span asp-validation-for="ClientId" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Volume"></label>
+                <input asp-for="Volume" class="form-control" placeholder="SecondName...">
+                <span asp-validation-for="Volume" class="small text-danger"></span>
+            </div>
+            <div class="text-center">
+                <input class="btn btn-primary mt-3" type="submit" value="Save" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

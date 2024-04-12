@@ -23,6 +23,21 @@ namespace TradeSystem.Data.Configurations.Seed
                 Name = "Bulgaria",
             };
             countries.Add(country);
+
+            country = new Country()
+            {
+                Id = 2,
+                Name = "Italy",
+            };
+            countries.Add(country);
+
+            country = new Country()
+            {
+                Id = 3,
+                Name = "Germany",
+            };
+            countries.Add(country);
+
             return countries.ToArray();
         }
     }

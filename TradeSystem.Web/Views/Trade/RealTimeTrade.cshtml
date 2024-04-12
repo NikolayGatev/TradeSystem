@@ -1,0 +1,53 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TradeSystem.Data.Models
+@model IEnumerable<RealTimeTradeServiceModel>
+@inject IClientService clientService
+@inject SignInManager<ApplicationUser> signInManager
+@{
+    ViewBag.Title = "Real time trade";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<div class="row">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Finacial instrument name</th>
+                <th scope="col">ISIN</th>
+                <th scope="col">Price</th>
+                <th scope="col">Value</th>
+                <th scope="col">Time of trade</th>
+                <th scope="col">Submit An Order</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var data in Model)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="FinancialInstrument" asp-action="Details"
+                           asp-route-financialInstrument="@data.GetNameAndIsin()" asp-route-id=" @data.FinancialInstrumentId"
+                           class="btn btn-success">@data.Name</a>
+                    </td>
+                    <th>@data.ISIN</th>
+                    <td>@data.Price</td>
+                    <td>@data.Volume</td>
+                    <td>@data.TimeOfTrade</td>
+                    @if ((signInManager.IsSignedIn(User))
+                    && (await clientService.ExistClientByUserIdAsync(User.Id())))
+                    {
+                        <td>
+                            <a asp-controller="Order" asp-action="Add" class="btn btn-success">Details</a>
+                        </td>
+                    }
+                    else
+                    {
+                    <td>Must be our client</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
