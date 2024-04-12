@@ -126,13 +126,13 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> Download(string filename)
         {
-            bool isGuid = Guid.TryParse(filename.Substring(0, filename.LastIndexOf('.') - 1), out Guid userId);
+            bool isGuid = Guid.TryParse(filename.Substring(0, filename.LastIndexOf('.')), out Guid userId);
 
             if(isGuid == false
                 || (userId != Guid.Parse(User.Id())) 
-                    || (await employeeService.ExistsByUserIdAsync(User.Id()) == false))
+                    && (await employeeService.ExistsByUserIdAsync(User.Id()) == false))
             {
-                BadRequest();
+                return BadRequest();
             }
 
             string path = Path.Combine(Environment.CurrentDirectory, "FilesWhitIdDicuments");
@@ -140,6 +140,11 @@ namespace TradeSystem.Web.Controllers
             IFileProvider fileProvider = new PhysicalFileProvider(path);
 
             IFileInfo fileInfo = fileProvider.GetFileInfo(filename.Substring(filename.LastIndexOf('\\') + 1));
+
+            if(fileInfo.Exists == false)
+            {
+                return NotFound(NonFile);
+            }
 
             var stream = fileInfo.CreateReadStream();
 

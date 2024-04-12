@@ -11,5 +11,7 @@
         public static string UnknownFinancialInstrument = "This financial instrument does not exist";
 
         public static string UnknownClient = "This client does not exist";
+
+        public const string NonFile = "The file does not exist";
     }
 }
