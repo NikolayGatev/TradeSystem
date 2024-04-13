@@ -27,10 +27,8 @@
                     }
                 @if (await clientService.ExistClientByUserIdAsync(User.Id()))
                     {
-                    <a class="btn btn-warning" asp-controller="Trade" asp-action="Buy"
-                       asp-route-id="@Model.Id">Buy</a>
-                    <a class="ml-2 btn btn-warning" asp-controller="Trade" asp-action="Sell"
-                       asp-route-id="@Model.Id">Sell</a>
+                    <a class="btn btn-warning" asp-controller="Order" asp-action="Add"
+                       asp-route-id="@Model.Id">Trade</a>
                     }                    
                 }
         </div>

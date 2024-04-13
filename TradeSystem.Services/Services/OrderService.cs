@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Exeptions;
 using TradeSystem.Core.Models.Enums;
@@ -45,26 +46,28 @@ namespace TradeSystem.Core.Services
             this.financialInstrumentService = financialInstrumentService;
         }
 
-        public async Task<Guid> CreateAsync(OrderFormModel model, Guid? clientId)
+        public async Task<Guid> CreateAsync(OrderFormModel model, Guid clientId)
         {
+            var client = await clientService.GetClientByClientIdAcync(clientId);
+
             if (await financialInstrumentService.ExixtFinancialInstrumentAsync(model.FinancialInstrumentId) == false)
             {
                 throw new NonFinancialInstrumentException(MessageNotFinancialInstrumentException);
             }
 
-            if(clientId == null)
+            if(client == null)
             {
                 throw new UnauthoriseActionException(MessageUnauthoriseActionException);
             }
 
             if (model.IsBid && await NotEnoughMoneyAsync(clientId, (model.Price * model.InitialVolume)) == false) 
             {
-                throw new Exception(DoNotEnoughMoney);
+                throw new NonEnoughMoney(DoNotEnoughMoney);
             }
 
             if(model.IsBid == false && await EnoughFinancialInstrumentsAsync(clientId, model.InitialVolume, model.FinancialInstrumentId) == false)
             {
-                throw new Exception(DoNotEnoughFinancialInstruments);
+                throw new NonEnoughFinancialInstrument(DoNotEnoughFinancialInstruments);
             }
 
             var order = new Order()
@@ -74,13 +77,11 @@ namespace TradeSystem.Core.Services
                 ActiveVolume = model.InitialVolume,
                 Price = model.Price,
                 FinancialInstrumentId = model.FinancialInstrumentId,
-                ClientId = clientId ?? new Guid(),
+                ClientId = clientId,
             };
 
-            if(model.IsBid && clientId != null)
+            if(model.IsBid)
             {
-                var client = await clientRepozitory.All().Where(c => c.Id == clientId).FirstAsync();
-
                 client.BlockedSum = model.InitialVolume * model.Price;
                 client.Balance -= model.InitialVolume * model.Price;
 
@@ -315,8 +316,7 @@ namespace TradeSystem.Core.Services
 
             orderRepozitory.Delete(entity);
             await orderRepozitory.SaveChangesAsync();
-        }
-        
+        }        
 
         public async Task<OrderQueryServiceModel> AllAsyn(
             string userId
@@ -459,6 +459,28 @@ namespace TradeSystem.Core.Services
                 .Select(o => (int)o.ActiveVolume).SumAsync();
 
             return (AllSellOrders + initialVolume) <= ownerFinIstr; 
+        }
+
+        public async Task DeleteAllOredersByFinancialInstrumentAsync(int financialInstrumentId, string userId)
+        {
+            var orders = await orderRepozitory.All()
+                .Where(o => o.FinancialInstrumentId == financialInstrumentId)
+                .Select(o => o.Id)
+                .ToListAsync();
+
+            foreach (var orderId in orders) 
+            {
+                try
+                {
+                    await DeleteAsync(orderId, userId);
+                }
+                catch (UnauthoriseActionException )
+                {                    
+                }
+                catch (Exception)
+                {
+                }
+            }
         }
     }
 }

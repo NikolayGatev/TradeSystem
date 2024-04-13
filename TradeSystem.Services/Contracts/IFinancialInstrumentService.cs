@@ -20,7 +20,7 @@ namespace TradeSystem.Core.Contracts
 
         public Task EditAsyn(int id, FinacialInstrumentFormModel model);
 
-        public Task DeleteAsync(int id);
+        public Task DeleteAsync(int id, string userId);
 
         public Task<FinancialInstrumentQueryServiceModel> AllAsyn(
             string? ISIN = null
@@ -34,6 +34,7 @@ namespace TradeSystem.Core.Contracts
         public Task FundedAccountWithFinancialInstruments(Guid clientId, int financialInstrumentId, uint count);
 
         public Task<IEnumerable<FinInstrumentServiceModel>> AllFinancialInstrumentsAsync();
-        Task<int> GetCountOfOwnerFinancialInstrumentOnClientByIdAsync(Guid? clientId, int finInstrId);
+
+        public Task<int> GetCountOfOwnerFinancialInstrumentOnClientByIdAsync(Guid? clientId, int finInstrId);
     }
 }
