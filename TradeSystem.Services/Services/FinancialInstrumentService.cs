@@ -32,7 +32,7 @@ namespace TradeSystem.Core.Services
         {
             if (userId != null)
             {
-                var clientId = await clientService.GetClientIdByUserIdAsync(userId ?? string.Empty) ?? new Guid();
+                var clientId = await clientService.GetClientIdByUserIdAsync(userId);
 
                 var ordersSum = await orderRepozitory.AllAsNoTracking().Where(o => o.ClientId == clientId && o.IsBid == false)
                     .ToListAsync();
@@ -89,7 +89,7 @@ namespace TradeSystem.Core.Services
             return finInstrument.Id;
         }
 
-        public async Task DeleteAsync(int id, string userId)
+        public async Task DeleteAsync(int id)
         {
             var entity = await GetFinancialInstrumentByIdAsync(id);
 

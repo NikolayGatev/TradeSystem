@@ -202,7 +202,7 @@ namespace TradeSystem.Web.Controllers
 
             try
             {
-                await finInsinstrumentService.DeleteAsync(model.Id, User.Id());
+                await finInsinstrumentService.DeleteAsync(model.Id);
             }
             catch (Exception ms)
             {

@@ -20,7 +20,7 @@ namespace TradeSystem.Core.Contracts
 
         public Task EditAsyn(int id, FinacialInstrumentFormModel model);
 
-        public Task DeleteAsync(int id, string userId);
+        public Task DeleteAsync(int id);
 
         public Task<FinancialInstrumentQueryServiceModel> AllAsyn(
             string? ISIN = null
