@@ -18,7 +18,7 @@ namespace TradeSystem.Core.Services
     {
         private readonly IDeletableEntityRepository<Employee> employeeRepozitory;
         private readonly IDeletableEntityRepository<Client> clientRepozitory;
-        private readonly IRepository<Country> countryRepozitory;
+        private readonly IDeletableEntityRepository<Country> countryRepozitory;
         private readonly IRepository<DataOfCorporateveClient> dataCorporativeClientRepozitory;
         private readonly IRepository<DataOfIndividualClient> dataIndividualClientRepozitory;
         private readonly IDeletableEntityRepository<Order> orderRepozitory;
@@ -27,7 +27,7 @@ namespace TradeSystem.Core.Services
         public ClientService(
            IDeletableEntityRepository<Employee> employeeRepozitory
            ,IDeletableEntityRepository<Client> clientRepozitory
-           ,IRepository<Country> countryRepozitory
+           ,IDeletableEntityRepository<Country> countryRepozitory
            ,IRepository<DataOfCorporateveClient> dataCorporativeClientRepozitory
            ,IRepository<DataOfIndividualClient> dataIndividualClientRepozitory
            ,IDeletableEntityRepository<Order> orderRepozitory
@@ -67,7 +67,6 @@ namespace TradeSystem.Core.Services
             result.AddRange(dataOfCorporativeClients);
 
             return result.OrderBy(x => x.ClientName);
-                ;
         }
 
         public async Task<IEnumerable<CountryServiceModel>> AllCountriesAsync()

@@ -6,7 +6,7 @@ namespace TradeSystem.Core.Contracts
 {
     public interface IOrderService
     {
-        Task<Guid> CreateAsync(OrderFormModel model, Guid? clientId);
+        Task<Guid> CreateAsync(OrderFormModel model, Guid clientId);
 
         Task<OrderDetailsServiceModel> GetOrderDetailsByIdAsync(Guid orderId, string userId);
 
@@ -27,5 +27,7 @@ namespace TradeSystem.Core.Contracts
             , int ordersPerPage = 1);
 
         Task<decimal> GetBalanceByUserIdAsync(string userId);
+
+        Task DeleteAllOredersByFinancialInstrumentAsync(int financialInstrumentId, string userId);
     }
 }

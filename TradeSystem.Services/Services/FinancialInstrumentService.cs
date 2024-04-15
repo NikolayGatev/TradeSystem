@@ -11,21 +11,18 @@ namespace TradeSystem.Core.Services
 {
     public class FinancialInstrumentService : IFinancialInstrumentService
     {
-        private readonly IDeletableEntityRepository<Client> clientRepozitory;
         private readonly IDeletableEntityRepository<Order> orderRepozitory;
         private readonly IDeletableEntityRepository<ClientFinancialInstrument> clientFinancialInstrumentRepozitory;
         private readonly IDeletableEntityRepository<FinancialInstrument> finInstrRepozitory;
         private readonly IClientService clientService;
-       
+
         public FinancialInstrumentService(
-                   IDeletableEntityRepository<Client> clientRepozitory
-                   , IDeletableEntityRepository<Order> orderRepozitory
+                   IDeletableEntityRepository<Order> orderRepozitory
                    , IDeletableEntityRepository<ClientFinancialInstrument> clientFinancialInstrumentRepozitory
                    , IDeletableEntityRepository<FinancialInstrument> finInstrRepozitory
                    , IClientService clientService)
 
         {
-            this.clientRepozitory = clientRepozitory;
             this.orderRepozitory = orderRepozitory;
             this.clientFinancialInstrumentRepozitory = clientFinancialInstrumentRepozitory;
             this.finInstrRepozitory = finInstrRepozitory;
@@ -35,7 +32,7 @@ namespace TradeSystem.Core.Services
         {
             if (userId != null)
             {
-                var clientId = await clientService.GetClientIdByUserIdAsync(userId ?? string.Empty) ?? new Guid();
+                var clientId = await clientService.GetClientIdByUserIdAsync(userId);
 
                 var ordersSum = await orderRepozitory.AllAsNoTracking().Where(o => o.ClientId == clientId && o.IsBid == false)
                     .ToListAsync();
@@ -99,7 +96,7 @@ namespace TradeSystem.Core.Services
             if (entity == null)
             {
                 throw new Exception(MessageNotDataException);
-            }
+            }            
 
             finInstrRepozitory.Delete(entity);
 
@@ -232,7 +229,7 @@ namespace TradeSystem.Core.Services
 
         public async Task FundedAccountWithFinancialInstruments(Guid clientId, int financialInstrumentId, uint count)
         {
-            var client = await clientRepozitory.All().Where(c => c.Id == clientId).FirstOrDefaultAsync();
+            var client = await clientService.GetClientByClientIdAcync(clientId);
 
             if(client == null)
             {

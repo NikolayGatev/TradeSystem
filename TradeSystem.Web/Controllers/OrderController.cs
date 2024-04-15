@@ -3,7 +3,9 @@ using System.Security.Claims;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Exeptions;
 using TradeSystem.Core.Models.Orders;
+using TradeSystem.Core.Services;
 using TradeSystem.Web.Attributes;
+using static TradeSystem.Common.MessageConstants;
 
 namespace TradeSystem.Web.Controllers
 {
@@ -58,7 +60,7 @@ namespace TradeSystem.Web.Controllers
                 return View(model);
             }
 
-            var clientId = await clientService.GetClientIdByUserIdAsync(User.Id());
+            var clientId = await clientService.GetClientIdByUserIdAsync(User.Id()) ?? new Guid();
 
             Guid id;
 
@@ -78,13 +80,18 @@ namespace TradeSystem.Web.Controllers
 
                 return Unauthorized();
             }
-            catch (Exception nmfi)
+            catch (NonEnoughMoney nem)
             {
-                logger.LogError(nmfi, "OrderController/Add");
+                logger.LogError(nem, "OrderController/Add");
 
-                return View(model);
+                return NotFound(DoNotEnoughMoney); ;
             }
+            catch (NonEnoughFinancialInstrument nefi)
+            {
+                logger.LogError(nefi, "OrderController/Add");
 
+                return NotFound(DoNotEnoughFinancialInstruments); ;
+            }
 
             return RedirectToAction(nameof(Details), new { orderId = id });
         }

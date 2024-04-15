@@ -17,7 +17,7 @@
             <p style="font-size:25px;">Date of created: <u>@Model.CreatedOn</u></p>
             <p>volume: <b>@Model.Volume</b></p>
             <p>Prece per lot: <b>@Model.Price BGN</b></p>
-            <p>Turnover: <b>@Model.Turnover BGN</b></p>
+            <p>Turnover: <b>@String.Format("{0:f5}", @Model.Turnover) BGN</b></p>
             @if (await clientService.ExistClientByUserIdAsync(User.Id()))
             {
             <p>Type: <b>@Model.BidAsk</b></p>

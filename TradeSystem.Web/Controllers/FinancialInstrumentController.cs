@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using TradeSystem.Core.Contracts;
 using TradeSystem.Core.Exeptions;
 using TradeSystem.Core.Extensions;
@@ -13,17 +14,20 @@ namespace TradeSystem.Web.Controllers
         private readonly IFinancialInstrumentService finInsinstrumentService;
         private readonly IClientService clientService;
         private readonly IEmployeeService employeeService;
+        private readonly IOrderService orderService;
         private readonly ILogger<ClientController> logger;
 
         public FinancialInstrumentController(
             IFinancialInstrumentService finInsinstrumentService
             , IClientService clientService
             , IEmployeeService employeeService
+            ,IOrderService orderService
             , ILogger<ClientController> logger)
         {
             this.finInsinstrumentService = finInsinstrumentService;
             this.clientService = clientService;
             this.employeeService = employeeService;
+            this.orderService = orderService;
             this.logger = logger;
         }
 
@@ -179,6 +183,23 @@ namespace TradeSystem.Web.Controllers
 
         public async Task<IActionResult> Delete(FinInstrumentDetailsServiceModel model)
         {
+            try
+            {
+                await orderService.DeleteAllOredersByFinancialInstrumentAsync(model.Id, User.Id());
+            }
+            catch (UnauthoriseActionException ua)
+            {
+                logger.LogError(ua, "FinacialInstrumentController/Delete");
+
+                return RedirectToAction(nameof(Index), "Home");
+            }
+            catch (Exception ms)
+            {
+                logger.LogError(ms, "FinacialInstrumentController/Delete");
+
+                return RedirectToAction(nameof(Index), "Home");
+            }
+
             try
             {
                 await finInsinstrumentService.DeleteAsync(model.Id);
