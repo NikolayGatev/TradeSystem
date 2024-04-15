@@ -90,7 +90,7 @@ namespace TradeSystem.Core.Services
                     DivisionName = e.Division.Name,
                     IsApproved = e.IsApproved,
                 })
-                .FirstAsync();
+                .FirstOrDefaultAsync();
 
             if (model == null)
             {
@@ -235,7 +235,6 @@ namespace TradeSystem.Core.Services
         public async Task<EmployeeDetailsServiceModel> GetEmployeeFormByIdAsync(Guid employeeId)
         {
             var employee = await employeeRepozitory.AllAsNoTracking()
-
                 .Where(e => e.Id == employeeId)
                 .Select(e => new EmployeeDetailsServiceModel()
                 {

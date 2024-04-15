@@ -150,7 +150,7 @@ namespace TradeSystem.Tests
 
         [Test]
 
-        public async Task DeleteAsync_WithNonExistingModel()
+        public void DeleteAsync_WithNonExistingModel()
         {
 
             var financialInstrumentService = new FinancialInstrumentService(
@@ -267,7 +267,7 @@ namespace TradeSystem.Tests
 
         [Test]
 
-        public async Task GetFinInstrumentDetailsByIdAsync_WithNonExistingModel()
+        public void GetFinInstrumentDetailsByIdAsync_WithNonExistingModel()
         {
 
             var financialInstrumentService = new FinancialInstrumentService(
@@ -301,7 +301,7 @@ namespace TradeSystem.Tests
 
         [Test]
 
-        public async Task GetEditAsync_WithNonExistingModel()
+        public void GetEditAsync_WithNonExistingModel()
         {
 
             var financialInstrumentService = new FinancialInstrumentService(
@@ -440,7 +440,7 @@ namespace TradeSystem.Tests
 
         [Test]
 
-        public async Task FundedAccountWithFinancialInstruments_ClientNonExisten()
+        public void FundedAccountWithFinancialInstruments_ClientNonExisten()
         {
 
             var financialInstrumentService = new FinancialInstrumentService(

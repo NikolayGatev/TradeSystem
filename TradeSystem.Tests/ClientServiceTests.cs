@@ -1,16 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Moq;
 using TradeSystem.Core.Contracts;
+using TradeSystem.Core.Exeptions;
+using TradeSystem.Core.Models.Clients;
+using TradeSystem.Core.Services;
+using TradeSystem.Data;
 using TradeSystem.Data.Common;
 using TradeSystem.Data.Models;
 using TradeSystem.Data.Repositories;
-using TradeSystem.Data;
 using static TradeSystem.Common.ExceptionMessages;
-using TradeSystem.Core.Services;
-using TradeSystem.Core.Models.Clients;
-using Microsoft.Extensions.Logging;
-using TradeSystem.Core.Exeptions;
-using TradeSystem.Core.Models.Enums;
 
 namespace TradeSystem.Tests
 {
@@ -157,7 +154,7 @@ namespace TradeSystem.Tests
 
         [Test]
 
-        public async Task DeleteAsync_InCorectIdData()
+        public void DeleteAsync_InCorectIdData()
         {
             Assert.ThrowsAsync<NonDataOfClientException>(async () => await clientService.DeleteAsync(Guid.Parse("660cb0ec-82b4-462c-8a0f-fdb6bf232f18")));           
         }
@@ -177,7 +174,7 @@ namespace TradeSystem.Tests
 
         [Test]
 
-        public async Task GetFinInstrumentDetailsByIdAsync_WithNonExistingModel()
+        public void GetFinInstrumentDetailsByIdAsync_WithNonExistingModel()
         {
             var exeption = Assert.ThrowsAsync<UnauthorizedAccessException>(async () => await clientService.DetailsOfAcountOnClientAsync("98807339-c1a5-4c2e-81f2-7c15e493bec8"));
             Assert.That(exeption.Message, Is.EqualTo(MessageUnauthoriseActionException));
@@ -207,7 +204,7 @@ namespace TradeSystem.Tests
 
         [Test]
 
-        public async Task DetailsOfDataOnClientAsync_Exception()
+        public void DetailsOfDataOnClientAsync_Exception()
         {
             var exeption = Assert.ThrowsAsync<UnauthorizedAccessException>(async () => await clientService.DetailsOfDataOnClientAsync("98807339-c1a5-4c2e-81f2-7c15e493bec8"));
             Assert.That(exeption.Message, Is.EqualTo(MessageUnauthoriseActionException));
@@ -377,7 +374,7 @@ namespace TradeSystem.Tests
 
         [Test]
 
-        public async Task GetDataOfCorporativeClientFormByIdAsync_Exception()
+        public void GetDataOfCorporativeClientFormByIdAsync_Exception()
         {
             var exception = Assert.ThrowsAsync<NonDataOfClientException>(async () => await clientService.GetDataOfCorporativeClientFormByIdAsync(new Guid()));
             Assert.That(exception.Message, Is.EqualTo(MessageNotDataException));
@@ -396,7 +393,7 @@ namespace TradeSystem.Tests
 
         [Test]
 
-        public async Task GetDataOfIdividualClientFormByIdAsync_Exception()
+        public void GetDataOfIdividualClientFormByIdAsync_Exception()
         {
             var exception = Assert.ThrowsAsync<NonDataOfClientException>(async () => await clientService.GetDataOfIdividualClientFormByIdAsync(new Guid()));
             Assert.That(exception.Message, Is.EqualTo(MessageNotDataException));
@@ -521,7 +518,7 @@ namespace TradeSystem.Tests
 
         [Test]
 
-        public async Task AddMoneyAsync_UnauthoriseActionException()
+        public void AddMoneyAsync_UnauthoriseActionException()
         {
             var exception = Assert.ThrowsAsync<UnauthoriseActionException>(async () => await clientService.AddMoneyAsync(new Guid().ToString(), 1000));
             Assert.That(exception.Message, Is.EqualTo(MessageUnauthoriseActionException));
@@ -552,7 +549,7 @@ namespace TradeSystem.Tests
 
         [Test]
 
-        public async Task GetClintDetailsAsync_UnauthoriseActionException()
+        public void GetClintDetailsAsync_UnauthoriseActionException()
         {
             var exception = Assert.ThrowsAsync<UnauthoriseActionException>(async () => await clientService.GetClintDetailsAsync(new Guid().ToString()));
             Assert.That(exception.Message, Is.EqualTo(MessageUnauthoriseActionException));
