@@ -22,11 +22,11 @@ namespace TradeSystem.Tests
         private DbContextOptions<TradeSystemDbContext> dbOptions;
         private TradeSystemDbContext dbContext;
 
-        protected IDeletableEntityRepository<Client> clientRepo;
-        protected IDeletableEntityRepository<Order> orderRepo;
-        protected IDeletableEntityRepository<ClientFinancialInstrument> clientFinInstrRepo;
-        protected IDeletableEntityRepository<FinancialInstrument> financialInstrumentRepo; 
-        protected Mock<IClientService> mockClientService;
+        private IDeletableEntityRepository<Client> clientRepo;
+        private IDeletableEntityRepository<Order> orderRepo;
+        private IDeletableEntityRepository<ClientFinancialInstrument> clientFinInstrRepo;
+        private IDeletableEntityRepository<FinancialInstrument> financialInstrumentRepo;
+        private Mock<IClientService> mockClientService;
 
         [SetUp]
         public void OneTimeSetUp()

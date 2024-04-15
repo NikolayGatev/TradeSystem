@@ -26,7 +26,7 @@ namespace TradeSystem.Core.Models.Clients
         
         [Required(ErrorMessage = RequiredMessage)]
         [IsAdult(ErrorMessage = HasBeAdult)]
-        [Display(Name = "Date of Birth(M.d.yyyy)")]
+        [Display(Name = "Date of Birth(d.M.yyyy)")]
 
         public string DateOfBirth { get; set; } = null!;
     }

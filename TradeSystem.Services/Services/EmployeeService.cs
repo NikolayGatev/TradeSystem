@@ -15,7 +15,7 @@ namespace TradeSystem.Core.Services
     {
         private readonly IDeletableEntityRepository<Employee> employeeRepozitory;
         private readonly IDeletableEntityRepository<Client> clientRepozitory;
-        private readonly IRepository<Country> countryRepozitory;
+        private readonly IDeletableEntityRepository<Country> countryRepozitory;
         private readonly IRepository<DataOfCorporateveClient> dataCorporativeClientRepozitory;
         private readonly IRepository<DataOfIndividualClient> dataIndividualClientRepozitory;
         private readonly IRepository<Division> divisionRepozitory;
@@ -24,7 +24,7 @@ namespace TradeSystem.Core.Services
         public EmployeeService(
                    IDeletableEntityRepository<Employee> employeeRepozitory
                    , IDeletableEntityRepository<Client> clientRepozitory
-                   , IRepository<Country> countryRepozitory
+                   , IDeletableEntityRepository<Country> countryRepozitory
                    , IRepository<DataOfCorporateveClient> dataCorporativeClientRepozitory
                    , IRepository<DataOfIndividualClient> dataIndividualClientRepozitory
                    , IRepository<Division> divisionRepozitory
