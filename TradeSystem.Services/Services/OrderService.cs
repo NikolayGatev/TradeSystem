@@ -278,7 +278,7 @@ namespace TradeSystem.Core.Services
 
         public async Task<Order?> GetOrderByIdAsync(Guid orderId)
         {
-            return await orderRepozitory.AllAsNoTrackingWithDeleted().Where(o => o.Id == orderId)
+            return await orderRepozitory.All().Where(o => o.Id == orderId)
                 .FirstOrDefaultAsync();
         }
 
@@ -320,9 +320,9 @@ namespace TradeSystem.Core.Services
 
         public async Task<OrderQueryServiceModel> AllAsyn(
             string userId
-            , string? ClientAccountId = null
-            , bool? IsBid = null
-            , bool? IsNotActive = null
+            , string? clientAccountId = null
+            , bool? isBid = null
+            , bool? isNotActive = null
             , string? ISIN = null
             , string? searchTerm = null
             , OrderSorting sorting = OrderSorting.Newest
@@ -345,24 +345,24 @@ namespace TradeSystem.Core.Services
                     .Where(o => o.FinancialInstrument.ISIN == ISIN);
             }
             
-            if (ClientAccountId != null
-                && Guid.TryParse(ClientAccountId, out Guid id)
+            if (clientAccountId != null
+                && Guid.TryParse(clientAccountId, out Guid id)
                 && (await clientService.ExistClientByIdAsync(id)))
             {
                 ordersToShow = ordersToShow
                     .Where(o => o.ClientId == id);
             }
 
-            if (IsNotActive != null)
+            if (isNotActive != null)
             {
                 ordersToShow = ordersToShow
-                    .Where(o => o.IsDeleted == IsNotActive);
+                    .Where(o => o.IsDeleted == isNotActive);
             }
 
-            if (IsBid != null)
+            if (isBid != null)
             {
                 ordersToShow = ordersToShow
-                    .Where(o => o.IsBid == IsBid);
+                    .Where(o => o.IsBid == isBid);
             }
 
             if (searchTerm != null)
@@ -474,11 +474,13 @@ namespace TradeSystem.Core.Services
                 {
                     await DeleteAsync(orderId, userId);
                 }
-                catch (UnauthoriseActionException )
-                {                    
+                catch (UnauthoriseActionException)
+                {
+                    throw new UnauthoriseActionException(MessageUnauthoriseActionException);
                 }
                 catch (Exception)
                 {
+                    throw new Exception(MessageNotDataException);
                 }
             }
         }
