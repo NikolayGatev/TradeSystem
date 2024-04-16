@@ -21,12 +21,12 @@ namespace TradeSystem.Core.Contracts
 
         Task<TradeQueryServiceModel> AllAsyn(string userId
             , string? ClientAccountId = null
-            , bool? IsBid = null
+            , bool? isBid = null
             , string? ISIN = null
             , string? searchTerm = null
             , TradeSorting sorting = TradeSorting.Newest
             , int currentPage = 1
-            , int ordersPerPage = 1);
+            , int tradesPerPage = 1);
 
         Task<IEnumerable<RealTimeTradeServiceModel>> RealTimeTrdeAcync();
     }

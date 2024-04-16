@@ -32,12 +32,12 @@ namespace TradeSystem.Core.Services
         public async Task<TradeQueryServiceModel> AllAsyn(
             string userId
             , string? ClientAccountId = null
-            , bool? IsBid = null
+            , bool? isBid = null
             , string? ISIN = null
             , string? searchTerm = null
             , TradeSorting sorting = TradeSorting.Newest
             , int currentPage = 1
-            , int ordersPerPage = 1)
+            , int tradesPerPage = 1)
         {
                 var clientId = await clientService.GetClientIdByUserIdAsync(userId);
 
@@ -62,10 +62,10 @@ namespace TradeSystem.Core.Services
                 tradesToShow = tradesToShow
                         .Where(t => t.TradeOrders.Any(to => to.Order.ClientId == id));
 
-                    if (IsBid != null)
+                    if (isBid != null)
                     {
                         tradesToShow = tradesToShow
-                            .Where(t => t.TradeOrders.Any(to => to.Order.ClientId == id && to.Order.IsBid == IsBid));
+                            .Where(t => t.TradeOrders.Any(to => to.Order.ClientId == id && to.Order.IsBid == isBid));
                     }
 
                 }
@@ -98,8 +98,8 @@ namespace TradeSystem.Core.Services
                 }
 
                 var trades = await tradesToShow
-                    .Skip((currentPage - 1) * ordersPerPage)
-                    .Take(ordersPerPage)
+                    .Skip((currentPage - 1) * tradesPerPage)
+                    .Take(tradesPerPage)
                     .Select(o => new TradeDetailsServiceModel()
                     {
                         Id = o.Id,
@@ -144,6 +144,7 @@ namespace TradeSystem.Core.Services
             if(trade != null)
             {
                 tradeRepozitory.Delete(trade);
+                await tradeRepozitory.SaveChangesAsync();
             }
         }
 

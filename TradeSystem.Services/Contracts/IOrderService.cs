@@ -17,9 +17,9 @@ namespace TradeSystem.Core.Contracts
         Task DeleteAsync(Guid orderId, string userId);
 
         Task<OrderQueryServiceModel> AllAsyn(string userId
-            ,string? ClientAccountId = null
-            , bool? IsBid = null
-            , bool?  IsNotActive = null
+            ,string? clientAccountId = null
+            , bool? isBid = null
+            , bool?  isNotActive = null
             , string? ISIN = null
             , string? searchTerm = null
             , OrderSorting sorting = OrderSorting.Newest
