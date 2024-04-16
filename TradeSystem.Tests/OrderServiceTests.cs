@@ -1,18 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Moq;
 using TradeSystem.Core.Contracts;
+using TradeSystem.Core.Exeptions;
+using TradeSystem.Core.Models.Enums;
+using TradeSystem.Core.Models.Orders;
+using TradeSystem.Core.Services;
+using TradeSystem.Data;
 using TradeSystem.Data.Common;
 using TradeSystem.Data.Models;
 using TradeSystem.Data.Repositories;
-using TradeSystem.Data;
-using TradeSystem.Core.Services;
-using TradeSystem.Core.Models.Orders;
-using TradeSystem.Core.Models.Clients;
-using TradeSystem.Core.Exeptions;
 using static TradeSystem.Common.ExceptionMessages;
-using TradeSystem.Core.Models.Enums;
-using System;
-using System.Security.Cryptography;
 
 namespace TradeSystem.Tests
 {
@@ -324,7 +321,7 @@ namespace TradeSystem.Tests
 
             Assert.That(result.TotalOrdersCount, Is.EqualTo(model));
         }
-
+       
         [Test]
 
         public async Task AllAsyn_WithISINNonNull()
