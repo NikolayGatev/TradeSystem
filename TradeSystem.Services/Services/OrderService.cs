@@ -227,7 +227,8 @@ namespace TradeSystem.Core.Services
 
             if (clientFinInsr != null)
              {
-                 clientFinInsr.Volume = isBid ? clientFinInsr.Volume + volume
+                 clientFinInsr.Volume = isBid 
+                    ? clientFinInsr.Volume + volume
                     : clientFinInsr.Volume - volume;                
              }
              else
@@ -278,7 +279,7 @@ namespace TradeSystem.Core.Services
 
         public async Task<Order?> GetOrderByIdAsync(Guid orderId)
         {
-            return await orderRepozitory.All().Where(o => o.Id == orderId)
+            return await orderRepozitory.AllWithDeleted().Where(o => o.Id == orderId)
                 .FirstOrDefaultAsync();
         }
 
