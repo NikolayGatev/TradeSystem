@@ -243,6 +243,7 @@ namespace TradeSystem.Core.Services
                     PhoneNumber = e.PhoneNumber,
                     DivisionId = e.DivisionId,
                     IsApproved = e.IsApproved,
+                    UserId = e.ApplicationUserId,
                 })
                 .FirstOrDefaultAsync();
 
@@ -330,6 +331,7 @@ namespace TradeSystem.Core.Services
                 .Select(e => new EmployeeDetailsServiceModel()
                 {
                     Id = e.Id,
+                    UserId = e.ApplicationUserId,
                     ApplicationName = e.ApplicationUser.UserName,
                     DivisionName = e.Division.Name,
                     IsApproved = e.IsApproved,

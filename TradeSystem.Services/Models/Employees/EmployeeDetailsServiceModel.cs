@@ -6,6 +6,8 @@ namespace TradeSystem.Core.Models.Employees
     {
         public Guid Id { get; set; }
 
+        public string? UserId { get; set; }
+
         [Display(Name = "Email")]
 
         public string? ApplicationName { get; set; } = null;
