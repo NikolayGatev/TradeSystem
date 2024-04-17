@@ -28,7 +28,7 @@
                 <input asp-for="PhoneNumber" class="form-control" placeholder="+359888888888">
                 <span asp-validation-for="PhoneNumber" class="small text-danger"></span>
             </div>
-            @if(User.IsAdmin())
+            @if(User.IsAdmin() && User.Id() != Model.UserId)
             {
                 <label asp-for="IsApproved">Status</label>
                 <div class="form-check form-check-inline">
