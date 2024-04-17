@@ -24,7 +24,7 @@ namespace TradeSystem.Data.Configurations.Seed
             {
                 Id = "dea12856-c198-4129-b3f3-b893d8395082",
                 UserName = "admin@gmail.com",
-                NormalizedUserName = "admin@gmail.comm",
+                NormalizedUserName = "admin@gmail.com",
                 Email = "admin@gmail.com",
                 NormalizedEmail = "admin@gmail.com"
             };
