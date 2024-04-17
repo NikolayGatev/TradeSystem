@@ -240,7 +240,7 @@ namespace TradeSystem.Core.Services
                 throw new NonFinancialInstrumentException(MessageNotFinancialInstrumentException);
             } 
 
-            if (client.FinancialInstruments.Any(si => si.FinancialInstrumentId == financialInstrumentId))
+            if (await clientFinancialInstrumentRepozitory.All().AnyAsync(si => si.FinancialInstrumentId == financialInstrumentId && si.ClientId == client.Id))
             {
                 var clientFinInsr = await clientFinancialInstrumentRepozitory.All()
                          .Where(f => f.FinancialInstrumentId == financialInstrumentId

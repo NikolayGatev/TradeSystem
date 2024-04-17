@@ -21,7 +21,7 @@ namespace TradeSystem.Web.Attributes
             if (employeeService != null
                 && employeeService.ExistsByUserIdAsync(context.HttpContext.User.Id()).Result)
             {
-                context.Result = new StatusCodeResult(StatusCodes.Status400BadRequest);
+                context.Result = new StatusCodeResult(StatusCodes.Status404NotFound);
             }
         }
     }

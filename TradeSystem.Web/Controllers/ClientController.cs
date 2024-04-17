@@ -26,7 +26,8 @@ namespace TradeSystem.Web.Controllers
         }
 
         [HttpGet]
-        [HaveNotIndividualClientData]
+        [HaveNotClientData]
+        [NotEmployee]
 
         public async Task<IActionResult> AddDataNewIndividualClient()
         {
@@ -38,7 +39,8 @@ namespace TradeSystem.Web.Controllers
         }
 
         [HttpPost]
-        [HaveNotIndividualClientData]
+        [HaveNotClientData]
+        [NotEmployee]
 
         public async Task<IActionResult> AddDataNewIndividualClient(IndividualDataClentFormModel model)
         {
@@ -67,7 +69,8 @@ namespace TradeSystem.Web.Controllers
         }
 
         [HttpGet]
-        [HaveNotIndividualClientData]
+        [HaveNotClientData]
+        [NotEmployee]
 
         public async Task<IActionResult> AddDataNewCorporativeClient()
         {
@@ -79,7 +82,8 @@ namespace TradeSystem.Web.Controllers
         }
 
         [HttpPost]
-        [HaveNotIndividualClientData]
+        [HaveNotClientData]
+        [NotEmployee]
 
         public async Task<IActionResult> AddDataNewCorporativeClient(CorporativeDataClentFormModel model)
         {
@@ -153,7 +157,7 @@ namespace TradeSystem.Web.Controllers
             return File(stream, mineType, filename);
         }
 
-        [NotEmployee]
+        [MustHaveClientData]
         [HttpGet]
 
         public async Task<IActionResult> EditIndividual(Guid dataId)
@@ -176,7 +180,7 @@ namespace TradeSystem.Web.Controllers
             }
         }
 
-        [NotEmployee]
+        [MustHaveClientData]
         [HttpPost]
 
         public async Task<IActionResult> EditIndividual(
@@ -212,7 +216,7 @@ namespace TradeSystem.Web.Controllers
             }
         }
 
-        [NotEmployee]
+        [MustHaveClientData]
         [HttpGet]
 
         public async Task<IActionResult> EditCorporative(Guid dataId)
@@ -235,7 +239,7 @@ namespace TradeSystem.Web.Controllers
             }
         }
 
-        [NotEmployee]
+        [MustHaveClientData]
         [HttpPost]
 
         public async Task<IActionResult> EditCorporative(
@@ -271,7 +275,7 @@ namespace TradeSystem.Web.Controllers
             }            
         }
 
-        [NotEmployee]
+        [MustHaveClientData]
         [HttpGet]
 
         public async Task<IActionResult> Delete(Guid dataId)
@@ -294,7 +298,7 @@ namespace TradeSystem.Web.Controllers
             }
         }
 
-        [NotEmployee]
+        [MustHaveClientData]
         [HttpPost]
 
         public async Task<IActionResult> Delete(DataOfClientServiceModel model, Guid dataId)

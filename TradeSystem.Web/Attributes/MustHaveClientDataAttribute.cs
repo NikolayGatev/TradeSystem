@@ -6,7 +6,7 @@ using TradeSystem.Web.Controllers;
 
 namespace TradeSystem.Web.Attributes
 {
-    public class MustHaveIndividualClientDataAttribute : ActionFilterAttribute
+    public class MustHaveClientDataAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -20,9 +20,10 @@ namespace TradeSystem.Web.Attributes
             }
 
             if(clientService != null
-                && clientService.ExistDataIndividualClientByUserIdAsync(context.HttpContext.User.Id()).Result == false)
+                && (clientService.ExistDataIndividualClientByUserIdAsync(context.HttpContext.User.Id()).Result == false
+                && clientService.ExistDataCorporativeClientByUserIdAsync(context.HttpContext.User.Id()).Result == false))
             {
-                context.Result = new RedirectToActionResult(nameof(ClientController.AddDataNewIndividualClient), "Client", null);
+                context.Result = new StatusCodeResult(StatusCodes.Status404NotFound);
             }
         }
     }

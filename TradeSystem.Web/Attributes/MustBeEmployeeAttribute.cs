@@ -22,7 +22,7 @@ namespace TradeSystem.Web.Attributes
             if (employeeService != null
                 && employeeService.ExistsByUserIdAsync(context.HttpContext.User.Id()).Result == false)
             {
-                context.Result = new RedirectToActionResult(nameof(EmployeeController.AddNewEmployee), "Employee", null);
+                context.Result = new StatusCodeResult(StatusCodes.Status404NotFound);
             }
         }
     }

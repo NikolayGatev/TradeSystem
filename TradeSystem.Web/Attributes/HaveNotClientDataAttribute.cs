@@ -5,7 +5,7 @@ using TradeSystem.Core.Contracts;
 
 namespace TradeSystem.Web.Attributes
 {
-    public class HaveNotIndividualClientDataAttribute : ActionFilterAttribute
+    public class HaveNotClientDataAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -19,9 +19,10 @@ namespace TradeSystem.Web.Attributes
             }
 
             if(clientService != null
-                && clientService.ExistDataIndividualClientByUserIdAsync(context.HttpContext.User.Id()).Result)
+                && (clientService.ExistDataIndividualClientByUserIdAsync(context.HttpContext.User.Id()).Result
+                || clientService.ExistDataCorporativeClientByUserIdAsync(context.HttpContext.User.Id()).Result))
             {
-                context.Result = new StatusCodeResult(StatusCodes.Status400BadRequest);
+                context.Result = new StatusCodeResult(StatusCodes.Status404NotFound);
             }
         }
     }

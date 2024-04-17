@@ -44,6 +44,25 @@
                     </label>
                 </div>
             }
+            else
+            {
+               @if(Model.IsApproved)
+                {
+                    <div class="form-group">
+                        <label asp-for="IsApproved">Approved</label>
+                        <input asp-for="IsApproved" class="form-control" value="@Model.IsApproved" readonly>
+                        <span asp-validation-for="IsApproved" class="small text-danger"></span>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <label asp-for="IsApproved">NotApproved</label>
+                        <input asp-for="IsApproved" class="form-control" value="@Model.IsApproved" readonly>
+                        <span asp-validation-for="IsApproved" class="small text-danger"></span>
+                    </div>
+                }
+            }
             <div class="text-center">
                 <input class="btn btn-primary mt-3" type="submit" value="Save" />
             </div>
